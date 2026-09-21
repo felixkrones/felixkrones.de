@@ -131,7 +131,7 @@
 <div id="shell">
   <div id="wrap">
     <canvas id="c" width="640" height="320"></canvas>
-    <div id="ov" role="dialog" aria-label="Achievements">
+    <div id="ov" role="dialog" aria-label="Menu">
       <header><h2>Felix H. Krones, PhD</h2><span class="count" id="ovCount"></span>
         <div class="tabs"><button id="ovAll">Unlock all</button><button id="ovClear">Clear</button><button class="close" id="ovClose">Close</button></div></header>
       <div class="body" id="ovBody"></div>
@@ -143,10 +143,10 @@
     <button id="tL" aria-label="left">&larr;</button>
     <button id="tR" aria-label="right">&rarr;</button>
     <button id="tJ" aria-label="jump">&uarr;</button>
-    <button id="tC" aria-label="achievements">&#9733;</button>
+    <button id="tC" aria-label="menu">&#9733;</button>
   </div>
   <div id="rot">Turn your phone sideways for a bigger view</div>
-  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> achievements &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
+  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
 </div>
 <script>
 "use strict";
@@ -1902,10 +1902,10 @@ function starLine(pre, post, cx, y, col){
 /* shown at the end when achievements are missing */
 function missingCard(){
   const n = TOTAL() - S.stars, lines = [['ACHIEVEMENTS MISSING', '#f4f2ee'], [`${n} OF ${TOTAL()} LEFT, GO BACK`, '#e8746b'],
-    [S.partner ? 'TOGETHER IT MIGHT BE EASIER NOW' : '', '#e0708f'], [TOUCH ? 'STAR' : 'PRESS A FOR THE ACHIEVEMENTS', '#b9b2a4']].filter(l => l[0]);
-  const w = Math.max(...lines.map(l => l[0]==='STAR' ? tw2('TAP') + 44 + tw2('FOR THE ACHIEVEMENTS') : tw2(l[0]))) + 36, hh = 10 + lines.length*22, x = Math.round(W/2 - w/2), y = 40;
+    [S.partner ? 'TOGETHER IT MIGHT BE EASIER NOW' : '', '#e0708f'], [TOUCH ? 'STAR' : 'PRESS A FOR THE MENU', '#b9b2a4']].filter(l => l[0]);
+  const w = Math.max(...lines.map(l => l[0]==='STAR' ? tw2('TAP') + 44 + tw2('FOR THE MENU') : tw2(l[0]))) + 36, hh = 10 + lines.length*22, x = Math.round(W/2 - w/2), y = 40;
   panelBox(x, y, w, hh, 'rgba(10,12,17,.88)'); r(x, y+hh-1, w, 1, '#d2574f');
-  lines.forEach((l, i) => l[0]==='STAR' ? starLine('TAP', 'FOR THE ACHIEVEMENTS', W/2, y+10+i*22, l[1]) : textC2(l[0], W/2, y+10+i*22, l[1], 1));
+  lines.forEach((l, i) => l[0]==='STAR' ? starLine('TAP', 'FOR THE MENU', W/2, y+10+i*22, l[1]) : textC2(l[0], W/2, y+10+i*22, l[1], 1));
 }
 function outlookCard(a){
   const k = clamp(a*1.6 - 0.3, 0, 1); if (k <= 0) return;
@@ -2038,7 +2038,7 @@ function drawHUD(seg, cam){
     r(W/2-80, 138, 160, 2, '#f2c14e');
     textC2('A PIXEL CV', W/2, 152, '#f2c14e', 2);
     if (Math.floor(S.t*2)%2===0) textC2(TOUCH ? 'TAP TO START' : 'PRESS  >  TO START', W/2, 204, '#f4f2ee', 2);
-    starLine(TOUCH ? 'TAP' : 'CLICK', 'FOR THE ACHIEVEMENTS', W/2, 250, '#b9b2a4');
+    starLine(TOUCH ? 'TAP' : 'CLICK', 'FOR MENU AND FULL CV', W/2, 250, '#b9b2a4');
     const b = S.btnRect;                                   // the star button stays visible above the start screen
     if (b){ panelBox(b.x, b.y, b.w, b.h); r(b.x, b.y+19, b.w, 1, '#f2c14e'); draw(ICON.star, b.x+6, 10); text(`${S.stars}/${TOTAL()}`, b.x+24, 13, '#f2c14e', 1);
       const p = 0.5 + 0.5*Math.sin(S.t*4); ctx.globalAlpha = 0.35*p; r(b.x-2, b.y-2, b.w+4, b.h+4, '#f2c14e'); ctx.globalAlpha = 1; }
