@@ -669,7 +669,6 @@ const LEVEL = [
   { id:'f_mck', kind:'flight', len:2200, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
   { id:'ox',    kind:'ground', len:2300, theme:'oxford',    name:'OXFORD',         years:'2021-2023', sub:'', map:'ox' },
   { id:'lon',   kind:'ground', len:1500, theme:'london',    name:'LONDON',         years:'2023-2024', sub:'', map:'ox' },
-  { id:'f_lz',  kind:'flight', len:700,  route:'LHR > ZRH', sub:'' },
   { id:'zh2',   kind:'ground', len:1500, theme:'zurich',    name:'ZURICH',         years:'2024-2026', sub:'', map:'zh' },
   { id:'muc',   kind:'ground', len:1400, theme:'munich',    name:'MUNICH',         years:'2026-',      sub:'WATERLAND PRIVATE EQUITY', map:'muc' },
   { id:'end',   kind:'ground', len:560,  theme:'munich',    name:'',               years:'',          sub:'', map:'muc' }
@@ -1001,12 +1000,14 @@ function onHit(b){
     target: () => b.wear ? [S.x-18, S.y - SH() + 14] : [W - 40 + camX(), 6],
     arrive: () => {
       S.btnGlow = 1;
-      if (b.wear){ wear(b.wear); popSparks(S.x, S.y - 32, '#ffffff', 10, 90); sfx('wear'); }
-      if (b.fx==='grow1') S.kid = 1;
-      if (b.fx==='grow2') S.kid = 0;
-      refreshPanel();
+      if (b.wear) popSparks(S.x, S.y - 32, '#ffffff', 10, 90);
     } };
   S.fly.push(item);
+  /* outfit and growth change right away, so running fast never mixes up the order */
+  if (b.wear){ wear(b.wear); sfx('wear'); }
+  if (b.fx==='grow1') S.kid = 1;
+  if (b.fx==='grow2') S.kid = 0;
+  refreshPanel();
   if (b.fx==='mck_on')  S.mck = true;
   if (b.fx==='mck_off') S.mck = false;
   if (b.fx==='partner_unused'){
