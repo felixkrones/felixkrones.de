@@ -75,8 +75,8 @@
 
   #ov tr.locked td.tt{ color:#4a463f; }
   #ov .map li.seen i{ background:#e8e6e1; }
-  #ov footer{ display:flex; gap:18px; justify-content:space-between; padding:8px 16px; border-top:1px solid var(--rule); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
-  #ov footer a{ color:#9fc3ea; text-decoration:none; } #ov footer a.site{ color:var(--accent); }
+  #ov footer{ display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:space-between; padding:8px 16px; border-top:1px solid var(--rule); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  #ov footer a{ color:#9fc3ea; text-decoration:none; } #ov footer a.site{ color:var(--accent); } #ov footer a.cv{ color:#f4f2ee; }
   #ov .map{ display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start; }
   #ov .map canvas{ image-rendering:pixelated; width:420px; max-width:100%; height:auto; border:1px solid var(--rule); background:#0f1a26; }
   #ov .map ol{ margin:0; padding:0; list-style:none; font-size:12px; columns:2; column-gap:24px; }
@@ -144,7 +144,7 @@
       <header><h2>Felix H. Krones, PhD</h2><span class="count" id="ovCount"></span>
         <div class="tabs"><button id="ovAll">Unlock all</button><button id="ovClear">Clear</button><button class="close" id="ovClose">Close</button></div></header>
       <div class="body" id="ovBody"></div>
-      <footer><a class="site" href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a><a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener">linkedin.com/in/felixkrones</a></footer>
+      <footer><a class="site" href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a><a class="cv" href="https://felixkrones.de/CV_Felix_Krones.pdf" target="_blank" rel="noopener">CV (PDF)</a><a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener">LinkedIn</a></footer>
     </div>
   </div>
   <div id="tl"><div class="track"></div></div>
@@ -1988,8 +1988,9 @@ const tC = document.getElementById('tC'); if (tC) tC.addEventListener('click', (
 
 const links = document.createElement('div');
 links.id = 'endlinks';
-links.innerHTML = '<a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener" style="color:#9fc3ea;border-bottom:1px solid #3d6fb4">LinkedIn</a>' +
-                  '<a href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&hl=en" target="_blank" rel="noopener" style="color:#f2c14e;border-bottom:1px solid #c99423">Google Scholar</a>';
+links.innerHTML = '<a href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&hl=en" target="_blank" rel="noopener" style="color:#f2c14e;border-bottom:1px solid #c99423">Google Scholar</a>' +
+                  '<a href="https://felixkrones.de/CV_Felix_Krones.pdf" target="_blank" rel="noopener" style="color:#f4f2ee;border-bottom:1px solid #8b8578">CV (PDF)</a>' +
+                  '<a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener" style="color:#9fc3ea;border-bottom:1px solid #3d6fb4">LinkedIn</a>';
 document.getElementById('tl').after(links);
 function showLinks(){ links.style.display = 'flex'; }
 function hideLinks(){ links.style.display = 'none'; }
