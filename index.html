@@ -701,7 +701,7 @@ const BOXES = [
   { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
   { seg:'oster', off:410,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
   { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO', loc:'Osterburken', icon:'scroll' },
-  { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'uniform' },
+  { seg:'germ',  off:270,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'uniform' },
   { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:['student','hardhat'] },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
   { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
@@ -729,7 +729,7 @@ BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.of
 /* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
 const HELPS = [
   { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
-  { seg:'germ',  off:960,  year:'2012-2018', tag:'PARTY GROUP HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
+  { seg:'ka1',   off:190,  year:'2012-2018', tag:'PARTY GROUP HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
   { seg:'ka1',   off:880,  year:'2013-2018', tag:'SOCCER CLUB TREASURER', role:'Treasurer soccer club', desc:'', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
   { seg:'ox',    off:450,  year:'2021-2024', tag:'PHD STUDENT REP', role:'PhD student representative', desc:'', org:'University of Oxford', loc:'UK', prop:'megaphone' },
   { seg:'ox',    off:1400, year:'2025-',     tag:'DEPUTY DISTRICT CHAIRMAN', role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
@@ -741,7 +741,9 @@ const EVENTS = [
   { seg:'ox', off:1040, fx:'mck_on', wear:'suit', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
 ];
 EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
-const FLYSTARS = [];   // no longer used, kept so older code paths stay valid
+const FLYSTARS = [];
+const boxX = tag => BOXES.find(b => b.tag === tag).x;
+const MCK_PERIODS = [[boxX('ENGAGEMENT MANAGER / PRINCIPAL'), boxX('DPHIL STUDIES')], [EVENTS[0].x, boxX('AI & DATA LEAD / PORTFOLIO MANAGEMENT')]];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
 const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 380 + k*270, got:false }));
 const PARTNER_X = SEGID.muc.x0 + Math.round(1000*UK);
@@ -878,8 +880,16 @@ function step(dt){
       }
     }
   }
-  if (S.x > WORLD_END - 280 && !S.ended){ S.ended = true; sfx('flag'); }
-  S.x = clamp(S.x, 60, S.ended ? WORLD_END + 90 : WORLD_END - 250);
+  /* the end: only with all achievements; otherwise a warning and the way is blocked */
+  const END_X = WORLD_END - 280, complete = S.stars >= TOTAL();
+  if (!S.ended && S.x >= END_X){
+    if (complete){ S.ended = true; sfx('flag'); }
+    else { if (!S.warn) sfx('jump'); S.x = END_X; }
+  }
+  S.warn = !S.ended && !complete && S.x > END_X - 60;
+  S.x = clamp(S.x, 60, S.ended ? WORLD_END + 90 : END_X);
+  /* McKinsey strip by life period: McKinsey box to DPhil start, QuantumBlack return to Waterland */
+  S.mck = MCK_PERIODS.some(([a, b]) => S.x >= a && S.x < b);
 
   /* vertical */
   if (S.flyBlend > 0){
@@ -926,7 +936,7 @@ function step(dt){
   /* volunteering: collected by walking past */
   for (const h of HELPS){
     if (h.got || S.x < h.x) continue;
-    h.got = true; S.stars++; S.btnGlow = 1; S.helpPop = { h:{ lines:[h.tag, h.org || h.loc || '', h.year].filter(Boolean) }, t:0 }; sfx('wear');
+    h.got = true; S.stars++; S.btnGlow = 1; refreshPanel(); S.helpPop = { h:{ lines:[h.tag, h.org || h.loc || '', h.year].filter(Boolean) }, t:0 }; sfx('wear');
     popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
   }
   for (const e of EVENTS){
@@ -1577,7 +1587,7 @@ function render(){
   }
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
   if (S.outlook > 0) brightLight(S.outlook, t);
-  if (S.x > WORLD_END - 1400) signpost(WORLD_END - 150 - cam, S.outlook);
+  if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
   if (S.partner){ ctx.globalAlpha = fadeRight(S.partner.x - cam); drawPartner(S.partner.x - cam, GROUND); ctx.globalAlpha = 1; }
 
   /* stork intro */
@@ -1637,6 +1647,7 @@ function render(){
   ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
 
   if (S.outlook > 0) outlookCard(S.outlook);
+  if (S.warn) missingCard();
   drawHUD(seg, cam);
 }
 
@@ -1691,6 +1702,13 @@ function brightLight(a, t){
   rg.addColorStop(0, `rgba(255,255,255,${a})`); rg.addColorStop(0.3, `rgba(255,246,210,${0.9*a})`);
   rg.addColorStop(0.65, `rgba(255,214,130,${0.45*a})`); rg.addColorStop(1, 'rgba(255,200,110,0)');
   ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+}
+/* shown at the end when achievements are missing */
+function missingCard(){
+  const n = TOTAL() - S.stars, l1 = 'ACHIEVEMENTS MISSING', l2 = `${n} OF ${TOTAL()} LEFT, GO BACK`, l3 = TOUCH ? 'TAP THE STAR FOR THE LIST' : 'PRESS A FOR THE LIST';
+  const w = Math.max(tw2(l1), tw2(l2), tw2(l3)) + 36, x = Math.round(W/2 - w/2), y = 44;
+  panelBox(x, y, w, 76, 'rgba(10,12,17,.88)'); r(x, y+75, w, 1, '#d2574f');
+  textC2(l1, W/2, y+10, '#f4f2ee', 1); textC2(l2, W/2, y+32, '#e8746b', 1); textC2(l3, W/2, y+54, '#b9b2a4', 1);
 }
 function outlookCard(a){
   const k = clamp(a*1.6 - 0.3, 0, 1); if (k <= 0) return;
