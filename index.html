@@ -47,17 +47,23 @@
     background:transparent; border:1px solid var(--rule); padding:5px 10px; cursor:pointer; }
   #ov .tabs button.on{ color:var(--ink); border-color:var(--accent); }
   #ov .body{ flex:1; overflow:auto; padding:10px 16px 12px; }
-  #ov .grid{ display:grid; grid-template-columns:1fr 1fr; gap:6px 28px; }
-  @media (max-width:700px){ #ov .grid{ grid-template-columns:1fr; } }
+  #ov .grid{ display:flex; flex-direction:column; gap:14px; max-width:1100px; margin:0 auto; }
+  #ov table{ table-layout:fixed; }
+  #ov col.c-ic{ width:24px; } #ov col.c-yr{ width:92px; } #ov col.c-role{ width:26%; } #ov col.c-desc{ width:24%; } #ov col.c-org{ width:26%; }
+  #ov thead td{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#7a746a; padding:6px 6px 3px; border-bottom:1px solid #2a2620; }
+  #ov td{ white-space:normal; overflow-wrap:anywhere; line-height:1.35; }
+  #ov td.sub{ padding-top:10px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#b9b2a4; border-bottom:none; }
+  #ov .flags{ display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; } #ov .flags img{ image-rendering:pixelated; width:15px; height:10px; object-fit:cover; object-position:top; }
+  @media (max-width:700px){ #ov col.c-desc{ width:0; } #ov td.ds{ display:none; } #ov col.c-yr{ width:70px; } }
   #ov table{ width:100%; border-collapse:collapse; font-size:12px; }
   #ov th{ text-align:left; font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:8px 6px 4px; color:#101318; }
   #ov th.life{ background:var(--life);} #ov th.edu{ background:var(--edu);} #ov th.work{ background:var(--work);}
   #ov td{ padding:4px 6px; border-bottom:1px solid #1f1c17; vertical-align:middle; white-space:nowrap; }
-  #ov td.ic{ width:18px; } #ov td.ic canvas{ display:block; image-rendering:pixelated; width:14px; height:14px; }
+  #ov td.ic{ width:18px; } #ov td.ic img{ background:#3a352d; padding:2px; border-radius:3px; } #ov td.ic canvas{ display:block; image-rendering:pixelated; width:14px; height:14px; }
   #ov td.yr{ width:78px; color:#b9b2a4; font-variant-numeric:tabular-nums; }
-  #ov td.st{ width:14px; color:var(--accent); text-align:right; }
+
   #ov tr.locked td{ color:#4a463f; } #ov tr.locked td.yr{ color:#4a463f; }
-  #ov tr.honour td.tt{ color:#f8e7b4; }
+
   #ov tr.locked td.tt{ color:#4a463f; }
   #ov .map li.seen i{ background:#e8e6e1; }
   #ov footer{ display:flex; gap:18px; justify-content:space-between; padding:8px 16px; border-top:1px solid var(--rule); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
@@ -501,6 +507,13 @@ const ICON = {
   ring:   ['.....WW.....','....WwwW....','....WwwW....','...YYYYYY...','..YY....YY..','..Y......Y..','..Y......Y..','..YY....YY..','...YYYYYY...','............','............','............'],
   baby:   ['............','...WWWWWW...','..WWWWWWWW..','..WWSSSSWW..','..WSSEESSW..','..WSSSSSSW..','..WWSSMSWW..','..WWWWWWWW..','...WWWWWW...','...WWWWWW...','....WWWW....','............'],
   book:   ['............','.BBBBBBBBBB.','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBBBBBBBBBW','.NNNNNNNNNNW','............'],
+  flag_ch: ['RRRRRRRRRRRR','RRRRRWWRRRRR','RRRRRWWRRRRR','RRRWWWWWWRRR','RRRWWWWWWRRR','RRRRRWWRRRRR','RRRRRWWRRRRR','RRRRRRRRRRRR','............','............','............','............'],
+  flag_de: ['NNNNNNNNNNNN','NNNNNNNNNNNN','NNNNNNNNNNNN','RRRRRRRRRRRR','RRRRRRRRRRRR','RRRRRRRRRRRR','YYYYYYYYYYYY','YYYYYYYYYYYY','............','............','............','............'],
+  flag_se: ['BBBYYBBBBBBB','BBBYYBBBBBBB','BBBYYBBBBBBB','YYYYYYYYYYYY','YYYYYYYYYYYY','BBBYYBBBBBBB','BBBYYBBBBBBB','BBBYYBBBBBBB','............','............','............','............'],
+  flag_fr: ['BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','BBBBWWWWRRRR','............','............','............','............'],
+  flag_li: ['BBBBBBBBBBBB','BBYYBBBBBBBB','BYYYYBBBBBBB','BBBBBBBBBBBB','RRRRRRRRRRRR','RRRRRRRRRRRR','RRRRRRRRRRRR','RRRRRRRRRRRR','............','............','............','............'],
+  flag_cz: ['BWWWWWWWWWWW','BBWWWWWWWWWW','BBBWWWWWWWWW','BBBBWWWWWWWW','BBBBRRRRRRRR','BBBRRRRRRRRR','BBRRRRRRRRRR','BRRRRRRRRRRR','............','............','............','............'],
+  flag_ua: ['BBBBBBBBBBBB','BBBBBBBBBBBB','BBBBBBBBBBBB','BBBBBBBBBBBB','YYYYYYYYYYYY','YYYYYYYYYYYY','YYYYYYYYYYYY','YYYYYYYYYYYY','............','............','............','............'],
   medal:  ['....RRRR....','....RBBR....','....RBBR....','....RBBR....','...YYYYYY...','..YYYYYYYY..','..YYyYYyYY..','..YYYYYYYY..','..YYyYYyYY..','...YYYYYY...','....YYYY....','............'],
   badge:  ['....BBBB....','..BBBBBBBB..','.BBBBBBBBBB.','.BBBWWWWBBB.','.BBWWBBWWBB.','.BBWWWWWWBB.','.BBWWBBWWBB.','.BBBWWWWBBB.','.BBBBBBBBBB.','..BBBBBBBB..','....BBBB....','............'],
   star:   ['.....YY.....','.....YY.....','....YYYY....','YYYYYYYYYYYY','.YYYYYYYYYY.','..YYYYYYYY..','...YYYYYY...','..YYYYYYYY..','..YYY..YYY..','.YY......YY.','............','............']
@@ -577,18 +590,10 @@ const LEVEL = [
   { id:'f_ral', kind:'flight', len:820,  route:'FRA > RDU', sub:'EXCHANGE SEMESTER' },
   { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
   { id:'f_bk',  kind:'flight', len:620,  route:'RDU > FRA', sub:'BACK TO KARLSRUHE' },
-  { id:'ka2',   kind:'ground', len:1550, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'FIRST JOBS, RESEARCH, TEACHING', map:'ka' },
-  { id:'zh',    kind:'ground', len:1580, theme:'zurich',    name:'ZURICH',         years:'2019-2026', sub:'ETH, THEN MCKINSEY', map:'zh' },
-  { id:'f_it',  kind:'flight', len:700,  route:'ZRH > MXP', sub:'CLIENT PROJECT', mck:true },
-  { id:'it',    kind:'ground', len:680,  theme:'milan',     name:'MILAN',          years:'',          sub:'CLIENT PROJECT', mck:true, map:'it' },
-  { id:'f_fi',  kind:'flight', len:700,  route:'MXP > HEL', sub:'CLIENT PROJECT', mck:true },
-  { id:'fi',    kind:'ground', len:680,  theme:'finland',   name:'FINLAND',        years:'',          sub:'CLIENT PROJECT', mck:true, map:'fi' },
-  { id:'f_ie',  kind:'flight', len:700,  route:'HEL > DUB', sub:'CLIENT PROJECT', mck:true },
-  { id:'ie',    kind:'ground', len:680,  theme:'ireland',   name:'IRELAND',        years:'',          sub:'CLIENT PROJECT', mck:true, map:'ie' },
-  { id:'f_sa',  kind:'flight', len:700,  route:'DUB > RUH', sub:'CLIENT PROJECT', mck:true },
-  { id:'sa',    kind:'ground', len:720,  theme:'riyadh',    name:'RIYADH',         years:'',          sub:'CLIENT PROJECT', mck:true, map:'sa' },
-  { id:'f_ox',  kind:'flight', len:700,  route:'RUH > LHR', sub:'DPHIL ALONGSIDE THE JOB', mck:true },
-  { id:'ox',    kind:'ground', len:1580, theme:'oxford',    name:'OXFORD',         years:'2021-2026',     sub:'DPHIL, MULTIMODAL AI IN MEDICINE', mck:true, map:'ox' },
+  { id:'ka2',   kind:'ground', len:1950, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
+  { id:'zh',    kind:'ground', len:1850, theme:'zurich',    name:'ZURICH',         years:'2019-2026', sub:'', map:'zh' },
+  { id:'f_mck', kind:'flight', len:2900, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
+  { id:'ox',    kind:'ground', len:1850, theme:'oxford',    name:'OXFORD',         years:'2021-2026', sub:'', mck:true, map:'ox' },
   { id:'muc',   kind:'ground', len:1400, theme:'munich',    name:'MUNICH',         years:'2026',      sub:'WATERLAND PRIVATE EQUITY', map:'muc' },
   { id:'end',   kind:'ground', len:560,  theme:'munich',    name:'',               years:'',          sub:'', map:'muc' }
 ];
@@ -614,45 +619,46 @@ const PLACES = {
   muc: { name:'Munich', lon:11.6, lat:48.1 }
 };
 
-/* Boxes. t = life | edu | work.  k = station (a period on the timeline) | award (a point in time, or an honour).
-   Ordered by start date. tag = short name shown when the item pops out. */
+/* Boxes. t = life | edu | work.
+   k = station (timeline / positions: square block) | degree | honour | volunteer (round medal).
+   Overview columns: years, role, desc, org, loc. tag = text in the pop-out bubble. Ordered by date. */
 const BOXES = [
-  { virtual:true, seg:'ober', off:130, t:'life', k:'station', y:100, year:'1993',      tag:'BORN',             short:'Born in Oberschefflenz, Odenwald', icon:'baby' },
-  { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   short:'Primary school, Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
-  { seg:'oster', off:330,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', short:'Secondary school, GTO Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
-  { seg:'oster', off:760,  t:'edu',  k:'award',   y:94,  year:'2012',      tag:'ABITUR 1.3',       short:'Abitur, grade 1.3', icon:'scroll', star:true },
-  { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', short:'Military service, German airforce', icon:'wings', wear:'airforce' },
-  { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. AT KIT',     short:'B.Sc. Industrial Engineering, KIT Karlsruhe', icon:'hardhat', wear:'hardhat' },
-  { seg:'ka1',   off:720,  t:'edu',  k:'award',   y:100, year:'2013-2019', tag:'SCHOLARSHIP',      short:'Konrad-Adenauer Foundation scholarship', icon:'medal', star:true },
-  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015',      tag:'EXCHANGE SEMESTER',short:'Exchange semester, NC State University', icon:'rocket' },
-  { seg:'ral',   off:600,  t:'edu',  k:'award',   y:94,  year:'2015',      tag:'GPA 4.0',          short:'GPA 4.0 at NC State', icon:'scroll', star:true },
-  { seg:'ka2',   off:250,  t:'edu',  k:'award',   y:96,  year:'2016',      tag:'B.SC. 1.5',        short:'B.Sc. degree, grade 1.5', icon:'scroll', star:true },
-  { seg:'ka2',   off:520,  t:'edu',  k:'station', y:100, year:'2016-2019', tag:'M.SC. AT KIT',     short:'M.Sc. Industrial Engineering, KIT Karlsruhe', icon:'book' },
-  { seg:'ka2',   off:790,  t:'work', k:'station', y:94,  year:'2016',      tag:'INTERNSHIP',       short:'Intern, EnBW, power-grid optimisation', icon:'bolt' },
-  { seg:'ka2',   off:1060, t:'work', k:'station', y:100, year:'2016-2017', tag:'STUDENT JOB',      short:'Student job, Mercedes-Benz, cost analysis tool', icon:'spanner' },
-  { seg:'ka2',   off:1330, t:'work', k:'station', y:96,  year:'2018-2019', tag:'TEACHING',         short:'Lecturer at DHBW, teaching assistant at KIT', icon:'pointer' },
-  { seg:'zh',    off:300,  t:'edu',  k:'station', y:96,  year:'2019',      tag:'THESIS AT ETH',    short:"Master's thesis, ETH Zurich", icon:'ethcap', wear:'ethcap' },
-  { seg:'zh',    off:560,  t:'edu',  k:'award',   y:100, year:'2019',      tag:'THESIS 6.0',       short:"Master's thesis, grade 6.0 (best possible)", icon:'scroll', star:true },
-  { seg:'zh',    off:820,  t:'edu',  k:'award',   y:94,  year:'2019',      tag:'M.SC. 1.3',        short:'M.Sc. degree, grade 1.3', icon:'diploma', star:true },
-  { seg:'zh',    off:1080, t:'work', k:'station', y:98,  year:'2019-2026', tag:'MCKINSEY',         short:'McKinsey & QuantumBlack, EM / Principal', icon:'suit', wear:'suit', fx:'mck_on' },
-  { seg:'zh',    off:1340, t:'work', k:'station', y:100, year:'2022',      tag:'INDEPENDENT',      short:'Independent consulting, PE-backed chemicals, steel', icon:'chart' },
-  { seg:'it',    off:340,  t:'work', k:'award',   y:98,  year:'',          tag:'CLIENT PROJECT',   short:'Italy, GenAI roadmap for a bank', icon:'flag_it' },
-  { seg:'fi',    off:340,  t:'work', k:'award',   y:98,  year:'',          tag:'CLIENT PROJECT',   short:'Finland, AI for energy trading', icon:'flag_fi' },
-  { seg:'ie',    off:340,  t:'work', k:'award',   y:98,  year:'',          tag:'CLIENT PROJECT',   short:'Ireland, client project', icon:'flag_ie' },
-  { seg:'sa',    off:360,  t:'work', k:'award',   y:98,  year:'',          tag:'CLIENT PROJECT',   short:'Riyadh, customs risk engine, +31pp detection', icon:'flag_sa', star:true },
-  { seg:'ox',    off:300,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL AT OXFORD',  short:'DPhil, multimodal AI in medicine, University of Oxford', icon:'book' },
-  { seg:'ox',    off:560,  t:'edu',  k:'award',   y:100, year:'2021-2024', tag:'STUDENT REP',      short:'PhD student representative', icon:'badge' },
-  { seg:'ox',    off:820,  t:'edu',  k:'award',   y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     short:'Friedrich Naumann and Shirley scholarships', icon:'medal', star:true },
-  { seg:'ox',    off:1080, t:'edu',  k:'award',   y:98,  year:'2024',      tag:'1ST PLACE',        short:'1st place, PhysioNet ML challenge', icon:'trophy', wear:'trophy', star:true },
-  { seg:'ox',    off:1340, t:'edu',  k:'award',   y:94,  year:'2026',      tag:'DPHIL AWARDED',    short:'DPhil awarded, University of Oxford', icon:'gown', wear:'gown', star:true },
-  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     tag:'WATERLAND',        short:'Portfolio manager, Waterland Private Equity', icon:'briefcase', wear:'briefcase', fx:'mck_off' },
-  { seg:'muc',   off:700,  t:'work', k:'award',   y:100, year:'2026-',     tag:'MENTOR',           short:'Hack Nation, mentor to start-ups', icon:'badge' },
-  { seg:'muc',   off:1000, t:'life', k:'station', y:98,  year:'2026',      tag:'ENGAGED',          short:'Engaged', icon:'ring', fx:'partner' }
+  { virtual:true, seg:'ober', off:130, t:'life', k:'station', y:100, year:'1993', tag:'BORN', role:'Born', desc:'', org:'', loc:'Oberschefflenz', icon:'baby' },
+
+  { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule Oberschefflenz', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
+  { seg:'oster', off:330,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO Osterburken', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
+  { seg:'oster', off:760,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO Osterburken', loc:'Osterburken', icon:'scroll' },
+  { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
+  { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
+  { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
+  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015',      tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace engineering', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
+  { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Top grade',        desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
+  { seg:'ka2',   off:220,  t:'work', k:'station', y:96,  year:'2015-2018', tag:'TEACHING ASSISTANT', role:'Teaching assistant', desc:'Statistics 1 and 2', org:'KIT', loc:'Karlsruhe', icon:'pointer' },
+  { seg:'ka2',   off:470,  t:'edu',  k:'degree',  y:100, year:'2016',      tag:'B.SC. 1.5',        role:'B.Sc.',            desc:'Grade 1.5', org:'KIT', loc:'Karlsruhe', icon:'scroll' },
+  { seg:'ka2',   off:720,  t:'edu',  k:'station', y:94,  year:'2016-2019', tag:'M.SC. STUDIES',    role:'M.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'book' },
+  { seg:'ka2',   off:970,  t:'work', k:'station', y:100, year:'2016',      tag:'INTERN',           role:'Intern',           desc:'Power-grid optimisation', org:'EnBW', loc:'Stuttgart', icon:'bolt' },
+  { seg:'ka2',   off:1220, t:'work', k:'station', y:94,  year:'2016-2017', tag:'WORKING STUDENT',  role:'Working student',  desc:'Cost analysis tool', org:'Mercedes-Benz', loc:'Sindelfingen', icon:'spanner' },
+  { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Introduction to data science', org:'DHBW', loc:'Karlsruhe', icon:'pointer' },
+  { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Healthcare chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart' },
+  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot-based coaching data', org:'ETH Zurich', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
+  { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Top grade',        desc:'Thesis grade 6.0', org:'ETH Zurich', loc:'Zurich', icon:'star' },
+  { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
+  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'Data science and AI', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
+  { seg:'zh',    off:1300, t:'work', k:'station', y:100, year:'2022',      tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Operating model, restructuring', org:'Independent', loc:'Europe', icon:'chart' },
+  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'Oxford', icon:'book' },
+  { seg:'ox',    off:520,  t:'work', k:'volunteer',y:100,year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', icon:'badge' },
+  { seg:'ox',    off:760,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann Foundation, Shirley', loc:'Oxford', icon:'medal' },
+  { seg:'ox',    off:1000, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'', icon:'trophy', wear:'trophy' },
+  { seg:'ox',    off:1300, t:'edu',  k:'degree',  y:94,  year:'2026',      tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'Oxford', icon:'gown', wear:'gown' },
+  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' },
+  { seg:'muc',   off:700,  t:'work', k:'volunteer',y:100,year:'2026-',     tag:'MENTOR',           role:'Mentor',           desc:'Start-ups', org:'Hack Nation', loc:'', icon:'badge' }
 ];
 BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.off); b.y = Math.round(GROUND - (166 - b.y)*UK); });
 
-const FLYSTARS = [];
-for (const s of LEVEL) if (s.kind==='flight') for (let k=0;k<3;k++) FLYSTARS.push({ x:s.x0 + 420 + k*240, k, got:false });
+const FLYSTARS = [];   // no longer used, kept so older code paths stay valid
+const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
+const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 420 + k*350, got:false }));
+const PARTNER_X = SEGID.muc.x0 + Math.round(1000*UK);
 
 const BOXSTYLE = {
   edu:  { a:'#f2c14e', b:'#c99423', c:'#8a6410', hi:'#fbe3a0', mark:'#5a3f08', name:'EDUCATION' },
@@ -676,7 +682,7 @@ function reset(){
     plate:null, plateT:0,
     flash:0, mck:false, mckT:0,
     flying:false, flyBlend:0,
-    partner:null,
+    partner:null, flagsGot:[],
     ended:false, endT:0, flagP:0,
     lastSeg:null, manual:false,
     fly:[], sparks:[], pops:[],
@@ -684,7 +690,7 @@ function reset(){
     intro:null, btnGlow:0
   };
   BOXES.forEach(b=>{ b.hit=false; b.bump=0; b.open=0; });
-  FLYSTARS.forEach(s=>s.got=false);
+  MCK_FLAGS.forEach(f=>f.got=false);
 }
 reset();
 const SH = () => SPRH[S.kid];
@@ -812,13 +818,15 @@ function step(dt){
   }
 
   /* flight stars */
-  for (const st of FLYSTARS){
-    if (st.got) continue;
-    st.y = FLY_Y - 48 + (st.k-1)*11;
-    if (Math.abs(st.x - S.x) < 35 && Math.abs(st.y - (S.y - 30)) < 96){
-      st.got = true; S.stars++; popSparks(st.x, st.y, '#f2c14e', 8, 70); sfx('star'); S.btnGlow = 1;
+  for (const fl of MCK_FLAGS){
+    if (fl.got) continue;
+    fl.y = FLY_Y - 44 + Math.sin(fl.k*1.7)*10;
+    if (Math.abs(fl.x - S.x) < 40 && S.flyBlend > 0.5){
+      fl.got = true; S.flagsGot.push(fl.c); popSparks(fl.x, fl.y, '#ffffff', 8, 70); sfx('wear');
+      S.plate = { kind:'country', name:fl.name }; S.plateT = 1.6;
     }
   }
+  if (!S.partner && S.x > PARTNER_X){ S.partner = { x:S.x+140, t:0 }; }
 
   tickTimers(dt);
   tickFly(dt);
@@ -864,13 +872,11 @@ function onHit(b){
   popSparks(b.x+16, b.y, BOXSTYLE[b.t].a, 14, 140);
   sfx('hit');
   S.stars++;
-  if (b.star) S.pops.push({ x:b.x+16, y:b.y-10, t:0 });
   const item = { icon:b.icon, name:b.tag, year:b.year, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3,
     target: () => b.wear ? [S.x-18, S.y - SH() + 14] : [W - 40 + camX(), 6],
     arrive: () => {
       S.btnGlow = 1;
       if (b.wear){ wear(b.wear); popSparks(S.x, S.y - 32, '#ffffff', 10, 90); sfx('wear'); }
-      if (b.star){ sfx('star'); S.flash = Math.max(S.flash, 0.6); }
       if (b.fx==='grow1') S.kid = 1;
       if (b.fx==='grow2') S.kid = 0;
       refreshPanel();
@@ -878,7 +884,7 @@ function onHit(b){
   S.fly.push(item);
   if (b.fx==='mck_on')  S.mck = true;
   if (b.fx==='mck_off') S.mck = false;
-  if (b.fx==='partner'){
+  if (b.fx==='partner_unused'){
     S.partner = { x:S.x+140, t:0 };
     S.flash = 1;
     for (let i=0;i<16;i++) popSparks(S.x+16, S.y-64, '#e0708f', 1, 80);
@@ -1421,11 +1427,13 @@ function render(){
     if (S.flyBlend > 0){ ctx.globalAlpha = S.flyBlend*0.8; scaled(0, GROUND, UK, ()=>clouds(cam/UK, .6, '#ffffff', 96, 170, 7)); ctx.globalAlpha = 1; }
   }
 
-  for (const st of FLYSTARS){
-    if (st.got) continue;
-    const sx = st.x - cam; if (sx<-20||sx>W+20) continue;
-    const y = (st.y||FLY_Y-48) + Math.sin(t*5+st.k)*3;
-    drawIcon(ICON.star, sx-12, y-12, 2);
+  for (const fl of MCK_FLAGS){
+    if (fl.got) continue;
+    const sx = fl.x - cam; if (sx<-30||sx>W+30) continue;
+    const y = (fl.y||FLY_Y-44) + Math.sin(t*4+fl.k)*3;
+    r(sx-2, y-10, 2, 30, '#d6dde5');                       // little flagpole
+    ctx.globalAlpha = .35; r(sx-1, y-9, 30, 20, '#000'); ctx.globalAlpha = 1;
+    drawIcon(ICON['flag_'+fl.c], sx, y-10, 2.4);
   }
   for (const b of BOXES){ if (b.virtual) continue; const sx = b.x - cam; if (sx < -40 || sx > W+40) continue; drawBox(b, sx); }
   if (S.x > WORLD_END - 1400){ const fx = WORLD_END - 240 - cam; scaled(fx, GROUND, UK, ()=>flagpole(fx, GROUND, S.flagP)); }
@@ -1504,7 +1512,7 @@ function drawGroundScene(seg, cam, t){
 }
 
 /* ---------- HUD ---------- */
-const TOTAL = () => BOXES.length + FLYSTARS.length;
+const TOTAL = () => BOXES.length;
 function drawHUD(seg, cam){
   /* achievements button, top right, small */
   const s = `${S.stars}/${TOTAL()}`, w = tw(s,1)+34, x = W - w - 8, glow = Math.max(0, S.btnGlow);
@@ -1518,6 +1526,11 @@ function drawHUD(seg, cam){
     const m = 'MCKINSEY & QUANTUMBLACK', mw = tw(m,1)+30;
     panelBox(8, 6, mw, 20, 'rgba(8,18,34,.85)'); r(8, 6, mw, 1, '#3d6fb4');
     r(14, 15, 10, 2, '#9fc3ea'); r(18, 11, 2, 10, '#9fc3ea'); text(m, 30, 13, '#dfe9f5', 1);
+    if (S.flagsGot.length){
+      const fw = S.flagsGot.length*16 + 14; panelBox(8, 28, fw, 14, 'rgba(8,18,34,.85)');
+      text('(', 11, 31, '#9fc3ea', 1); S.flagsGot.forEach((c,i)=> draw(ICON['flag_'+c].slice(0,8), 17 + i*16, 31));
+      text(')', 17 + S.flagsGot.length*16 - 2, 31, '#9fc3ea', 1);
+    }
     ctx.globalAlpha = 1;
   }
 
@@ -1525,10 +1538,10 @@ function drawHUD(seg, cam){
   if (S.plate && S.plateT > 0){
     const p = S.plate, a = clamp(Math.min(S.plateT/0.3, (2.8-S.plateT)/0.3+1), 0, 1);
     ctx.globalAlpha = a;
-    const line = p.kind==='flight' ? p.route : p.name + (p.years ? '   ' + p.years : '');
+    const line = p.kind==='flight' ? p.route : p.kind==='country' ? p.name : p.name + (p.years ? '   ' + p.years : '');
     const pw = tw2(line,1)+24;
-    panelBox(W/2-pw/2, 6, pw, 26, p.kind==='flight' ? 'rgba(8,18,34,.85)' : undefined);
-    if (p.kind==='flight') textC2(line, W/2, 12, '#dfe9f5', 1);
+    panelBox(W/2-pw/2, 6, pw, 26, p.kind!=='ground' && p.kind!==undefined ? 'rgba(8,18,34,.85)' : undefined);
+    if (p.kind==='flight' || p.kind==='country') textC2(line, W/2, 12, '#dfe9f5', 1);
     else { text2(p.name, W/2-pw/2+12, 12, '#f4f2ee', 1); if (p.years) text2(p.years, W/2-pw/2+12+tw2(p.name,1)+36, 12, '#f2c14e', 1); }
     ctx.globalAlpha = 1;
   }
@@ -1560,20 +1573,24 @@ function iconDataURL(name){
   return iconURL[name] = c.toDataURL();
 }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function flagRow(){
+  if (!S.flagsGot.length) return '';
+  return `<div class="flags">(${S.flagsGot.map(c=>`<img src="${iconDataURL('flag_'+c)}" alt="${c.toUpperCase()}" title="${c.toUpperCase()}">`).join('')})</div>`;
+}
 function rowsFor(list){
   return list.map(b => {
-    const cls = (b.hit ? '' : 'locked') + (b.star ? ' honour' : '');
-    const yr = b.year || '';
-    const title = b.hit ? esc(b.short) : 'Locked';
-    const ic = b.hit ? `<img src="${iconDataURL(b.icon)}" width="14" height="14" style="image-rendering:pixelated;display:block" alt="">` : '<span style="display:block;width:12px;height:12px;background:#1f1c17"></span>';
-    return `<tr class="${cls}"><td class="ic">${ic}</td><td class="yr">${esc(yr)}</td><td class="tt">${title}</td><td class="st">${b.hit && b.star ? '&#9733;' : ''}</td></tr>`;
+    if (!b.hit) return `<tr class="locked"><td class="ic"><span style="display:block;width:12px;height:12px;background:#1f1c17"></span></td><td class="yr">${esc(b.year)}</td><td class="tt">Locked</td><td class="ds"></td><td></td><td></td></tr>`;
+    const ic = `<img src="${iconDataURL(b.icon)}" width="14" height="14" style="image-rendering:pixelated;display:block" alt="">`;
+    return `<tr><td class="ic">${ic}</td><td class="yr">${esc(b.year)}</td><td class="tt">${esc(b.role)}</td><td class="ds">${esc(b.desc)}</td><td>${esc(b.org)}</td><td>${esc(b.loc)}${b.flags ? flagRow() : ''}</td></tr>`;
   }).join('');
 }
 function table(cls, title, sections){
-  let html = `<table><thead><tr><th class="${cls}" colspan="4">${title}</th></tr></thead><tbody>`;
+  let html = `<table><colgroup><col class="c-ic"><col class="c-yr"><col class="c-role"><col class="c-desc"><col class="c-org"><col></colgroup>
+    <thead><tr><th class="${cls}" colspan="6">${title}</th></tr>
+    <tr><td></td><td>Years</td><td>Role</td><td class="ds">Description</td><td>Organisation</td><td>Location</td></tr></thead><tbody>`;
   for (const [sub, list] of sections){
     if (!list.length) continue;
-    if (sub) html += `<tr><td colspan="4" style="padding-top:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7a746a;border-bottom:none">${sub}</td></tr>`;
+    if (sub) html += `<tr><td class="sub" colspan="6">${sub}</td></tr>`;
     html += rowsFor(list);
   }
   return html + '</tbody></table>';
@@ -1583,8 +1600,9 @@ function refreshPanel(){
   if (!panelOpen) return;
   const by = (t,k) => BOXES.filter(b=>b.t===t && (!k || b.k===k));
   ovBody.innerHTML = `<div class="grid">
-    <div>${table('life','Life',[['',by('life')]])}${table('edu','Education',[['Timeline',by('edu','station')],['Degrees, grades and honours',by('edu','award')]])}</div>
-    <div>${table('work','Work',[['Positions',by('work','station')],['Projects and roles',by('work','award')]])}</div></div>`;
+    ${table('life','Life',[['',by('life')]])}
+    ${table('edu','Education',[['Timeline',by('edu','station')],['Degrees',by('edu','degree')],['Honours',by('edu','honour')]])}
+    ${table('work','Work',[['Positions',by('work','station')],['Volunteering',by('work','volunteer')]])}</div>`;
 }
 function drawMap(){
   const c = document.getElementById('mapc'); if (!c) return;
@@ -1617,7 +1635,7 @@ function openPanel(open){
 document.getElementById('ovClose').onclick = ()=>openPanel(false);
 document.getElementById('ovAll').onclick = ()=>{
   for (const b of BOXES){ if (b.hit) continue; b.hit = true; b.open = 1; S.stars++; if (b.wear) wear(b.wear); }
-  for (const st of FLYSTARS){ if (!st.got){ st.got = true; S.stars++; } }
+  for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
   S.kid = 0; S.visible = true; S.fly = []; userGesture(); sfx('flag'); refreshPanel();
 };
 
@@ -1714,7 +1732,7 @@ const tC = document.getElementById('tC'); if (tC) tC.addEventListener('click', (
 const links = document.createElement('div');
 links.id = 'endlinks';
 links.innerHTML = '<a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener" style="color:#9fc3ea;border-bottom:1px solid #3d6fb4">LinkedIn</a>' +
-                  '<a href="https://felixkrones.de" target="_blank" rel="noopener" style="color:#f2c14e;border-bottom:1px solid #c99423">felixkrones.de</a>';
+                  '<a href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&hl=en" target="_blank" rel="noopener" style="color:#f2c14e;border-bottom:1px solid #c99423">Google Scholar</a>';
 document.getElementById('tl').after(links);
 function showLinks(){ links.style.display = 'flex'; }
 function hideLinks(){ links.style.display = 'none'; }
