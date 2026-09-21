@@ -84,6 +84,7 @@
   #touch button{ flex:1; height:52px; font:inherit; font-size:20px; color:var(--ink);
     background:var(--panel); border:1px solid var(--rule); border-radius:8px; touch-action:manipulation; }
   #touch button:active{ background:#2a251f; }
+  #touch #tF{ display:none; }                           /* fast run: only on phones held sideways */
   #rot{ display:none; font-size:11px; letter-spacing:.08em; color:var(--dim); text-align:center; }
   #tl .lab.next{ color:#5a5448; } #tl .lab.next.on{ color:var(--accent); }
   #ov td .pl2{ display:none; }
@@ -122,7 +123,7 @@
     #touch{ position:fixed; left:calc(10px + env(safe-area-inset-left,0px)); right:calc(10px + env(safe-area-inset-right,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px));
       width:auto; max-width:none; gap:8px; pointer-events:none; z-index:10; }
     #touch button{ flex:0 0 60px; height:60px; pointer-events:auto; background:rgba(20,18,15,.42); border-color:rgba(255,255,255,.18); color:rgba(255,255,255,.85); }
-    #touch #tJ{ margin-left:auto; }
+    #touch #tF{ display:block; margin-left:auto; font-size:26px; }
   }
 </style>
 </head>
@@ -142,6 +143,7 @@
   <div id="touch">
     <button id="tL" aria-label="left">&larr;</button>
     <button id="tR" aria-label="right">&rarr;</button>
+    <button id="tF" aria-label="run fast">&raquo;</button>
     <button id="tJ" aria-label="jump">&uarr;</button>
     <button id="tC" aria-label="menu">&#9733;</button>
   </div>
@@ -1811,7 +1813,7 @@ function render(){
   }
   if (S.partner && S.partner.t < 3.5){
     for (let i=0;i<5;i++){ const k = (S.partner.t*1.2 + i*0.2) % 1, hx = S.x - cam - 34 + Math.sin(k*7+i)*16 + i*10, hy = GROUND - 90 - k*64;
-      const hc = '#e0708f'; ctx.globalAlpha = 1-k; scaled(hx, hy, 2, ()=>{ r(hx, hy, 2, 2, hc); r(hx+3, hy, 2, 2, hc); r(hx, hy+2, 5, 2, hc); r(hx+1, hy+4, 3, 1, hc); r(hx+2, hy+5, 1, 1, hc); }); ctx.globalAlpha = 1; }
+      const hc = '#e0708f'; ctx.globalAlpha = 1-k; drawIcon(ICON.heart16, Math.round(hx), Math.round(hy), 1); ctx.globalAlpha = 1; }
   }
   /* ambient particles */
   const pt = (seg.kind==='ground' && THEMES[seg.theme].particles);
@@ -1840,7 +1842,15 @@ function drawHelp(h, sx, t){
   const x = Math.round(sx), g = GROUND;
   shadow(x + 19, g, 26);
   scaled(x, g, UK, ()=>{
-  if (h.prop === 'jar'){ r(x+4, g-22, 16, 22, '#cfe3ea'); r(x+4, g-22, 16, 1, '#ffffff'); r(x+6, g-25, 12, 3, '#8a6340'); r(x+6, g-10, 12, 9, '#f2c14e'); r(x+8, g-13, 5, 3, '#f7d98a'); r(x+5, g-20, 2, 14, 'rgba(255,255,255,.55)'); }
+  if (h.prop === 'jar'){                              // fund-raiser stand: table, donation box with coins, a coin dropping in, stack of books
+    r(x-4, g-14, 36, 3, '#a8743f'); r(x-4, g-14, 36, 1, '#c48f55'); r(x-2, g-11, 2, 11, '#8a5a33'); r(x+28, g-11, 2, 11, '#8a5a33');
+    r(x+1, g-31, 18, 17, '#2e2a26'); r(x+2, g-30, 16, 15, '#d6e8ee'); r(x+3, g-29, 2, 12, '#ffffff');
+    r(x+6, g-31, 8, 1, '#15120f');                                                    // coin slot
+    for (const [cx, cy] of [[6,-17],[10,-17],[14,-17],[8,-19],[12,-19],[10,-21]]){ disc(x+cx, g+cy, 2, '#c99423'); r(x+cx-1, g+cy-1, 2, 1, '#fbe3a0'); }
+    const fy = g - 40 + ((t*14) % 9); disc(x+10, Math.round(fy), 2, '#f2c14e'); r(x+9, Math.round(fy)-1, 2, 1, '#fff4c4');   // coin dropping in
+    r(x+21, g-18, 10, 4, '#3d6fb4'); r(x+22, g-22, 9, 4, '#c8493f'); r(x+21, g-26, 10, 4, '#4f8f5a');   // books: education
+    r(x+21, g-18, 10, 1, '#9fc3ea'); r(x+22, g-22, 9, 1, '#e8746b'); r(x+21, g-26, 10, 1, '#7fb88a');
+  }
   else if (h.prop === 'lectern'){ r(x+2, g-26, 20, 6, '#8a6340'); r(x+2, g-26, 20, 1, '#b08455'); r(x+8, g-20, 8, 20, '#6b4a2e'); r(x+4, g-2, 16, 2, '#4e341f'); r(x+15, g-34, 2, 8, '#9aa6b4'); r(x+14, g-36, 4, 3, '#3a3f46'); }
   else if (h.prop === 'ball'){ r(x-6, g-24, 2, 24, '#f0f0f0'); r(x+26, g-24, 2, 24, '#f0f0f0'); r(x-6, g-24, 34, 2, '#f0f0f0'); for (let yy=g-22; yy<g; yy+=4) r(x-4, yy, 30, 1, 'rgba(255,255,255,.25)'); r(x+6, g-10, 10, 10, '#f4f2ee'); r(x+9, g-7, 4, 4, '#222'); r(x+6, g-10, 2, 2, '#222'); r(x+14, g-2, 2, 2, '#222'); }
   else if (h.prop === 'megaphone'){                  // megaphone on a small speaker's crate
@@ -1854,7 +1864,7 @@ function drawHelp(h, sx, t){
   }
   else if (h.prop === 'laptop'){ r(x, g-10, 26, 10, '#6b4a2e'); r(x+3, g-26, 20, 14, '#3a3f46'); r(x+5, g-24, 16, 10, '#1f4a6b'); r(x+9, g-22, 3, 6, '#f2c14e'); r(x+13, g-20, 3, 4, '#9fc3ea'); r(x+1, g-12, 24, 2, '#9aa6b4'); }
   });
-  if (!h.got){ heart(x + 12, g - 82 + Math.sin(t*3 + h.i)*3, 3, '#e0708f'); }
+  if (!h.got) drawIcon(ICON.heart16, x + 4, Math.round(g - 84 + Math.sin(t*3 + h.i)*3), 2);
 }
 
 /* outlook at the end: a signpost with open directions, and a short message */
@@ -2216,7 +2226,7 @@ function bindTouch(id, code){
   const off = e=>{ e.preventDefault(); keys[code] = false; };
   el.addEventListener('pointerdown', on); el.addEventListener('pointerup', off); el.addEventListener('pointercancel', off); el.addEventListener('pointerleave', off);
 }
-bindTouch('tL','ArrowLeft'); bindTouch('tR','ArrowRight'); bindTouch('tJ','ArrowUp');
+bindTouch('tL','ArrowLeft'); bindTouch('tR','ArrowRight'); bindTouch('tJ','ArrowUp'); bindTouch('tF','ShiftLeft');
 const tC = document.getElementById('tC'); if (tC) tC.addEventListener('click', ()=>{ userGesture(); openPanel(!panelOpen); });
 
 const links = document.createElement('div');
