@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Felix H. Krones, PhD. A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with an open and bright outlook.">
+<meta name="description" content="Felix H. Krones, PhD. A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with a bright outlook.">
 <meta name="author" content="Felix H. Krones">
 <link rel="canonical" href="https://felixkrones.de/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Crect width='12' height='12' fill='%2312100d'/%3E%3Cpath fill='%23f2c14e' d='M5 1h2v2h1v1h3v1h-1v1h-1v1h1v2h-1v-1h-2v-1h-2v1h-2v1h-1v-2h1v-1h-1v-1h-1v-1h3v-1h1z'/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://felixkrones.de/">
 <meta property="og:title" content="Felix H. Krones, PhD">
-<meta property="og:description" content="A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with an open and bright outlook.">
+<meta property="og:description" content="A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with a bright outlook.">
 <meta property="og:image" content="https://felixkrones.de/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -678,7 +678,7 @@ const BOXES = [
   { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
   { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
-  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015',      tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
+  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
   { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Exchange semester', desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
   { seg:'ka2',   off:220,  t:'work', k:'station', y:96,  year:'2015-2018', tag:'TEACHING ASSISTANT', role:'Teaching assistant', desc:'Statistics 1 and 2', org:'KIT', loc:'Karlsruhe', icon:'pointer' },
   { seg:'ka2',   off:470,  t:'edu',  k:'degree',  y:100, year:'2016',      major:true, tag:'B.SC. 1.5',        role:'B.Sc.',            desc:'Grade 1.5', org:'KIT', loc:'Karlsruhe', icon:'scroll' },
@@ -687,13 +687,13 @@ const BOXES = [
   { seg:'ka2',   off:1220, t:'work', k:'station', y:94,  year:'2016-2017', tag:'WORKING STUDENT',  role:'Working student',  desc:'Cost analysis tool', org:'Mercedes-Benz', loc:'Sindelfingen', icon:'spanner' },
   { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Intro to data science', org:'DHBW', loc:'Karlsruhe', icon:'pointer' },
   { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart' },
-  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
+  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019-2019', tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
   { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH', loc:'Zurich', icon:'star' },
   { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      major:true, tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
+  { seg:'ox',    off:840 , t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
   { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', major:true, tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
   { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'UK', icon:'book', fx:'mck_off' },
   { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann + Shirley', loc:'Oxford, UK', icon:'medal' },
-  { seg:'ox',    off:840 , t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
   { seg:'ox',    off:1240, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'Karlsruhe', icon:'trophy', wear:'trophy' },
   { seg:'ox',    off:1560, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'UK', icon:'gown', wear:'gown' },
   { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     major:true, tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' }
@@ -828,7 +828,8 @@ function step(dt){
   if (S.ended){
     /* the end: both stroll to the right, into the bright light */
     S.x += 92*dt; S.facing = 1;
-  } else if (S.manual && !wantFly){
+  } else if (S.manual){
+    /* manual: on the ground and in the plane, left/right move back and forth, Shift is faster */
     let dir = 0;
     if (keys.ArrowRight || keys.KeyD) dir = 1;
     if (keys.ArrowLeft) dir = -1;
@@ -1525,9 +1526,11 @@ function render(){
 
   if (S.flyBlend > 0){
     ctx.globalAlpha = clamp((S.flyBlend-0.45)*1.9, 0, 1);
-    const pxp = Math.round(S.x - cam) - 58, pyp = Math.round(S.y) - 12;
+    const fx = Math.round(S.x - cam), pxp = fx - 58, pyp = Math.round(S.y) - 12;
+    ctx.save(); if (S.facing < 0){ ctx.translate(2*fx, 0); ctx.scale(-1, 1); }   // the plane turns round when flying back
     draw(PLANE, pxp, pyp);
     const spin = Math.floor(t*40)%2; r(pxp+52+spin*4, pyp+25, 3, 4, '#d6dde5');   // engine fan flicker
+    ctx.restore();
     ctx.globalAlpha = 1;
   }
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
@@ -1610,7 +1613,7 @@ function drawHelp(h, sx, t){
 }
 
 /* outlook at the end: a signpost with open directions, and a short message */
-const SIGNS = [ { t:'PRIVATE ?', d:1 }, { t:'LOCATION ?', d:1 }, { t:'WORK ?', d:1 }, { t:'EDUCATION ?', d:1 } ];
+const SIGNS = [ { t:'PRIVATE', d:1 }, { t:'LOCATION', d:1 }, { t:'WORK', d:1 }, { t:'EDUCATION', d:1 } ];
 function signpost(px, a){
   px = Math.round(px); const top = GROUND - 128;
   shadow(px, GROUND, 18);
@@ -1649,9 +1652,9 @@ function brightLight(a, t){
 function outlookCard(a){
   const k = clamp(a*1.6 - 0.3, 0, 1); if (k <= 0) return;
   ctx.globalAlpha = k;
-  const l1 = 'THE FUTURE IS OPEN', l2 = 'AND IT LOOKS BRIGHT', w = Math.max(tw2(l1), tw2(l2)) + 36, cx = 300, x = Math.round(cx - w/2), y = 40;
-  panelBox(x, y, w, 58, 'rgba(10,12,17,.84)'); r(x, y+57, w, 1, '#f2c14e');
-  textC2(l1, cx, y+10, '#f4f2ee', 1); textC2(l2, cx, y+32, '#f2c14e', 1);
+  const l1 = 'THE FUTURE LOOKS BRIGHT', w = tw2(l1) + 36, cx = 300, x = Math.round(cx - w/2), y = 44;
+  panelBox(x, y, w, 36, 'rgba(10,12,17,.84)'); r(x, y+35, w, 1, '#f2c14e');
+  textC2(l1, cx, y+11, '#f2c14e', 1);
   ctx.globalAlpha = 1;
 }
 
@@ -1743,8 +1746,9 @@ function rowsFor(list){
     const fl = b.flags ? flagRow() : '';
     const role = esc(b.role) + (b.desc ? `<span class="ds">, ${esc(b.desc)}</span>` : '');
     /* organisation in the light font, location in grey after a comma; without an organisation the location takes the light font */
-    const place = b.org ? `<span class="og">${esc(b.org)}</span>` + (b.loc ? `, <span class="lo">${esc(b.loc)}</span>` : '')
-                        : `<span class="og">${esc(b.loc)}</span>`;
+    /* first item (organisation, or the town when there is none) in the light font, everything after the first comma in grey */
+    const first = b.org || (b.loc || '').split(', ')[0], rest = b.org ? (b.loc || '') : (b.loc || '').split(', ').slice(1).join(', ');
+    const place = `<span class="og">${esc(first)}</span>` + (rest ? `, <span class="lo">${esc(rest)}</span>` : '');
     return `<tr class="${b.major ? 'major ' + b.t : ''}"><td class="ic">${ic}</td><td class="yr">${esc(b.year)}</td><td class="tt">${role}<span class="pl2">${place}${fl}</span></td><td class="pl">${place}${fl}</td></tr>`;
   }).join('');
 }
