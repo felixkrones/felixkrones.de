@@ -717,7 +717,7 @@ const BOXES = [
   { seg:'ka2',   off:1220, t:'work', k:'station', y:94,  year:'2016-2017', tag:'WORKING STUDENT',  role:'Working student',  desc:'Cost analysis tool', org:'Mercedes-Benz', loc:'Sindelfingen', icon:'car16' },
   { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Intro to data science', org:'DHBW', loc:'Karlsruhe', icon:'board16' },
   { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart16' },
-  { seg:'zh',    off:150 ,  t:'edu',  k:'station', y:96,  year:'2019-2019', tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH', loc:'Zurich', icon:'ethcap16', wear:'ethcap' },
+  { seg:'zh',    off:250 ,  t:'edu',  k:'station', y:96,  year:'2019-2019', tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH', loc:'Zurich', icon:'ethcap16', wear:'ethcap' },
   { seg:'zh',    off:380 ,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH', loc:'Zurich', icon:'star16' },
   { seg:'zh',    off:610 ,  t:'edu',  k:'degree',  y:94,  year:'2019',      major:true, tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma16' },
   { seg:'ox',    off:1450, t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart16' },
@@ -1843,7 +1843,15 @@ function drawHelp(h, sx, t){
   if (h.prop === 'jar'){ r(x+4, g-22, 16, 22, '#cfe3ea'); r(x+4, g-22, 16, 1, '#ffffff'); r(x+6, g-25, 12, 3, '#8a6340'); r(x+6, g-10, 12, 9, '#f2c14e'); r(x+8, g-13, 5, 3, '#f7d98a'); r(x+5, g-20, 2, 14, 'rgba(255,255,255,.55)'); }
   else if (h.prop === 'lectern'){ r(x+2, g-26, 20, 6, '#8a6340'); r(x+2, g-26, 20, 1, '#b08455'); r(x+8, g-20, 8, 20, '#6b4a2e'); r(x+4, g-2, 16, 2, '#4e341f'); r(x+15, g-34, 2, 8, '#9aa6b4'); r(x+14, g-36, 4, 3, '#3a3f46'); }
   else if (h.prop === 'ball'){ r(x-6, g-24, 2, 24, '#f0f0f0'); r(x+26, g-24, 2, 24, '#f0f0f0'); r(x-6, g-24, 34, 2, '#f0f0f0'); for (let yy=g-22; yy<g; yy+=4) r(x-4, yy, 30, 1, 'rgba(255,255,255,.25)'); r(x+6, g-10, 10, 10, '#f4f2ee'); r(x+9, g-7, 4, 4, '#222'); r(x+6, g-10, 2, 2, '#222'); r(x+14, g-2, 2, 2, '#222'); }
-  else if (h.prop === 'megaphone'){ r(x+2, g-14, 4, 14, '#3a3f46'); r(x+2, g-22, 8, 8, '#d2574f'); r(x+10, g-25, 4, 14, '#d2574f'); r(x+14, g-28, 4, 20, '#e8746b'); r(x+18, g-30, 2, 24, '#f4f2ee'); }
+  else if (h.prop === 'megaphone'){                  // megaphone on a small speaker's crate
+    r(x, g-10, 22, 10, '#a8743f'); r(x, g-10, 22, 1, '#c48f55'); r(x, g-5, 22, 1, '#8a5a33'); r(x+10, g-10, 1, 10, '#8a5a33');
+    r(x+1, g-19, 3, 4, '#2e2a26');                                              // mouthpiece
+    for (let k=0;k<17;k++){ const hh = Math.round(4 + k*0.5), top = g-17 - Math.floor(hh/2);
+      r(x+4+k, top, 1, hh, '#c8493f'); r(x+4+k, top, 1, 1, '#e8746b'); r(x+4+k, top+hh-1, 1, 1, '#8b1e2d'); }
+    r(x+21, g-22, 2, 11, '#f4f2ee');                                            // rim
+    r(x+8, g-15, 2, 5, '#2e2a26');                                              // handle
+    for (const [dx, dh] of [[26,6],[29,10]]) r(x+dx, g-17-dh/2, 1, dh, 'rgba(255,255,255,.7)');   // sound
+  }
   else if (h.prop === 'laptop'){ r(x, g-10, 26, 10, '#6b4a2e'); r(x+3, g-26, 20, 14, '#3a3f46'); r(x+5, g-24, 16, 10, '#1f4a6b'); r(x+9, g-22, 3, 6, '#f2c14e'); r(x+13, g-20, 3, 4, '#9fc3ea'); r(x+1, g-12, 24, 2, '#9aa6b4'); }
   });
   if (!h.got){ heart(x + 12, g - 82 + Math.sin(t*3 + h.i)*3, 3, '#e0708f'); }
