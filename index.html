@@ -96,7 +96,7 @@
   #rot{ display:none; font-size:11px; letter-spacing:.08em; color:var(--dim); text-align:center; }
   #tl .lab.next{ color:#5a5448; } #tl .lab.next.on{ color:var(--accent); }
   #ov td .pl2{ display:none; }
-  #ov tr.major td{ background:rgba(255,255,255,.045); } #ov tr.major td.tt{ font-weight:700; }
+  #ov tr.major td{ background:rgba(255,255,255,.045); padding-top:6px; padding-bottom:6px; } #ov tr.major td.tt{ font-weight:700; }
   #ov tr.major.edu td.ic{ box-shadow:inset 3px 0 0 var(--edu); } #ov tr.major.work td.ic{ box-shadow:inset 3px 0 0 var(--work); }
   #tl .lab.first{ transform:none; } #tl .lab.next{ transform:translateX(-100%); }
   @media (max-width:560px){
@@ -155,7 +155,7 @@
     <button id="tC" aria-label="achievements">&#9733;</button>
   </div>
   <div id="rot">Turn your phone sideways for a bigger view</div>
-  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>A</b> achievements &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
+  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> achievements &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
 </div>
 <script>
 "use strict";
@@ -623,7 +623,7 @@ function textC2(s, cx, y, col, sp=1){ text2(s, Math.round(cx - tw2(s,sp)/2), y, 
 const GROUND = 266;            // y of the ground surface
 const SPD   = 240;             // walk speed px/s
 const FLYSPD= 830;             // plane speed px/s
-const FLYSPD_MCK = 460;        // slower over the McKinsey client countries, so the flags can be seen
+const FLYSPD_MCK = 600;        // slower over the McKinsey client countries, so the flags can be seen
 const FLY_Y = 150;              // feet y while flying (plane deck)
 const GRAV  = 1216;
 const JUMPV = -386;            // apex ~61 units = 98 px
@@ -639,7 +639,7 @@ const LEVEL = [
   { id:'f_bk',  kind:'flight', len:620,  route:'RDU > FRA', sub:'BACK TO KARLSRUHE' },
   { id:'ka2',   kind:'ground', len:1950, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
   { id:'zh',    kind:'ground', len:1850, theme:'zurich',    name:'ZURICH',         years:'2019-2026', sub:'', map:'zh' },
-  { id:'f_mck', kind:'flight', len:2900, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
+  { id:'f_mck', kind:'flight', len:2200, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
   { id:'ox',    kind:'ground', len:1850, theme:'oxford',    name:'OXFORD',         years:'2021-2026', sub:'', mck:true, map:'ox' },
   { id:'muc',   kind:'ground', len:1400, theme:'munich',    name:'MUNICH',         years:'2026',      sub:'WATERLAND PRIVATE EQUITY', map:'muc' },
   { id:'end',   kind:'ground', len:560,  theme:'munich',    name:'',               years:'',          sub:'', map:'muc' }
@@ -672,9 +672,9 @@ const PLACES = {
 const BOXES = [
   { virtual:true, seg:'ober', off:130, t:'life', k:'station', y:100, year:'1993', tag:'BORN', role:'Born', desc:'', org:'', loc:'Oberschefflenz', icon:'baby' },
 
-  { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule Oberschefflenz', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
-  { seg:'oster', off:410,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO Osterburken', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
-  { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO Osterburken', loc:'Osterburken', icon:'scroll' },
+  { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
+  { seg:'oster', off:410,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
+  { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO', loc:'Osterburken', icon:'scroll' },
   { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
   { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
@@ -687,33 +687,37 @@ const BOXES = [
   { seg:'ka2',   off:1220, t:'work', k:'station', y:94,  year:'2016-2017', tag:'WORKING STUDENT',  role:'Working student',  desc:'Cost analysis tool', org:'Mercedes-Benz', loc:'Sindelfingen', icon:'spanner' },
   { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Intro to data science', org:'DHBW', loc:'Karlsruhe', icon:'pointer' },
   { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart' },
-  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH Zurich', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
-  { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH Zurich', loc:'Zurich', icon:'star' },
+  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
+  { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH', loc:'Zurich', icon:'star' },
   { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      major:true, tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
-  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2021', major:true, tag:'MCKINSEY',         role:'Principal Data Scientist', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
-  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'Oxford', icon:'book', fx:'mck_off' },
-  { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann, Shirley', loc:'Oxford', icon:'medal' },
+  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', major:true, tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
+  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'UK', icon:'book', fx:'mck_off' },
+  { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann + Shirley', loc:'Oxford, UK', icon:'medal' },
   { seg:'ox',    off:840 , t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
-  { seg:'ox',    off:1040, t:'work', k:'station', y:96,  year:'2023-2026', major:true, tag:'BACK AT QUANTUMBLACK', role:'Engagement Manager Data Science', desc:'DPhil part-time', org:'QuantumBlack, McKinsey', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on' },
   { seg:'ox',    off:1240, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'Karlsruhe', icon:'trophy', wear:'trophy' },
-  { seg:'ox',    off:1560, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'Oxford', icon:'gown', wear:'gown' },
+  { seg:'ox',    off:1560, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'UK', icon:'gown', wear:'gown' },
   { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     major:true, tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' }
 ];
 BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.off); b.y = Math.round(GROUND - (166 - b.y)*UK); });
 
 /* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
 const HELPS = [
-  { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'Education', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
-  { seg:'germ',  off:960,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of local group', desc:'', org:'Political party group', loc:'Schefflenz', prop:'lectern' },
-  { seg:'ka1',   off:880,  year:'2013-2018', tag:'CLUB TREASURER',   role:'Treasurer', desc:'Soccer club', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
-  { seg:'ox',    off:450,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', prop:'megaphone' },
+  { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
+  { seg:'germ',  off:960,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
+  { seg:'ka1',   off:880,  year:'2013-2018', tag:'CLUB TREASURER',   role:'Treasurer soccer club', desc:'', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
+  { seg:'ox',    off:450,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'UK', prop:'megaphone' },
   { seg:'ox',    off:1400, year:'2025-',     tag:'DEPUTY CHAIRMAN',  role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'work'; h.k = 'volunteer'; });
+/* Story moments without a box: the return to QuantumBlack during the DPhil (not a separate overview row) */
+const EVENTS = [
+  { seg:'ox', off:1040, fx:'mck_on', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
+];
+EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
 const FLYSTARS = [];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
-const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 420 + k*350, got:false }));
+const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 380 + k*270, got:false }));
 const PARTNER_X = SEGID.muc.x0 + Math.round(1000*UK);
 
 const BOXSTYLE = {
@@ -748,6 +752,7 @@ function reset(){
   BOXES.forEach(b=>{ b.hit=false; b.bump=0; b.open=0; });
   MCK_FLAGS.forEach(f=>f.got=false);
   HELPS.forEach(h=>h.got=false);
+  EVENTS.forEach(e=>e.done=false);
 }
 reset();
 const SH = () => SPRH[S.kid];
@@ -892,7 +897,12 @@ function step(dt){
     h.got = true; S.stars++; S.btnGlow = 1; S.helpPop = { h, t:0 }; sfx('wear');
     popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
   }
-  if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > 2.4) S.helpPop = null; }
+  for (const e of EVENTS){
+    if (e.done || S.x < e.x) continue;
+    e.done = true; if (e.fx==='mck_on') S.mck = true;
+    S.helpPop = { h:{ lines:e.lines }, t:0, col:e.col, dur:3.2 }; sfx('wear');
+  }
+  if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > (S.helpPop.dur || 2.4)) S.helpPop = null; }
   if (!S.partner && S.x > PARTNER_X){ S.partner = { x:S.x+140, t:0 }; }
 
   tickTimers(dt);
@@ -1499,14 +1509,17 @@ function render(){
     drawGroundScene(seg, cam, t);
     if (S.flyBlend > 0){ ctx.globalAlpha = S.flyBlend*0.8; scaled(0, GROUND, UK, ()=>clouds(cam/UK, .6, '#ffffff', 96, 170, 7)); ctx.globalAlpha = 1; }
   }
+  /* soft veil over the scenery, so boxes, items and the figures stand out */
+  ctx.globalAlpha = 0.26; r(0, 0, W, GROUND, theme.sky[1]); ctx.globalAlpha = 0.18; r(0, GROUND, W, H-GROUND, '#e9e4da'); ctx.globalAlpha = 1;
 
   for (const fl of MCK_FLAGS){
-    if (fl.got) continue;
     const sx = fl.x - cam; if (sx<-30||sx>W+30) continue;
+    ctx.globalAlpha = fl.got ? 0.4 : 1;
     const y = (fl.y||FLY_Y-44) + Math.sin(t*4+fl.k)*3;
     r(sx-2, y-10, 2, 30, '#d6dde5');                       // little flagpole
     ctx.globalAlpha = .35; r(sx-1, y-9, 30, 20, '#000'); ctx.globalAlpha = 1;
     drawIcon(ICON['flag_'+fl.c], sx, y-10, 2.4);
+    ctx.globalAlpha = 1;
   }
   for (const b of BOXES){ if (b.virtual) continue; const sx = b.x - cam; if (sx < -40 || sx > W+40) continue; drawBox(b, sx); }
 
@@ -1546,10 +1559,11 @@ function render(){
     drawIcon(ICON[f.icon], sx+18-half, f.y+18-half, sc);
   }
   if (S.helpPop){
-    const hp = S.helpPop, a = clamp(Math.min(hp.t/0.2, (2.4-hp.t)/0.4), 0, 1), nm = hp.h.tag, yr = hp.h.year;
-    const w = Math.max(tw2(nm), tw2(yr)) + 20, hh = 44, nx = clamp(S.x - cam + 44, 6, W-w-6), ny = S.y - SH() - 4 - Math.min(hp.t, 0.3)*20;
-    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, '#e0708f');
-    text2(nm, nx+10, ny+6, '#f4f2ee', 1); text2(yr, nx+10, ny+26, '#e0708f', 1); ctx.globalAlpha = 1;
+    const hp = S.helpPop, dur = hp.dur || 2.4, col = hp.col || '#e0708f', a = clamp(Math.min(hp.t/0.2, (dur-hp.t)/0.4), 0, 1);
+    const lines = hp.h.lines || [hp.h.tag, hp.h.year];
+    const w = Math.max(...lines.map(l=>tw2(l))) + 20, hh = 8 + lines.length*20, nx = clamp(S.x - cam + 44, 6, W-w-6), ny = S.y - SH() - 4 - (lines.length-2)*20 - Math.min(hp.t, 0.3)*20;
+    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, col);
+    lines.forEach((l,i)=> text2(l, nx+10, ny+6+i*20, i===lines.length-1 ? col : '#f4f2ee', 1)); ctx.globalAlpha = 1;
   }
   for (const p of S.sparks){ ctx.globalAlpha = Math.min(1, p.life*2); r(p.x-cam, p.y, 3, 3, p.col); ctx.globalAlpha = 1; }
   for (const p of S.pops){
@@ -1596,7 +1610,7 @@ function drawHelp(h, sx, t){
 }
 
 /* outlook at the end: a signpost with open directions, and a short message */
-const SIGNS = [ { t:'PRIVATE ?', d:-1 }, { t:'EDUCATION ?', d:1 }, { t:'LOCATION ?', d:-1 }, { t:'WORK ?', d:1 } ];
+const SIGNS = [ { t:'PRIVATE ?', d:1 }, { t:'LOCATION ?', d:1 }, { t:'WORK ?', d:1 }, { t:'EDUCATION ?', d:1 } ];
 function signpost(px, a){
   px = Math.round(px); const top = GROUND - 128;
   shadow(px, GROUND, 18);
@@ -1647,6 +1661,7 @@ function drawGroundScene(seg, cam, t){
   const i = LEVEL.indexOf(seg);
   for (const sg of [LEVEL[i-1], seg, LEVEL[i+1]]){
     if (!sg || sg.kind!=='ground') continue;
+    if (sg === LEVEL[i+1] && sg.theme !== seg.theme) continue;   // no buildings floating over the wrong scenery
     for (const [off, fn] of (PROPS[sg.id]||[])){ const sx = sg.x0 + Math.round(off*UK) - cam; if (sx < -360 || sx > W+100) continue; scaled(sx, GROUND, UK, ()=>fn(sx, GROUND, t)); }
   }
   groundBand(seg, cam, theme);
@@ -1727,10 +1742,9 @@ function rowsFor(list){
     const ic = `<img src="${iconDataURL(b.icon || 'badge')}" width="14" height="14" alt="">`;
     const fl = b.flags ? flagRow() : '';
     const role = esc(b.role) + (b.desc ? `<span class="ds">, ${esc(b.desc)}</span>` : '');
-    /* location always in the grey font; when the organisation already names it, grey that part instead of repeating it */
-    const org = b.org || '', inOrg = b.loc && org.includes(b.loc);
-    const orgHtml = inOrg ? esc(org).replace(esc(b.loc), `<span class="lo">${esc(b.loc)}</span>`) : esc(org);
-    const place = [org && `<span class="og">${orgHtml}</span>`, b.loc && !inOrg && `<span class="lo">${esc(b.loc)}</span>`].filter(Boolean).join(', ');
+    /* organisation in the light font, location in grey after a comma; without an organisation the location takes the light font */
+    const place = b.org ? `<span class="og">${esc(b.org)}</span>` + (b.loc ? `, <span class="lo">${esc(b.loc)}</span>` : '')
+                        : `<span class="og">${esc(b.loc)}</span>`;
     return `<tr class="${b.major ? 'major ' + b.t : ''}"><td class="ic">${ic}</td><td class="yr">${esc(b.year)}</td><td class="tt">${role}<span class="pl2">${place}${fl}</span></td><td class="pl">${place}${fl}</td></tr>`;
   }).join('');
 }
