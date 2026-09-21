@@ -194,8 +194,25 @@ const PAL = {
   Y:'#f2c14e', y:'#c99423',            // gold / dark gold
   R:'#c8493f', G:'#4f8f5a', B:'#3d6fb4', b:'#8a5a33', a:'#5c3a1f',
   g:'#9aa2ae', h:'#c6ccd2', w:'#ffffff', q:'#d8869f', u:'#6f4a8e', c:'#7fc0dd',
-  L:'#a9d6e5', l:'#e0f0f6', z:'#5a8a3c', v:'#e07b39', x:'#8b1e2d', i:'#009246', j:'#ce2b37'
+  L:'#a9d6e5', l:'#e0f0f6', z:'#5a8a3c', v:'#e07b39', x:'#8b1e2d', i:'#009246', j:'#ce2b37',
+  e:'#2f3d63', f:'#1f2945',            // Luftwaffe beret
+  Q:'#3a4d6e', Z:'#2a3852',            // quarter zip / shade
+  A:'#c9b48c', X:'#a8936c'             // chinos / shade
 };
+/* Flecktarn camouflage for the uniform: a fixed pattern per pixel */
+const CAMO = ['#6b7a4c', '#6b7a4c', '#4a5634', '#7e6443', '#2c2f24', '#8d9863'];
+const camo = (x, y) => CAMO[Math.floor(hash(Math.floor(x/2)*31 + Math.floor(y/2)*97 + 5) * 6) % 6];
+/* draw a sprite, recolouring some letters through fn(x, y, letter) */
+function drawRemap(grid, ox, oy, letters, fn){
+  for (let y=0; y<grid.length; y++){
+    const row = grid[y];
+    for (let x=0; x<row.length; x++){
+      const ch = row[x];
+      const c = letters.includes(ch) ? fn(x, y, ch) : PAL[ch];
+      if (c) r(ox + x, oy + y, 1, 1, c);
+    }
+  }
+}
 
 function draw(grid, ox, oy, flip){
   for (let y=0; y<grid.length; y++){
@@ -379,6 +396,15 @@ const WEAR = {
       'NGGGG.................GGGGN.',
       '.NGG...................GGN..',
       '..NN...................NN...'
+    ] },
+  beret: { dx:3, dy:-3, g:[
+      '.......NNNNNNNNNNNN.......',
+      '....NNNeeeeeeeeeeeeNNN....',
+      '..NNeeeeeeeeeeeeeeeeeeNN..',
+      '.NeeeeeeeeeeeeeeeeeeeeeeN.',
+      'NeYYeeeeeeeeeeeeeeeeeeeefN',
+      'NeYYeeeeeeeeeeeeeeeeeeefN.',
+      '.NNNNNNNNNNNNNNNNNNNNNNN..'
     ] },
   airforce: { dx:4, dy:-3, g:[
       '........NNNNNNNN........',
@@ -633,15 +659,15 @@ const LEVEL = [
   { id:'ober',  kind:'ground', len:1500, theme:'village',   name:'OBERSCHEFFLENZ', years:'1993-2004', sub:'BORN AND RAISED IN THE ODENWALD', map:'ober' },
   { id:'oster', kind:'ground', len:1000, theme:'town',      name:'OSTERBURKEN',    years:'2004-2012', sub:'SECONDARY SCHOOL', map:'ober' },
   { id:'germ',  kind:'ground', len:1150,  theme:'airbase',   name:'GERMERSHEIM',    years:'2012-2013', sub:'GERMAN AIRFORCE', map:'germ' },
-  { id:'ka1',   kind:'ground', len:1000, theme:'karlsruhe', name:'KARLSRUHE',      years:'2013-2019', sub:'KIT, INDUSTRIAL ENGINEERING', map:'ka' },
+  { id:'ka1',   kind:'ground', len:1000, theme:'karlsruhe', name:'KARLSRUHE',      years:'2013-2015', sub:'KIT, INDUSTRIAL ENGINEERING', map:'ka' },
   { id:'f_ral', kind:'flight', len:820,  route:'FRA > RDU', sub:'EXCHANGE SEMESTER' },
-  { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
+  { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015-2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
   { id:'f_bk',  kind:'flight', len:620,  route:'RDU > FRA', sub:'BACK TO KARLSRUHE' },
   { id:'ka2',   kind:'ground', len:1950, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
   { id:'zh',    kind:'ground', len:1850, theme:'zurich',    name:'ZURICH',         years:'2019-2026', sub:'', map:'zh' },
   { id:'f_mck', kind:'flight', len:2200, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
   { id:'ox',    kind:'ground', len:1850, theme:'oxford',    name:'OXFORD',         years:'2021-2026', sub:'', mck:true, map:'ox' },
-  { id:'muc',   kind:'ground', len:1400, theme:'munich',    name:'MUNICH',         years:'2026',      sub:'WATERLAND PRIVATE EQUITY', map:'muc' },
+  { id:'muc',   kind:'ground', len:1400, theme:'munich',    name:'MUNICH',         years:'2026-',      sub:'WATERLAND PRIVATE EQUITY', map:'muc' },
   { id:'end',   kind:'ground', len:560,  theme:'munich',    name:'',               years:'',          sub:'', map:'muc' }
 ];
 let acc = 0;
@@ -675,8 +701,8 @@ const BOXES = [
   { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
   { seg:'oster', off:410,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
   { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO', loc:'Osterburken', icon:'scroll' },
-  { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
-  { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
+  { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'uniform' },
+  { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:['student','hardhat'] },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
   { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
   { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Exchange semester', desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
@@ -691,28 +717,28 @@ const BOXES = [
   { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH', loc:'Zurich', icon:'star' },
   { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      major:true, tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
   { seg:'ox',    off:840 , t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
-  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', major:true, tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
-  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'UK', icon:'book', fx:'mck_off' },
-  { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann + Shirley', loc:'Oxford, UK', icon:'medal' },
+  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', major:true, tag:'ENGAGEMENT MANAGER / PRINCIPAL',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
+  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'UK', icon:'book', wear:'student', fx:'mck_off' },
+  { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIP',     role:'Scholarship',      desc:'', org:'Friedrich Naumann + Shirley', loc:'Oxford, UK', icon:'medal' },
   { seg:'ox',    off:1240, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'Karlsruhe', icon:'trophy', wear:'trophy' },
   { seg:'ox',    off:1560, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'UK', icon:'gown', wear:'gown' },
-  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     major:true, tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' }
+  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     major:true, tag:'AI & DATA LEAD / PORTFOLIO MANAGEMENT',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:['quarterzip','briefcase'], fx:'mck_off' }
 ];
 BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.off); b.y = Math.round(GROUND - (166 - b.y)*UK); });
 
 /* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
 const HELPS = [
   { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
-  { seg:'germ',  off:960,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
-  { seg:'ka1',   off:880,  year:'2013-2018', tag:'CLUB TREASURER',   role:'Treasurer soccer club', desc:'', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
-  { seg:'ox',    off:450,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'UK', prop:'megaphone' },
-  { seg:'ox',    off:1400, year:'2025-',     tag:'DEPUTY CHAIRMAN',  role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
+  { seg:'germ',  off:960,  year:'2012-2018', tag:'PARTY GROUP HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
+  { seg:'ka1',   off:880,  year:'2013-2018', tag:'SOCCER CLUB TREASURER', role:'Treasurer soccer club', desc:'', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
+  { seg:'ox',    off:450,  year:'2021-2024', tag:'PHD STUDENT REP', role:'PhD student representative', desc:'', org:'University of Oxford', loc:'UK', prop:'megaphone' },
+  { seg:'ox',    off:1400, year:'2025-',     tag:'DEPUTY DISTRICT CHAIRMAN', role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'work'; h.k = 'volunteer'; });
 /* Story moments without a box: the return to QuantumBlack during the DPhil (not a separate overview row) */
 const EVENTS = [
-  { seg:'ox', off:1040, fx:'mck_on', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
+  { seg:'ox', off:1040, fx:'mck_on', wear:'suit', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
 ];
 EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
 const FLYSTARS = [];   // no longer used, kept so older code paths stay valid
@@ -736,7 +762,7 @@ function reset(){
   S = {
     t:0, x:208, y:GROUND, vy:0, onGround:true, facing:1,
     kid:2, visible:false,
-    worn:{ hat:null, body:null, back:null, hand:null, hold:null },
+    worn:{ hat:null, body:null, legs:null, back:null, hand:null, hold:null },
     stars:0, bar:[],
     caption:null, capX:0, capT:0,
     plate:null, plateT:0,
@@ -757,12 +783,17 @@ function reset(){
 reset();
 const SH = () => SPRH[S.kid];
 
+/* outfits: school backpacks, Bundeswehr uniform, student again, suit at McKinsey, gown, Waterland smart casual */
 function wear(name){
+  if (Array.isArray(name)){ name.forEach(wear); return; }
   const w = S.worn;
   if (name==='satchel' || name==='backpack') w.back = name;
-  else if (name==='airforce' || name==='hardhat' || name==='ethcap') w.hat = name;
-  else if (name==='suit') w.body = name;
-  else if (name==='gown'){ w.body='gown'; w.hat='mortar'; w.back=null; }
+  else if (name==='uniform'){ w.body='uniform'; w.legs='camo'; w.hat='beret'; w.back=null; }
+  else if (name==='student'){ w.body=null; w.legs=null; w.hat=null; w.back='backpack'; }
+  else if (name==='hardhat' || name==='ethcap') w.hat = name;
+  else if (name==='suit'){ w.body='suit'; w.legs=null; w.hat=null; w.back=null; }
+  else if (name==='quarterzip'){ w.body='quarterzip'; w.legs='chinos'; w.hat=null; w.back=null; }
+  else if (name==='gown'){ w.body='gown'; w.legs=null; w.hat='mortar'; w.back=null; }
   else if (name==='trophy') w.hold = name;
   else if (name==='briefcase') w.hand = name;
 }
@@ -895,12 +926,12 @@ function step(dt){
   /* volunteering: collected by walking past */
   for (const h of HELPS){
     if (h.got || S.x < h.x) continue;
-    h.got = true; S.stars++; S.btnGlow = 1; S.helpPop = { h, t:0 }; sfx('wear');
+    h.got = true; S.stars++; S.btnGlow = 1; S.helpPop = { h:{ lines:[h.tag, h.org || h.loc || '', h.year].filter(Boolean) }, t:0 }; sfx('wear');
     popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
   }
   for (const e of EVENTS){
     if (e.done || S.x < e.x) continue;
-    e.done = true; if (e.fx==='mck_on') S.mck = true;
+    e.done = true; if (e.fx==='mck_on') S.mck = true; if (e.wear) wear(e.wear);
     S.helpPop = { h:{ lines:e.lines }, t:0, col:e.col, dur:3.2 }; sfx('wear');
   }
   if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > (S.helpPop.dur || 2.4)) S.helpPop = null; }
@@ -951,7 +982,7 @@ function onHit(b){
   popSparks(b.x+16, b.y, BOXSTYLE[b.t].a, 14, 140);
   sfx('hit');
   S.stars++;
-  const item = { icon:b.icon, name:b.tag, year:b.year, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3,
+  const item = { icon:b.icon, name:b.tag, org:b.org || b.loc || '', year:b.year, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3,
     target: () => b.wear ? [S.x-18, S.y - SH() + 14] : [W - 40 + camX(), 6],
     arrive: () => {
       S.btnGlow = 1;
@@ -1474,8 +1505,19 @@ function drawFelix(px, feetY){
   if (S.facing < 0){ ctx.scale(-1, 1); }
   ctx.translate(-16, 0);
   const w = S.worn;
-  draw(legs, 0, 22 + torso.length);
-  if (w.body && WEAR[w.body] && S.kid===0) draw(WEAR[w.body].g, WEAR[w.body].dx, WEAR[w.body].dy); else draw(torso, 0, 22);
+  if (w.legs==='camo') drawRemap(legs, 0, 22 + torso.length, 'Pp', (x,y,ch) => ch==='p' ? '#3c4630' : camo(x, y + 40));
+  else if (w.legs==='chinos') drawRemap(legs, 0, 22 + torso.length, 'Pp', (x,y,ch) => ch==='p' ? PAL.X : PAL.A);
+  else draw(legs, 0, 22 + torso.length);
+  if (w.body==='uniform' && S.kid===0){
+    drawRemap(torso, 0, 22, 'TtU', (x,y,ch) => ch==='t' ? '#3c4630' : camo(x, y));
+    r(12, 22, 8, 2, '#4d5a38'); r(15, 23, 2, 3, '#3c4630');                    // collar
+    r(24, 26, 3, 1, '#15120f'); r(24, 27, 3, 1, '#c8493f'); r(24, 28, 3, 1, '#f2c14e');   // flag on the sleeve
+  } else if (w.body==='quarterzip' && S.kid===0){
+    drawRemap(torso, 0, 22, 'TtU', (x,y,ch) => ch==='t' ? PAL.Z : ch==='U' ? (y < 6 ? '#c6ccd2' : PAL.Q) : PAL.Q);
+    r(11, 22, 4, 2, '#f4f2ee'); r(17, 22, 4, 2, '#f4f2ee'); r(13, 24, 2, 1, '#f4f2ee'); r(17, 24, 2, 1, '#f4f2ee');   // shirt collar
+    r(10, 22, 12, 1, PAL.Q); r(10, 22, 1, 3, PAL.Z); r(21, 22, 1, 3, PAL.Z);   // zip collar of the jumper
+  } else if (w.body && WEAR[w.body] && S.kid===0) draw(WEAR[w.body].g, WEAR[w.body].dx, WEAR[w.body].dy);
+  else draw(torso, 0, 22);
   if (w.back && WEAR[w.back]) draw(WEAR[w.back].g, WEAR[w.back].dx, WEAR[w.back].dy);
   draw(HEAD, 0, 0);
   if (w.hat && WEAR[w.hat]) draw(WEAR[w.hat].g, WEAR[w.hat].dx, WEAR[w.hat].dy);
@@ -1511,7 +1553,7 @@ function render(){
     if (S.flyBlend > 0){ ctx.globalAlpha = S.flyBlend*0.8; scaled(0, GROUND, UK, ()=>clouds(cam/UK, .6, '#ffffff', 96, 170, 7)); ctx.globalAlpha = 1; }
   }
   /* soft veil over the scenery, so boxes, items and the figures stand out */
-  ctx.globalAlpha = 0.26; r(0, 0, W, GROUND, theme.sky[1]); ctx.globalAlpha = 0.18; r(0, GROUND, W, H-GROUND, '#e9e4da'); ctx.globalAlpha = 1;
+  ctx.globalAlpha = 0.36; r(0, 0, W, GROUND, theme.sky[1]); ctx.globalAlpha = 0.26; r(0, GROUND, W, H-GROUND, '#e9e4da'); ctx.globalAlpha = 1;
 
   for (const fl of MCK_FLAGS){
     const sx = fl.x - cam; if (sx<-30||sx>W+30) continue;
@@ -1554,10 +1596,11 @@ function render(){
     const sx = f.x - cam, sc = f.sc || 1, half = 6*sc;
     if (f.phase < 2){
       ctx.globalAlpha = .45; disc(sx+18, f.y+18, 28, '#ffffff'); ctx.globalAlpha = 1;
-      const nm = f.name || '', yr = f.year || '', w = Math.max(tw2(nm), tw2(yr))+20, hh = yr ? 44 : 24, nx = clamp(sx+18 - w/2, 6, W-w-6), ny = f.y - 16 - hh;
+      /* bubble: what, where, when */
+      const lines = [[f.name || '', '#f4f2ee'], [f.org || '', '#b9b2a4'], [f.year || '', '#f2c14e']].filter(l => l[0]);
+      const w = Math.max(...lines.map(l=>tw2(l[0])))+20, hh = 8 + lines.length*20, nx = clamp(sx+18 - w/2, 6, W-w-6), ny = Math.max(4, f.y - 16 - hh);
       panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, 'rgba(255,255,255,.08)');
-      text2(nm, nx+10, ny+6, '#f4f2ee', 1);
-      if (yr) text2(yr, nx+10, ny+26, '#f2c14e', 1);
+      lines.forEach((l,i)=> text2(l[0], nx+10, ny+6+i*20, l[1], 1));
     }
     drawIcon(ICON[f.icon], sx+18-half, f.y+18-half, sc);
   }
@@ -1566,7 +1609,7 @@ function render(){
     const lines = hp.h.lines || [hp.h.tag, hp.h.year];
     const w = Math.max(...lines.map(l=>tw2(l))) + 20, hh = 8 + lines.length*20, nx = clamp(S.x - cam + 44, 6, W-w-6), ny = S.y - SH() - 4 - (lines.length-2)*20 - Math.min(hp.t, 0.3)*20;
     ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, col);
-    lines.forEach((l,i)=> text2(l, nx+10, ny+6+i*20, i===lines.length-1 ? col : '#f4f2ee', 1)); ctx.globalAlpha = 1;
+    lines.forEach((l,i)=> text2(l, nx+10, ny+6+i*20, i===lines.length-1 ? col : i===0 ? '#f4f2ee' : '#b9b2a4', 1)); ctx.globalAlpha = 1;
   }
   for (const p of S.sparks){ ctx.globalAlpha = Math.min(1, p.life*2); r(p.x-cam, p.y, 3, 3, p.col); ctx.globalAlpha = 1; }
   for (const p of S.pops){
