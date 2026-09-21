@@ -623,6 +623,7 @@ function textC2(s, cx, y, col, sp=1){ text2(s, Math.round(cx - tw2(s,sp)/2), y, 
 const GROUND = 266;            // y of the ground surface
 const SPD   = 240;             // walk speed px/s
 const FLYSPD= 830;             // plane speed px/s
+const FLYSPD_MCK = 460;        // slower over the McKinsey client countries, so the flags can be seen
 const FLY_Y = 150;              // feet y while flying (plane deck)
 const GRAV  = 1216;
 const JUMPV = -386;            // apex ~61 units = 98 px
@@ -631,7 +632,7 @@ const JUMPV = -386;            // apex ~61 units = 98 px
 const LEVEL = [
   { id:'ober',  kind:'ground', len:1500, theme:'village',   name:'OBERSCHEFFLENZ', years:'1993-2004', sub:'BORN AND RAISED IN THE ODENWALD', map:'ober' },
   { id:'oster', kind:'ground', len:1000, theme:'town',      name:'OSTERBURKEN',    years:'2004-2012', sub:'SECONDARY SCHOOL', map:'ober' },
-  { id:'germ',  kind:'ground', len:950,  theme:'airbase',   name:'GERMERSHEIM',    years:'2012-2013', sub:'GERMAN AIRFORCE', map:'germ' },
+  { id:'germ',  kind:'ground', len:1150,  theme:'airbase',   name:'GERMERSHEIM',    years:'2012-2013', sub:'GERMAN AIRFORCE', map:'germ' },
   { id:'ka1',   kind:'ground', len:1000, theme:'karlsruhe', name:'KARLSRUHE',      years:'2013-2019', sub:'KIT, INDUSTRIAL ENGINEERING', map:'ka' },
   { id:'f_ral', kind:'flight', len:820,  route:'FRA > RDU', sub:'EXCHANGE SEMESTER' },
   { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
@@ -672,8 +673,8 @@ const BOXES = [
   { virtual:true, seg:'ober', off:130, t:'life', k:'station', y:100, year:'1993', tag:'BORN', role:'Born', desc:'', org:'', loc:'Oberschefflenz', icon:'baby' },
 
   { seg:'ober',  off:900,  t:'edu',  k:'station', y:98,  year:'2000-2004', tag:'PRIMARY SCHOOL',   role:'Primary school',   desc:'', org:'Grundschule Oberschefflenz', loc:'Oberschefflenz', icon:'satchel', wear:'satchel', fx:'grow1' },
-  { seg:'oster', off:330,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO Osterburken', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
-  { seg:'oster', off:760,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO Osterburken', loc:'Osterburken', icon:'scroll' },
+  { seg:'oster', off:410,  t:'edu',  k:'station', y:96,  year:'2004-2012', tag:'SECONDARY SCHOOL', role:'Secondary school', desc:'', org:'GTO Osterburken', loc:'Osterburken', icon:'backpack', wear:'backpack', fx:'grow2' },
+  { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO Osterburken', loc:'Osterburken', icon:'scroll' },
   { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
   { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
@@ -689,23 +690,24 @@ const BOXES = [
   { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH Zurich', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
   { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Thesis',           desc:'Grade 6.0', org:'ETH Zurich', loc:'Zurich', icon:'star' },
   { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      major:true, tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
-  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', major:true, tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
-  { seg:'zh',    off:1300, t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
-  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'Oxford', icon:'book' },
-  { seg:'ox',    off:760,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann, Shirley', loc:'Oxford', icon:'medal' },
-  { seg:'ox',    off:1000, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'Karlsruhe', icon:'trophy', wear:'trophy' },
-  { seg:'ox',    off:1300, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'Oxford', icon:'gown', wear:'gown' },
+  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2021', major:true, tag:'MCKINSEY',         role:'Principal Data Scientist', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
+  { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'Oxford', icon:'book', fx:'mck_off' },
+  { seg:'ox',    off:640,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann, Shirley', loc:'Oxford', icon:'medal' },
+  { seg:'ox',    off:840 , t:'work', k:'station', y:100, year:'2022-2022', tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
+  { seg:'ox',    off:1040, t:'work', k:'station', y:96,  year:'2023-2026', major:true, tag:'BACK AT QUANTUMBLACK', role:'Engagement Manager Data Science', desc:'DPhil part-time', org:'QuantumBlack, McKinsey', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on' },
+  { seg:'ox',    off:1240, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'Karlsruhe', icon:'trophy', wear:'trophy' },
+  { seg:'ox',    off:1560, t:'edu',  k:'degree',  y:94,  year:'2026',      major:true, tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'Oxford', icon:'gown', wear:'gown' },
   { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     major:true, tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' }
 ];
 BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.off); b.y = Math.round(GROUND - (166 - b.y)*UK); });
 
 /* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
 const HELPS = [
-  { seg:'oster', off:620,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'Education', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
-  { seg:'germ',  off:760,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of local group', desc:'', org:'Political party group', loc:'Schefflenz', prop:'lectern' },
+  { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'Education', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
+  { seg:'germ',  off:960,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of local group', desc:'', org:'Political party group', loc:'Schefflenz', prop:'lectern' },
   { seg:'ka1',   off:880,  year:'2013-2018', tag:'CLUB TREASURER',   role:'Treasurer', desc:'Soccer club', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
-  { seg:'ox',    off:520,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', prop:'megaphone' },
-  { seg:'ox',    off:1150, year:'2025-',     tag:'DEPUTY CHAIRMAN',  role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
+  { seg:'ox',    off:450,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', prop:'megaphone' },
+  { seg:'ox',    off:1400, year:'2025-',     tag:'DEPUTY CHAIRMAN',  role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'work'; h.k = 'volunteer'; });
@@ -816,7 +818,7 @@ function step(dt){
 
   /* horizontal */
   const fast = (keys.ShiftLeft || keys.ShiftRight) ? 1.9 : 1;
-  const speed = wantFly ? FLYSPD : SPD*fast;
+  const speed = wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) : SPD*fast;
   S.fast = fast;
   if (S.ended){
     /* the end: both stroll to the right, into the bright light */
@@ -1097,7 +1099,6 @@ function schoolGTO(x, y){
   for (let yy=10; yy<44; yy+=14) for (let xx=8; xx<112; xx+=16){ r(x+xx, y-52+yy, 10, 9, '#5a7a92'); r(x+xx+4, y-52+yy, 1, 9, '#d9c9a8'); }
   r(x+52, y-18, 16, 18, '#4a3a2a'); r(x+56, y-14, 8, 10, '#8fb0c8');
   r(x+40, y-66, 40, 10, '#2b3552'); text('GTO', x+47, y-65, '#f4f2ee', 2);
-  r(x+120, y-40, 2, 40, '#888'); r(x+122, y-40, 14, 9, '#f2c14e'); r(x+122, y-31, 14, 9, '#c8493f');
 }
 function romanTower(x, y){
   r(x, y-64, 26, 64, '#b9ad94'); for (let yy=0; yy<64; yy+=6) for (let xx=((yy/6)|0)%2*4; xx<26; xx+=8) r(x+xx, y-64+yy, 3, 1, 'rgba(0,0,0,.12)');
@@ -1380,8 +1381,8 @@ const THEMES = {
 /* world-anchored props per segment; x is an offset inside the segment */
 const PROPS = {
   ober:  [[60,(x,y,t)=>halfTimbered(x,y,60,40)],[150,(x,y,t)=>barn(x,y)],[300,(x,y,t)=>cow(x,y)],[330,(x,y,t)=>cow(x,y)],[560,(x,y,t)=>church(x,y)],[700,(x,y,t)=>halfTimbered(x,y,50,34,'#7a4a3a')],[1030,(x,y,t)=>pitch(x,y,t)],[1250,(x,y,t)=>tractor(x,y)],[1340,(x,y,t)=>halfTimbered(x,y,56,38)]],
-  oster: [[40,(x,y,t)=>romanTower(x,y)],[200,(x,y,t)=>schoolGTO(x,y)],[520,(x,y,t)=>townHall(x,y)],[600,(x,y,t)=>poster(x,y)],[820,(x,y,t)=>halfTimbered(x,y,60,40,'#6f4a3a')],[1000,(x,y,t)=>halfTimbered(x,y,44,32)]],
-  germ:  [[40,(x,y,t)=>hangar(x,y,150)],[230,(x,y,t)=>controlTower(x,y)],[320,(x,y,t)=>jetParked(x,y)],[560,(x,y,t)=>windsock(x,y,t)],[640,(x,y,t)=>hangar(x,y,130)],[820,(x,y,t)=>jetParked(x,y)]],
+  oster: [[40,(x,y,t)=>romanTower(x,y)],[200,(x,y,t)=>schoolGTO(x,y)],[660,(x,y,t)=>townHall(x,y)],[900,(x,y,t)=>halfTimbered(x,y,60,40,'#6f4a3a')],[1060,(x,y,t)=>halfTimbered(x,y,44,32)]],
+  germ:  [[40,(x,y,t)=>hangar(x,y,150)],[230,(x,y,t)=>controlTower(x,y)],[320,(x,y,t)=>jetParked(x,y)],[560,(x,y,t)=>windsock(x,y,t)],[600,(x,y,t)=>hangar(x,y,130)],[790,(x,y,t)=>jetParked(x,y)]],
   ka1:   [[40,(x,y,t)=>schloss(x,y)],[260,(x,y,t)=>tram(x,y,t)],[420,(x,y,t)=>pyramid(x,y)],[640,(x,y,t)=>kitSign(x,y)],[720,(x,y,t)=>brickHall(x,y,120,50)]],
   ral:   [[60,(x,y,t)=>brickHall(x,y)],[240,(x,y,t)=>belltower(x,y)],[330,(x,y,t)=>usFlag(x,y,t)],[520,(x,y,t)=>pickup(x,y)],[620,(x,y,t)=>brickHall(x,y,100,60)]],
   ka2:   [[40,(x,y,t)=>brickHall(x,y,120,50)],[240,(x,y,t)=>tram(x,y,t)],[500,(x,y,t)=>kitSign(x,y)],[580,(x,y,t)=>halfTimbered(x,y,60,44,'#6f4a3a')],[860,(x,y,t)=>schloss(x,y)],[1120,(x,y,t)=>tram(x,y,t)]],
