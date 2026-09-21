@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="Felix H. Krones, PhD. A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich.">
+<meta name="description" content="Felix H. Krones, PhD. A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with an open and bright outlook.">
 <meta name="author" content="Felix H. Krones">
 <link rel="canonical" href="https://felixkrones.de/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Crect width='12' height='12' fill='%2312100d'/%3E%3Cpath fill='%23f2c14e' d='M5 1h2v2h1v1h3v1h-1v1h-1v1h1v2h-1v-1h-2v-1h-2v1h-2v1h-1v-2h1v-1h-1v-1h-1v-1h3v-1h1z'/%3E%3C/svg%3E">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://felixkrones.de/">
 <meta property="og:title" content="Felix H. Krones, PhD">
-<meta property="og:description" content="A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich.">
+<meta property="og:description" content="A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich, with an open and bright outlook.">
 <meta property="og:image" content="https://felixkrones.de/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -37,7 +37,7 @@
   #tl .lab.on{ color:var(--accent); }
   #tl .mark{ position:absolute; top:9px; width:9px; height:13px; margin-left:-4px; background:var(--accent); clip-path:polygon(50% 100%, 0 40%, 0 0, 100% 0, 100% 40%); transition:left .1s linear; }
   /* overlay: achievements + map */
-  #ov{ position:absolute; inset:0; background:rgba(8,9,13,.96); color:var(--ink); display:none; flex-direction:column; overflow:hidden; border:1px solid var(--rule); }
+  #ov{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); width:min(1500px, calc(100vw - 32px)); height:auto; max-height:calc(100vh - 32px); z-index:50; box-shadow:0 30px 80px rgba(0,0,0,.7); background:rgba(8,9,13,.97); color:var(--ink); display:none; flex-direction:column; overflow:hidden; border:1px solid var(--rule); }
   #ov.open{ display:flex; }
   #ov header{ display:flex; align-items:center; gap:14px; padding:10px 16px 8px; border-bottom:1px solid var(--rule); flex-wrap:wrap; }
   #ov h2{ margin:0; font-size:13px; font-weight:600; letter-spacing:.16em; text-transform:uppercase; }
@@ -47,19 +47,28 @@
     background:transparent; border:1px solid var(--rule); padding:5px 10px; cursor:pointer; }
   #ov .tabs button.on{ color:var(--ink); border-color:var(--accent); }
   #ov .body{ flex:1; overflow:auto; padding:10px 16px 12px; }
-  #ov .grid{ display:flex; flex-direction:column; gap:14px; max-width:1100px; margin:0 auto; }
-  #ov table{ table-layout:fixed; }
-  #ov col.c-ic{ width:24px; } #ov col.c-yr{ width:92px; } #ov col.c-role{ width:26%; } #ov col.c-desc{ width:24%; } #ov col.c-org{ width:26%; }
+  #ov .cols{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:start; }
+  #ov .col{ display:flex; flex-direction:column; gap:12px; min-width:0; }
+  @media (max-width:900px){ #ov .cols{ grid-template-columns:1fr; gap:12px; } }
+  #ov td.ic{ width:18px; } #ov td.yr{ width:72px; } #ov td.tt{ white-space:nowrap; } #ov tr.gap td{ border:none; height:8px; padding:0; }
+  #ov td.tt{ color:var(--ink); } #ov td .ds{ color:#8b8578; } #ov td .og{ color:#b9b2a4; } #ov td .lo{ color:#8b8578; }
+  #ov td.ic img{ image-rendering:pixelated; display:block; } #ov .lk{ display:block; width:12px; height:12px; background:#1f1c17; }
   #ov thead td{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:#7a746a; padding:6px 6px 3px; border-bottom:1px solid #2a2620; }
-  #ov td{ white-space:normal; overflow-wrap:anywhere; line-height:1.35; }
-  #ov td.sub{ padding-top:10px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#b9b2a4; border-bottom:none; }
-  #ov .flags{ display:flex; flex-wrap:wrap; gap:3px; margin-top:3px; } #ov .flags img{ image-rendering:pixelated; width:15px; height:10px; object-fit:cover; object-position:top; }
-  @media (max-width:700px){ #ov col.c-desc{ width:0; } #ov td.ds{ display:none; } #ov col.c-yr{ width:70px; } }
-  #ov table{ width:100%; border-collapse:collapse; font-size:12px; }
-  #ov th{ text-align:left; font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:8px 6px 4px; color:#101318; }
+  #ov td{ white-space:normal; overflow-wrap:normal; line-height:1.3; } #ov td.yr{ white-space:nowrap; }
+  #ov td.sub{ padding-top:6px; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:#b9b2a4; border-bottom:none; }
+  #ov .flags{ display:flex; flex-wrap:wrap; gap:2px; margin-top:2px; align-items:center; } #ov .flags img{ image-rendering:pixelated; width:15px; height:10px; object-fit:cover; object-position:top; }
+  #ov table{ width:100%; border-collapse:collapse; font-size:11px; }
+  #ov .body{ padding-top:8px; } #ov td{ line-height:1.3; }
+  #ov th{ text-align:left; font-size:10px; letter-spacing:.14em; text-transform:uppercase; padding:5px 6px 3px; color:#101318; }
+  #ov th.next{ background:linear-gradient(90deg,#f2c14e,#f7d98a); }
+  #ov td.outtd{ white-space:normal; padding:6px 6px 2px; border-bottom:none; }
+  #ov .out p{ margin:0 0 6px; font-size:12px; line-height:1.45; color:var(--ink); }
+  #ov .out.locked p{ color:#4a463f; }
+  #ov .out .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  #ov .out .chips span{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#f2c14e; border:1px solid #5a4a22; padding:3px 8px; border-radius:3px; }
   #ov th.life{ background:var(--life);} #ov th.edu{ background:var(--edu);} #ov th.work{ background:var(--work);}
-  #ov td{ padding:4px 6px; border-bottom:1px solid #1f1c17; vertical-align:middle; white-space:nowrap; }
-  #ov td.ic{ width:18px; } #ov td.ic img{ background:#3a352d; padding:2px; border-radius:3px; } #ov td.ic canvas{ display:block; image-rendering:pixelated; width:14px; height:14px; }
+  #ov td{ padding:2px 5px; border-bottom:1px solid #1f1c17; vertical-align:middle; }
+  #ov td.ic{ width:18px; } #ov td.ic canvas{ display:block; image-rendering:pixelated; width:14px; height:14px; }
   #ov td.yr{ width:78px; color:#b9b2a4; font-variant-numeric:tabular-nums; }
 
   #ov tr.locked td{ color:#4a463f; } #ov tr.locked td.yr{ color:#4a463f; }
@@ -84,16 +93,54 @@
   #touch button{ flex:1; height:52px; font:inherit; font-size:20px; color:var(--ink);
     background:var(--panel); border:1px solid var(--rule); border-radius:8px; touch-action:manipulation; }
   #touch button:active{ background:#2a251f; }
-  @media (pointer:coarse){ #touch{ display:flex; } #hud{ display:none; } #wrap,#tl{ width:100%; } }
+  #rot{ display:none; font-size:11px; letter-spacing:.08em; color:var(--dim); text-align:center; }
+  #tl .lab.next{ color:#5a5448; } #tl .lab.next.on{ color:var(--accent); }
+  #ov td .pl2{ display:none; }
+  #tl .lab.first{ transform:none; } #tl .lab.next{ transform:translateX(-100%); }
+  @media (max-width:560px){
+    #ov td.tt{ white-space:normal; } #ov td.pl{ display:none; }
+    #ov td .pl2{ display:block; font-size:11px; margin-top:1px; }
+    #ov td{ padding:5px 4px; } #ov td.yr{ width:64px; font-size:11px; vertical-align:top; padding-top:6px; } #ov td.ic{ vertical-align:top; padding-top:6px; }
+    #ov header{ gap:6px 12px; } #ov h2{ font-size:12px; } #ov .count{ font-size:11px; }
+    #ov .tabs{ margin-left:0; width:100%; } #ov .tabs button{ flex:1; }
+  }
+  /* phones and tablets */
+  @media (pointer:coarse){
+    html,body{ touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
+    #touch{ display:flex; } #hud{ display:none; }
+    #touch button{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+    #wrap,#tl{ width:100%; }
+    #ov{ position:fixed; inset:0; transform:none; width:auto; height:auto; max-height:none; z-index:50; border:none; background:#08090d; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px); }
+    #ov header{ padding:12px 14px 10px; } #ov .tabs button, #ov .close{ padding:9px 12px; font-size:12px; }
+    #ov .body{ padding:8px 12px 14px; -webkit-overflow-scrolling:touch; }
+    #ov footer{ padding:12px 14px; font-size:12px; }
+  }
+  @media (pointer:coarse) and (orientation:portrait){
+    #shell{ padding:10px 8px; gap:12px; }
+    #rot{ display:block; }
+    #tl{ height:32px; } #tl .lab{ font-size:12px; }
+    #touch button{ height:64px; font-size:24px; }
+  }
+  /* phone held sideways: game fills the screen, controls sit on top of it */
+  @media (pointer:coarse) and (orientation:landscape) and (max-height:560px){
+    #shell{ padding:4px 8px; padding-bottom:calc(4px + env(safe-area-inset-bottom,0px)); gap:0; }
+    #wrap{ width:min(100%, calc((100vh - 8px) * 2)); width:min(100%, calc((100dvh - 8px) * 2)); }
+    #tl{ display:none; } #endlinks{ display:none !important; }
+    #touch{ position:fixed; left:calc(10px + env(safe-area-inset-left,0px)); right:calc(10px + env(safe-area-inset-right,0px)); bottom:calc(10px + env(safe-area-inset-bottom,0px));
+      width:auto; max-width:none; gap:8px; pointer-events:none; z-index:10; }
+    #touch button{ flex:0 0 60px; height:60px; pointer-events:auto; background:rgba(20,18,15,.42); border-color:rgba(255,255,255,.18); color:rgba(255,255,255,.85); }
+    #touch #tJ{ margin-left:auto; }
+  }
 </style>
 </head>
 <body>
+
 <div id="shell">
   <div id="wrap">
     <canvas id="c" width="640" height="320"></canvas>
     <div id="ov" role="dialog" aria-label="Achievements">
       <header><h2>Felix H. Krones, PhD</h2><span class="count" id="ovCount"></span>
-        <div class="tabs"><button id="ovAll">Unlock all</button><button class="close" id="ovClose">Close</button></div></header>
+        <div class="tabs"><button id="ovAll">Unlock all</button><button id="ovClear">Clear</button><button class="close" id="ovClose">Close</button></div></header>
       <div class="body" id="ovBody"></div>
       <footer><a class="site" href="https://scholar.google.com/citations?user=tX8UpusAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a><a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener">linkedin.com/in/felixkrones</a></footer>
     </div>
@@ -101,10 +148,11 @@
   <div id="tl"><div class="track"></div></div>
   <div id="touch">
     <button id="tL" aria-label="left">&larr;</button>
-    <button id="tJ" aria-label="jump">&uarr;</button>
     <button id="tR" aria-label="right">&rarr;</button>
+    <button id="tJ" aria-label="jump">&uarr;</button>
     <button id="tC" aria-label="achievements">&#9733;</button>
   </div>
+  <div id="rot">Turn your phone sideways for a bigger view</div>
   <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>A</b> achievements &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
 </div>
 <script>
@@ -547,7 +595,7 @@ const FONT = {
  '!':['..#..','..#..','..#..','..#..','..#..','.....','..#..'], '?':['.###.','#...#','...#.','..#..','..#..','.....','..#..'],
  '/':['....#','...#.','...#.','..#..','.#...','.#...','#....'], '+':['.....','..#..','..#..','#####','..#..','..#..','.....'],
  '(':['..##.','.#...','.#...','.#...','.#...','.#...','..##.'], ')':['.##..','...#.','...#.','...#.','...#.','...#.','.##..'],
- '>':['.....','#....','.#...','..#..','.#...','#....','.....'], '%':['##..#','##.#.','..#..','..#..','.#...','#..##','#..##'],
+ '>':['.....','#....','.#...','..#..','.#...','#....','.....'], '<':['.....','....#','...#.','..#..','...#.','....#','.....'], '%':['##..#','##.#.','..#..','..#..','.#...','#..##','#..##'],
  '*':['.....','#.#.#','.###.','#####','.###.','#.#.#','.....'], ' ':['.....','.....','.....','.....','.....','.....','.....']
 };
 function drawIcon(grid, x, y, s=1){
@@ -631,30 +679,38 @@ const BOXES = [
   { seg:'germ',  off:470,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'airforce' },
   { seg:'ka1',   off:400,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:'hardhat' },
   { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
-  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015',      tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace engineering', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
+  { seg:'ral',   off:300,  t:'edu',  k:'station', y:98,  year:'2015',      tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
   { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Top grade',        desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
   { seg:'ka2',   off:220,  t:'work', k:'station', y:96,  year:'2015-2018', tag:'TEACHING ASSISTANT', role:'Teaching assistant', desc:'Statistics 1 and 2', org:'KIT', loc:'Karlsruhe', icon:'pointer' },
   { seg:'ka2',   off:470,  t:'edu',  k:'degree',  y:100, year:'2016',      tag:'B.SC. 1.5',        role:'B.Sc.',            desc:'Grade 1.5', org:'KIT', loc:'Karlsruhe', icon:'scroll' },
   { seg:'ka2',   off:720,  t:'edu',  k:'station', y:94,  year:'2016-2019', tag:'M.SC. STUDIES',    role:'M.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'book' },
   { seg:'ka2',   off:970,  t:'work', k:'station', y:100, year:'2016',      tag:'INTERN',           role:'Intern',           desc:'Power-grid optimisation', org:'EnBW', loc:'Stuttgart', icon:'bolt' },
   { seg:'ka2',   off:1220, t:'work', k:'station', y:94,  year:'2016-2017', tag:'WORKING STUDENT',  role:'Working student',  desc:'Cost analysis tool', org:'Mercedes-Benz', loc:'Sindelfingen', icon:'spanner' },
-  { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Introduction to data science', org:'DHBW', loc:'Karlsruhe', icon:'pointer' },
-  { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Healthcare chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart' },
-  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot-based coaching data', org:'ETH Zurich', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
+  { seg:'ka2',   off:1470, t:'work', k:'station', y:100, year:'2018-2019', tag:'LECTURER',         role:'Lecturer',         desc:'Intro to data science', org:'DHBW', loc:'Karlsruhe', icon:'pointer' },
+  { seg:'ka2',   off:1720, t:'work', k:'station', y:96,  year:'2018-2019', tag:'RESEARCH ASSISTANT', role:'Research assistant', desc:'Chatbots, smart meters', org:'ETH, KIT, FZI', loc:'Zurich, Karlsruhe', icon:'chart' },
+  { seg:'zh',    off:280,  t:'edu',  k:'station', y:96,  year:'2019',      tag:"MASTER'S THESIS",  role:"Master's thesis",  desc:'Chatbot coaching data', org:'ETH Zurich', loc:'Zurich', icon:'ethcap', wear:'ethcap' },
   { seg:'zh',    off:520,  t:'edu',  k:'honour',  y:100, year:'2019',      tag:'THESIS 6.0',       role:'Top grade',        desc:'Thesis grade 6.0', org:'ETH Zurich', loc:'Zurich', icon:'star' },
   { seg:'zh',    off:760,  t:'edu',  k:'degree',  y:94,  year:'2019',      tag:'M.SC. 1.3',        role:'M.Sc.',            desc:'Grade 1.3', org:'KIT', loc:'Karlsruhe', icon:'diploma' },
-  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'Data science and AI', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
-  { seg:'zh',    off:1300, t:'work', k:'station', y:100, year:'2022',      tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Operating model, restructuring', org:'Independent', loc:'Europe', icon:'chart' },
+  { seg:'zh',    off:1020, t:'work', k:'station', y:98,  year:'2019-2026', tag:'MCKINSEY',         role:'Engagement Manager / Principal', desc:'', org:'McKinsey & QuantumBlack', loc:'Zurich', icon:'suit', wear:'suit', fx:'mck_on', flags:true },
+  { seg:'zh',    off:1300, t:'work', k:'station', y:100, year:'2022',      tag:'SENIOR CONSULTANT',role:'Senior consultant',desc:'Restructuring', org:'Independent', loc:'Europe', icon:'chart' },
   { seg:'ox',    off:280,  t:'edu',  k:'station', y:92,  year:'2021-2026', tag:'DPHIL STUDIES',    role:'DPhil',            desc:'Multimodal AI in medicine', org:'University of Oxford', loc:'Oxford', icon:'book' },
-  { seg:'ox',    off:520,  t:'work', k:'volunteer',y:100,year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', icon:'badge' },
-  { seg:'ox',    off:760,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann Foundation, Shirley', loc:'Oxford', icon:'medal' },
+  { seg:'ox',    off:760,  t:'edu',  k:'honour',  y:96,  year:'2022-2024', tag:'SCHOLARSHIPS',     role:'Scholarship',      desc:'', org:'Friedrich Naumann, Shirley', loc:'Oxford', icon:'medal' },
   { seg:'ox',    off:1000, t:'edu',  k:'honour',  y:98,  year:'2024',      tag:'1ST PLACE',        role:'1st place',        desc:'ML challenge', org:'PhysioNet', loc:'', icon:'trophy', wear:'trophy' },
   { seg:'ox',    off:1300, t:'edu',  k:'degree',  y:94,  year:'2026',      tag:'DPHIL AWARDED',    role:'DPhil',            desc:'Awarded', org:'University of Oxford', loc:'Oxford', icon:'gown', wear:'gown' },
-  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' },
-  { seg:'muc',   off:700,  t:'work', k:'volunteer',y:100,year:'2026-',     tag:'MENTOR',           role:'Mentor',           desc:'Start-ups', org:'Hack Nation', loc:'', icon:'badge' }
+  { seg:'muc',   off:400,  t:'work', k:'station', y:96,  year:'2026-',     tag:'WATERLAND',        role:'AI & Data Lead / Portfolio management', desc:'', org:'Waterland Private Equity', loc:'Munich', icon:'briefcase', wear:'briefcase', fx:'mck_off' }
 ];
 BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.off); b.y = Math.round(GROUND - (166 - b.y)*UK); });
 
+/* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
+const HELPS = [
+  { seg:'oster', off:620,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'Education', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
+  { seg:'germ',  off:760,  year:'2012-2018', tag:'LOCAL PARTY HEAD', role:'Head of local group', desc:'', org:'Political party group', loc:'Schefflenz', prop:'lectern' },
+  { seg:'ka1',   off:880,  year:'2013-2018', tag:'CLUB TREASURER',   role:'Treasurer', desc:'Soccer club', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
+  { seg:'ox',    off:520,  year:'2021-2024', tag:'STUDENT REP',      role:'PhD student representative', desc:'', org:'University of Oxford', loc:'Oxford', prop:'megaphone' },
+  { seg:'ox',    off:1150, year:'2025-',     tag:'DEPUTY CHAIRMAN',  role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
+  { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
+];
+HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'work'; h.k = 'volunteer'; });
 const FLYSTARS = [];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
 const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 420 + k*350, got:false }));
@@ -683,14 +739,15 @@ function reset(){
     flash:0, mck:false, mckT:0,
     flying:false, flyBlend:0,
     partner:null, flagsGot:[],
-    ended:false, endT:0, flagP:0,
+    ended:false, endT:0, flagP:0, outlook:0,
     lastSeg:null, manual:false,
     fly:[], sparks:[], pops:[],
     started:false, auto:false, startT:0,
-    intro:null, btnGlow:0
+    intro:null, btnGlow:0, helpPop:null, allUnlocked:false
   };
   BOXES.forEach(b=>{ b.hit=false; b.bump=0; b.open=0; });
   MCK_FLAGS.forEach(f=>f.got=false);
+  HELPS.forEach(h=>h.got=false);
 }
 reset();
 const SH = () => SPRH[S.kid];
@@ -781,8 +838,8 @@ function step(dt){
       }
     }
   }
-  if (S.x > WORLD_END - 190 && !S.ended){ S.ended = true; sfx('flag'); }
-  S.x = clamp(S.x, 60, WORLD_END - 160);
+  if (S.x > WORLD_END - 280 && !S.ended){ S.ended = true; sfx('flag'); }
+  S.x = clamp(S.x, 60, WORLD_END - 250);
 
   /* vertical */
   if (S.flyBlend > 0){
@@ -826,6 +883,13 @@ function step(dt){
       S.plate = { kind:'country', name:fl.name }; S.plateT = 1.6;
     }
   }
+  /* volunteering: collected by walking past */
+  for (const h of HELPS){
+    if (h.got || S.x < h.x) continue;
+    h.got = true; S.stars++; S.btnGlow = 1; S.helpPop = { h, t:0 }; sfx('wear');
+    popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
+  }
+  if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > 2.4) S.helpPop = null; }
   if (!S.partner && S.x > PARTNER_X){ S.partner = { x:S.x+140, t:0 }; }
 
   tickTimers(dt);
@@ -842,7 +906,8 @@ function step(dt){
   }
   if (S.ended){
     S.endT += dt; S.flagP = Math.min(1, S.endT/1.5);
-    if (S.endT > 2.4 && !S.panelShown){ S.panelShown = true; openPanel(true); }
+    S.outlook = clamp((S.endT-1.6)/1.2, 0, 1);
+    if (S.endT > 7.5 && !S.panelShown){ S.panelShown = true; openPanel(true); }
   }
 }
 
@@ -1436,7 +1501,7 @@ function render(){
     drawIcon(ICON['flag_'+fl.c], sx, y-10, 2.4);
   }
   for (const b of BOXES){ if (b.virtual) continue; const sx = b.x - cam; if (sx < -40 || sx > W+40) continue; drawBox(b, sx); }
-  if (S.x > WORLD_END - 1400){ const fx = WORLD_END - 240 - cam; scaled(fx, GROUND, UK, ()=>flagpole(fx, GROUND, S.flagP)); }
+  if (S.x > WORLD_END - 1400){ const fx = WORLD_END - 330 - cam; scaled(fx, GROUND, UK, ()=>flagpole(fx, GROUND, S.flagP)); }
 
   if (S.flyBlend > 0){
     ctx.globalAlpha = clamp((S.flyBlend-0.45)*1.9, 0, 1);
@@ -1445,6 +1510,8 @@ function render(){
     const spin = Math.floor(t*40)%2; r(pxp+52+spin*4, pyp+25, 3, 4, '#d6dde5');   // engine fan flicker
     ctx.globalAlpha = 1;
   }
+  for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
+  if (S.x > WORLD_END - 1400) signpost(WORLD_END - 100 - cam, S.outlook);
   if (S.partner) drawPartner(S.partner.x - cam, GROUND);
 
   /* stork intro */
@@ -1469,6 +1536,12 @@ function render(){
       if (yr) text2(yr, nx+10, ny+26, '#f2c14e', 1);
     }
     drawIcon(ICON[f.icon], sx+18-half, f.y+18-half, sc);
+  }
+  if (S.helpPop){
+    const hp = S.helpPop, a = clamp(Math.min(hp.t/0.2, (2.4-hp.t)/0.4), 0, 1), nm = hp.h.tag, yr = hp.h.year;
+    const w = Math.max(tw2(nm), tw2(yr)) + 20, hh = 44, nx = clamp(S.x - cam + 44, 6, W-w-6), ny = S.y - SH() - 4 - Math.min(hp.t, 0.3)*20;
+    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, '#e0708f');
+    text2(nm, nx+10, ny+6, '#f4f2ee', 1); text2(yr, nx+10, ny+26, '#e0708f', 1); ctx.globalAlpha = 1;
   }
   for (const p of S.sparks){ ctx.globalAlpha = Math.min(1, p.life*2); r(p.x-cam, p.y, 3, 3, p.col); ctx.globalAlpha = 1; }
   for (const p of S.pops){
@@ -1495,7 +1568,55 @@ function render(){
   vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.26)');
   ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
 
+  if (S.outlook > 0) outlookCard(S.outlook);
   drawHUD(seg, cam);
+}
+
+/* volunteering props: small things on the way, a heart shows there is something to help with */
+function heart(x, y, s, col){ scaled(x, y, s, ()=>{ r(x, y, 2, 2, col); r(x+3, y, 2, 2, col); r(x, y+2, 5, 2, col); r(x+1, y+4, 3, 1, col); r(x+2, y+5, 1, 1, col); }); }
+function drawHelp(h, sx, t){
+  const x = Math.round(sx), g = GROUND;
+  shadow(x + 19, g, 26);
+  scaled(x, g, UK, ()=>{
+  if (h.prop === 'jar'){ r(x+4, g-22, 16, 22, '#cfe3ea'); r(x+4, g-22, 16, 1, '#ffffff'); r(x+6, g-25, 12, 3, '#8a6340'); r(x+6, g-10, 12, 9, '#f2c14e'); r(x+8, g-13, 5, 3, '#f7d98a'); r(x+5, g-20, 2, 14, 'rgba(255,255,255,.55)'); }
+  else if (h.prop === 'lectern'){ r(x+2, g-26, 20, 6, '#8a6340'); r(x+2, g-26, 20, 1, '#b08455'); r(x+8, g-20, 8, 20, '#6b4a2e'); r(x+4, g-2, 16, 2, '#4e341f'); r(x+15, g-34, 2, 8, '#9aa6b4'); r(x+14, g-36, 4, 3, '#3a3f46'); }
+  else if (h.prop === 'ball'){ r(x-6, g-24, 2, 24, '#f0f0f0'); r(x+26, g-24, 2, 24, '#f0f0f0'); r(x-6, g-24, 34, 2, '#f0f0f0'); for (let yy=g-22; yy<g; yy+=4) r(x-4, yy, 30, 1, 'rgba(255,255,255,.25)'); r(x+6, g-10, 10, 10, '#f4f2ee'); r(x+9, g-7, 4, 4, '#222'); r(x+6, g-10, 2, 2, '#222'); r(x+14, g-2, 2, 2, '#222'); }
+  else if (h.prop === 'megaphone'){ r(x+2, g-14, 4, 14, '#3a3f46'); r(x+2, g-22, 8, 8, '#d2574f'); r(x+10, g-25, 4, 14, '#d2574f'); r(x+14, g-28, 4, 20, '#e8746b'); r(x+18, g-30, 2, 24, '#f4f2ee'); }
+  else if (h.prop === 'laptop'){ r(x, g-10, 26, 10, '#6b4a2e'); r(x+3, g-26, 20, 14, '#3a3f46'); r(x+5, g-24, 16, 10, '#1f4a6b'); r(x+9, g-22, 3, 6, '#f2c14e'); r(x+13, g-20, 3, 4, '#9fc3ea'); r(x+1, g-12, 24, 2, '#9aa6b4'); }
+  });
+  if (!h.got){ heart(x + 12, g - 82 + Math.sin(t*3 + h.i)*3, 3, '#e0708f'); }
+}
+
+/* outlook at the end: a signpost with open directions, and a short message */
+const SIGNS = [ { t:'PRIVATE ?', d:-1 }, { t:'EDUCATION ?', d:1 }, { t:'LOCATION ?', d:-1 }, { t:'WORK ?', d:1 } ];
+function signpost(px, a){
+  px = Math.round(px); const top = GROUND - 128;
+  shadow(px, GROUND, 18);
+  r(px-3, top, 6, GROUND-top, '#6b4a2e'); r(px-3, top, 2, GROUND-top, '#8a6340'); r(px-4, top-3, 8, 4, '#4e341f');
+  SIGNS.forEach((sg, i) => {
+    const k = clamp(a*5 - i*0.8, 0, 1); if (k <= 0) return;
+    const w = tw(sg.t) + 14, h = 15, y = top + 6 + i*21 - Math.round((1-k)*6);
+    const x0 = sg.d > 0 ? px + 3 : px - 3 - w;
+    ctx.globalAlpha = k;
+    r(x0, y+2, w, h, 'rgba(0,0,0,.25)');
+    r(x0, y, w, h, '#c99a5a'); r(x0, y, w, 1, '#e2b877'); r(x0, y+h-1, w, 1, '#8a6238');
+    for (let j=0;j<8;j++){ const tx = sg.d > 0 ? x0 + w + j : x0 - 1 - j; r(tx, y+j, 1, h-2*j, j===0 ? '#c99a5a' : (j%2 ? '#bf9152' : '#c99a5a')); }
+    text(sg.t, x0 + 7, y + 4, '#3b2716');
+    r(sg.d > 0 ? px+4 : px-6, y+6, 2, 2, '#4e341f');
+    ctx.globalAlpha = 1;
+  });
+}
+function outlookCard(a){
+  /* warmer light from the right: the future looks bright */
+  const g = ctx.createLinearGradient(W*0.35, 0, W, 0);
+  g.addColorStop(0, 'rgba(255,214,130,0)'); g.addColorStop(1, `rgba(255,214,130,${0.28*a})`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, GROUND);
+  const k = clamp(a*1.6 - 0.3, 0, 1); if (k <= 0) return;
+  ctx.globalAlpha = k;
+  const l1 = 'THE FUTURE IS OPEN', l2 = 'AND IT LOOKS BRIGHT', w = Math.max(tw2(l1), tw2(l2)) + 36, cx = 470, x = Math.round(cx - w/2), y = 40;
+  panelBox(x, y, w, 58, 'rgba(10,12,17,.84)'); r(x, y+57, w, 1, '#f2c14e');
+  textC2(l1, cx, y+10, '#f4f2ee', 1); textC2(l2, cx, y+32, '#f2c14e', 1);
+  ctx.globalAlpha = 1;
 }
 
 function drawGroundScene(seg, cam, t){
@@ -1512,7 +1633,8 @@ function drawGroundScene(seg, cam, t){
 }
 
 /* ---------- HUD ---------- */
-const TOTAL = () => BOXES.length;
+const TOTAL = () => BOXES.length + HELPS.length;
+const TOUCH = matchMedia('(pointer:coarse)').matches;
 function drawHUD(seg, cam){
   /* achievements button, top right, small */
   const s = `${S.stars}/${TOTAL()}`, w = tw(s,1)+34, x = W - w - 8, glow = Math.max(0, S.btnGlow);
@@ -1554,7 +1676,7 @@ function drawHUD(seg, cam){
     textC2('FELIX H. KRONES, PHD', W/2, 108, '#f4f2ee', 3);
     r(W/2-80, 138, 160, 2, '#f2c14e');
     textC2('A PIXEL CV', W/2, 152, '#f2c14e', 2);
-    if (Math.floor(S.t*2)%2===0) textC2('PRESS  >  TO START', W/2, 204, '#f4f2ee', 2);
+    if (Math.floor(S.t*2)%2===0) textC2(TOUCH ? 'TAP TO START' : 'PRESS  >  TO START', W/2, 204, '#f4f2ee', 2);
   }
   if (paused && !panelOpen && S.started){ r(0,0,W,H,'rgba(8,9,13,.45)'); textC2('PAUSED', W/2, H/2-8, '#f4f2ee', 3); }
 }
@@ -1579,30 +1701,49 @@ function flagRow(){
 }
 function rowsFor(list){
   return list.map(b => {
-    if (!b.hit) return `<tr class="locked"><td class="ic"><span style="display:block;width:12px;height:12px;background:#1f1c17"></span></td><td class="yr">${esc(b.year)}</td><td class="tt">Locked</td><td class="ds"></td><td></td><td></td></tr>`;
-    const ic = `<img src="${iconDataURL(b.icon)}" width="14" height="14" style="image-rendering:pixelated;display:block" alt="">`;
-    return `<tr><td class="ic">${ic}</td><td class="yr">${esc(b.year)}</td><td class="tt">${esc(b.role)}</td><td class="ds">${esc(b.desc)}</td><td>${esc(b.org)}</td><td>${esc(b.loc)}${b.flags ? flagRow() : ''}</td></tr>`;
+    const on = b.hit || b.got;
+    if (!on) return `<tr class="locked"><td class="ic"><span class="lk"></span></td><td class="yr">${esc(b.year)}</td><td class="tt" colspan="2">Locked</td></tr>`;
+    const ic = `<img src="${iconDataURL(b.icon || 'badge')}" width="14" height="14" alt="">`;
+    const fl = b.flags ? flagRow() : '';
+    const role = esc(b.role) + (b.desc ? `<span class="ds">, ${esc(b.desc)}</span>` : '');
+    const showLoc = b.loc && !(b.org || '').includes(b.loc);   // skip the location when the organisation already names it
+    const place = [b.org && `<span class="og">${esc(b.org)}</span>`, showLoc && `<span class="lo">${esc(b.loc)}</span>`].filter(Boolean).join(', ');
+    return `<tr><td class="ic">${ic}</td><td class="yr">${esc(b.year)}</td><td class="tt">${role}<span class="pl2">${place}${fl}</span></td><td class="pl">${place}${fl}</td></tr>`;
   }).join('');
 }
-function table(cls, title, sections){
-  let html = `<table><colgroup><col class="c-ic"><col class="c-yr"><col class="c-role"><col class="c-desc"><col class="c-org"><col></colgroup>
-    <thead><tr><th class="${cls}" colspan="6">${title}</th></tr>
-    <tr><td></td><td>Years</td><td>Role</td><td class="ds">Description</td><td>Organisation</td><td>Location</td></tr></thead><tbody>`;
-  for (const [sub, list] of sections){
-    if (!list.length) continue;
-    if (sub) html += `<tr><td class="sub" colspan="6">${sub}</td></tr>`;
-    html += rowsFor(list);
+/* one table per overview column, so all rows in a column share the same column positions */
+function table(groups){
+  let html = `<table><colgroup><col class="c-ic"><col class="c-yr"><col class="c-role"><col class="c-pl"></colgroup>`;
+  for (const [cls, title, sections] of groups){
+    html += `<tbody><tr><th class="${cls}" colspan="4">${title}</th></tr>`;
+    for (const [sub, list] of sections){
+      if (!list.length) continue;
+      if (sub) html += `<tr><td class="sub" colspan="4">${sub}</td></tr>`;
+      html += rowsFor(list);
+    }
+    html += `<tr class="gap"><td colspan="4"></td></tr></tbody>`;
   }
-  return html + '</tbody></table>';
+  return html + '</table>';
 }
+const yStart = b => parseInt(b.year, 10) || 0;
 function refreshPanel(){
   ovCount.textContent = `${S.stars} / ${TOTAL()} achievements`;
   if (!panelOpen) return;
   const by = (t,k) => BOXES.filter(b=>b.t===t && (!k || b.k===k));
-  ovBody.innerHTML = `<div class="grid">
-    ${table('life','Life',[['',by('life')]])}
-    ${table('edu','Education',[['Timeline',by('edu','station')],['Degrees',by('edu','degree')],['Honours',by('edu','honour')]])}
-    ${table('work','Work',[['Positions',by('work','station')],['Volunteering',by('work','volunteer')]])}</div>`;
+  const degHon = BOXES.filter(b=>b.t==='edu' && (b.k==='degree' || b.k==='honour')).map((b,i)=>[b,i])
+    .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
+  ovBody.innerHTML = `<div class="cols">
+    <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
+    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Volunteering',HELPS]]]])}
+    ${outlookBlock()}</div></div>`;
+}
+function outlookBlock(){
+  const open = S.ended || S.allUnlocked;
+  const body = open
+    ? `<div class="out"><p>Private life, location, work and education: all open. And it looks bright.</p>
+       <div class="chips"><span>Private ?</span><span>Location ?</span><span>Work ?</span><span>Education ?</span></div></div>`
+    : `<div class="out locked"><p>Reach the end of the game to see the outlook.</p></div>`;
+  return `<table><tbody><tr><th class="next">Outlook</th></tr><tr><td class="outtd">${body}</td></tr></tbody></table>`;
 }
 function drawMap(){
   const c = document.getElementById('mapc'); if (!c) return;
@@ -1633,10 +1774,12 @@ function openPanel(open){
   if (open) refreshPanel();
 }
 document.getElementById('ovClose').onclick = ()=>openPanel(false);
+document.getElementById('ovClear').onclick = ()=>{ reset(); hideLinks(); updateTimeline(); refreshPanel(); };
 document.getElementById('ovAll').onclick = ()=>{
   for (const b of BOXES){ if (b.hit) continue; b.hit = true; b.open = 1; S.stars++; if (b.wear) wear(b.wear); }
   for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
-  S.kid = 0; S.visible = true; S.fly = []; userGesture(); sfx('flag'); refreshPanel();
+  for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
+  S.kid = 0; S.visible = true; S.fly = []; S.allUnlocked = true; userGesture(); sfx('flag'); refreshPanel();
 };
 
 /* timeline under the game */
@@ -1647,9 +1790,9 @@ const tl = document.getElementById('tl'); let tlMark;
     if (s.kind!=='ground' || !s.years) continue;
     const y = s.years.split('-')[0]; if (seen.has(y)) continue; seen.add(y);
     const pct = s.x0 / WORLD_END * 100;
-    tl.insertAdjacentHTML('beforeend', `<div class="tick" style="left:${pct}%"></div><div class="lab" data-x0="${s.x0}" data-x1="${s.x1}" style="left:${pct}%">${y}</div>`);
+    tl.insertAdjacentHTML('beforeend', `<div class="tick" style="left:${pct}%"></div><div class="lab${seen.size===1?' first':''}" data-x0="${s.x0}" data-x1="${s.x1}" style="left:${pct}%">${y}</div>`);
   }
-  tl.insertAdjacentHTML('beforeend', `<div class="tick" style="left:100%"></div><div class="mark"></div>`);
+  tl.insertAdjacentHTML('beforeend', `<div class="tick" style="left:100%"></div><div class="lab next" style="left:100%">NEXT</div><div class="mark"></div>`);
   tlMark = tl.querySelector('.mark');
 })();
 function updateTimeline(){
@@ -1657,7 +1800,18 @@ function updateTimeline(){
   const labs = tl.querySelectorAll('.lab'); let onIdx = -1;
   labs.forEach((l,i)=>{ if (S.x >= +l.dataset.x0) onIdx = i; });
   labs.forEach((l,i)=> l.classList.toggle('on', i===onIdx));
+  const nx = tl.querySelector('.lab.next'); if (nx) nx.classList.toggle('on', S.ended);
 }
+/* hide year labels that would overlap on narrow screens */
+function layoutTimeline(){
+  let lastRight = -1e9;
+  tl.querySelectorAll('.lab').forEach(l => {
+    l.style.visibility = 'visible';
+    const b = l.getBoundingClientRect();
+    if (b.left < lastRight + 6 && !l.classList.contains('next')) l.style.visibility = 'hidden'; else lastRight = b.right;
+  });
+}
+layoutTimeline(); addEventListener('resize', layoutTimeline); addEventListener('orientationchange', ()=>setTimeout(layoutTimeline, 200));
 function onSegment(seg){}
 
 /* =====================================================================
@@ -1754,7 +1908,7 @@ window.GAME = {
   reset, step, render,
   seek(sec){ reset(); openPanel(false); startGame(true); const n = Math.round(sec/DT); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   advance(n=1){ if (!S.started) startGame(true); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
-  get time(){ return S.t; }, get done(){ return S.ended && S.endT > 3.5; }
+  get time(){ return S.t; }, get done(){ return S.ended && S.endT > 8; }
 };
 </script>
 
