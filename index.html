@@ -155,7 +155,7 @@
     <button id="tC" aria-label="achievements">&#9733;</button>
   </div>
   <div id="rot">Turn your phone sideways for a bigger view</div>
-  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> achievements &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
+  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> or click <b>&#9733;</b> menu &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
 </div>
 <script>
 "use strict";
@@ -579,6 +579,7 @@ const ICON = {
   ring:   ['.....WW.....','....WwwW....','....WwwW....','...YYYYYY...','..YY....YY..','..Y......Y..','..Y......Y..','..YY....YY..','...YYYYYY...','............','............','............'],
   baby:   ['............','...WWWWWW...','..WWWWWWWW..','..WWSSSSWW..','..WSSEESSW..','..WSSSSSSW..','..WWSSMSWW..','..WWWWWWWW..','...WWWWWW...','...WWWWWW...','....WWWW....','............'],
   book:   ['............','.BBBBBBBBBB.','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBWWWWWBBBW','.BBBBBBBBBBW','.BBBBBBBBBBW','.NNNNNNNNNNW','............'],
+  flag_us: ['BWBWBRRRRRRR','BBBBBWWWWWWW','BWBWBRRRRRRR','BBBBBWWWWWWW','RRRRRRRRRRRR','WWWWWWWWWWWW','RRRRRRRRRRRR','WWWWWWWWWWWW','............','............','............','............'],
   flag_gb: ['WBBBWRRWBBBW','BWBBWRRWBBWB','WWWWWRRWWWWW','RRRRRRRRRRRR','RRRRRRRRRRRR','WWWWWRRWWWWW','BWBBWRRWBBWB','WBBBWRRWBBBW','............','............','............','............'],
   flag_ch: ['RRRRRRRRRRRR','RRRRRWWRRRRR','RRRRRWWRRRRR','RRRWWWWWWRRR','RRRWWWWWWRRR','RRRRRWWRRRRR','RRRRRWWRRRRR','RRRRRRRRRRRR','............','............','............','............'],
   flag_de: ['NNNNNNNNNNNN','NNNNNNNNNNNN','NNNNNNNNNNNN','RRRRRRRRRRRR','RRRRRRRRRRRR','RRRRRRRRRRRR','YYYYYYYYYYYY','YYYYYYYYYYYY','............','............','............','............'],
@@ -707,7 +708,7 @@ const BOXES = [
   { seg:'germ',  off:140 ,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'uniform' },
   { seg:'ka1',   off:150 ,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:['student','hardhat'] },
   { seg:'ka1',   off:540,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
-  { seg:'ral',   off:150 ,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
+  { seg:'ral',   off:150 ,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'flag_us' },
   { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Exchange semester', desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
   { seg:'ka2',   off:430 ,  t:'work', k:'station', y:96,  year:'2015-2018', tag:'TEACHING ASSISTANT', role:'Teaching assistant', desc:'Statistics 1 and 2', org:'KIT', loc:'Karlsruhe', icon:'pointer' },
   { seg:'ka2',   off:680 ,  t:'edu',  k:'degree',  y:100, year:'2016',      major:true, tag:'B.SC. 1.5',        role:'B.Sc.',            desc:'Grade 1.5', org:'KIT', loc:'Karlsruhe', icon:'scroll' },
@@ -746,6 +747,7 @@ const EVENTS = [
 ];
 EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
 const FLYSTARS = [];
+const BUBBLE_T = 2.2;   // seconds a box bubble stays
 const boxX = tag => BOXES.find(b => b.tag === tag).x;
 const MCK_PERIODS = [[boxX('ENGAGEMENT MANAGER / PRINCIPAL'), boxX('DPHIL STUDIES')], [EVENTS.find(e => e.fx==='mck_on').x, boxX('AI & DATA LEAD / PORTFOLIO MANAGEMENT')]];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['gb','UNITED KINGDOM'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
@@ -777,7 +779,7 @@ function reset(){
     partner:null, flagsGot:[],
     ended:false, endT:0, flagP:0, outlook:0,
     lastSeg:null, manual:false,
-    fly:[], sparks:[], pops:[],
+    fly:[], sparks:[], pops:[], bubbles:[],
     started:false, auto:false, startT:0,
     intro:null, btnGlow:0, helpPop:null, allUnlocked:false
   };
@@ -859,7 +861,7 @@ function step(dt){
   S.flyBlend = clamp(S.flyBlend + (wantFly ? dt*2.2 : -dt*2.2), 0, 1);
 
   /* horizontal */
-  const fast = (keys.ShiftLeft || keys.ShiftRight) ? 1.9 : 1;
+  const fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) : 1;   // together even faster
   const speed = wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) : SPD*fast;
   S.fast = fast;
   if (S.ended){
@@ -961,7 +963,8 @@ function step(dt){
 
   if (S.partner){
     S.partner.t += dt;
-    S.partner.x += ((S.x - 36*S.facing) - S.partner.x) * Math.min(1, dt*8);   // she walks behind him in either direction
+    if (S.flyBlend > 0.3) S.partner.x = S.x - 30*S.facing;                    // on the plane she sits right behind him
+    else S.partner.x += ((S.x - 36*S.facing) - S.partner.x) * Math.min(1, dt*8);   // she walks behind him in either direction
   }
   if (S.ended){
     S.endT += dt;
@@ -980,33 +983,36 @@ function tickTimers(dt){
 function tickFly(dt){
   for (const f of S.fly){
     f.t += dt;
-    if (f.phase===0){ f.y -= 110*dt; if (f.t > 0.4){ f.phase=1; f.t=0; } }
-    else if (f.phase===1){ const k = Math.min(1, dt*5); f.x = lerp(f.x, S.x + 40, k); f.y = lerp(f.y, S.y - SH() - 50 + Math.sin(f.t*6)*3, k); if (f.t > 1.2){ f.phase=2; f.t=0; f.sx=f.x; f.sy=f.y; } }
+    if (f.phase===0){ f.y -= 110*dt; if (f.t > (f.fast ? 0.2 : 0.4)){ f.phase=1; f.t=0; } }
+    else if (f.phase===1){ const k = Math.min(1, dt*(f.fast ? 9 : 5)); f.x = lerp(f.x, S.x + 40, k); f.y = lerp(f.y, S.y - SH() - 50 + Math.sin(f.t*6)*3, k); if (f.t > (f.fast ? 0.25 : 1.2)){ f.phase=2; f.t=0; f.sx=f.x; f.sy=f.y; } }
     else if (f.phase===2){
-      const k = Math.min(1, f.t/0.5), e = 1-Math.pow(1-k,3);
+      const k = Math.min(1, f.t/(f.fast ? 0.25 : 0.5)), e = 1-Math.pow(1-k,3);
       const [tx,ty] = f.target();
       f.x = lerp(f.sx, tx, e); f.y = lerp(f.sy, ty, e); f.sc = lerp(3, 1, e);
       if (k>=1){ f.done = true; f.arrive(); }
     }
   }
   S.fly = S.fly.filter(f=>!f.done);
+  for (const bb of S.bubbles) bb.t += dt;
+  S.bubbles = S.bubbles.filter(bb => bb.t < BUBBLE_T);
 }
 
 function onHit(b){
   popSparks(b.x+16, b.y, BOXSTYLE[b.t].a, 14, 140);
   sfx('hit');
   S.stars++;
-  const item = { icon:b.icon, name:b.tag, org:b.org || b.loc || '', year:b.year, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3,
+  S.bubbles.push({ lines:[[b.tag, '#f4f2ee'], [b.org || b.loc || '', '#b9b2a4'], [b.year, '#f2c14e']].filter(l => l[0]), x:b.x+16, y:b.y-10, t:0 });
+  /* items you wear fly into Felix quickly and change the outfit when they arrive; others fly to the star button */
+  const item = { icon:b.icon, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3, fast:!!b.wear,
     target: () => b.wear ? [S.x-18, S.y - SH() + 14] : [W - 40 + camX(), 6],
     arrive: () => {
       S.btnGlow = 1;
-      if (b.wear) popSparks(S.x, S.y - 32, '#ffffff', 10, 90);
+      if (b.wear){ wear(b.wear); popSparks(S.x, S.y - 32, '#ffffff', 10, 90); sfx('wear'); }
+      if (b.fx==='grow1') S.kid = 1;
+      if (b.fx==='grow2') S.kid = 0;
+      refreshPanel();
     } };
   S.fly.push(item);
-  /* outfit and growth change right away, so running fast never mixes up the order */
-  if (b.wear){ wear(b.wear); sfx('wear'); }
-  if (b.fx==='grow1') S.kid = 1;
-  if (b.fx==='grow2') S.kid = 0;
   refreshPanel();
   if (b.fx==='mck_on')  S.mck = true;
   if (b.fx==='mck_off') S.mck = false;
@@ -1758,7 +1764,7 @@ function render(){
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
   if (S.outlook > 0) brightLight(S.outlook, t);
   if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
-  if (S.partner){ ctx.globalAlpha = fadeRight(S.partner.x - cam); drawPartner(S.partner.x - cam, GROUND); ctx.globalAlpha = 1; }
+  if (S.partner){ ctx.globalAlpha = fadeRight(S.partner.x - cam); drawPartner(S.partner.x - cam, S.flyBlend > 0 ? S.y : GROUND); ctx.globalAlpha = 1; }
 
   /* stork intro */
   if (S.intro && !S.intro.done){
@@ -1774,15 +1780,15 @@ function render(){
 
   for (const f of S.fly){
     const sx = f.x - cam, sc = f.sc || 1, half = 6*sc;
-    if (f.phase < 2){
-      ctx.globalAlpha = .45; disc(sx+18, f.y+18, 28, '#ffffff'); ctx.globalAlpha = 1;
-      /* bubble: what, where, when */
-      const lines = [[f.name || '', '#f4f2ee'], [f.org || '', '#b9b2a4'], [f.year || '', '#f2c14e']].filter(l => l[0]);
-      const w = Math.max(...lines.map(l=>tw2(l[0])))+20, hh = 8 + lines.length*20, nx = clamp(sx+18 - w/2, 6, W-w-6), ny = Math.max(4, f.y - 16 - hh);
-      panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, 'rgba(255,255,255,.08)');
-      lines.forEach((l,i)=> text2(l[0], nx+10, ny+6+i*20, l[1], 1));
-    }
+    if (f.phase < 2){ ctx.globalAlpha = .45; disc(sx+18, f.y+18, 28, '#ffffff'); ctx.globalAlpha = 1; }
     drawIcon(ICON[f.icon], sx+18-half, f.y+18-half, sc);
+  }
+  /* bubble: what, where, when (stays where the box was, independent of the flying item) */
+  for (const bb of S.bubbles){
+    const a = clamp(Math.min(bb.t/0.15, (BUBBLE_T - bb.t)/0.3), 0, 1), lines = bb.lines;
+    const w = Math.max(...lines.map(l=>tw2(l[0])))+20, hh = 8 + lines.length*20, nx = clamp(bb.x - cam - w/2, 6, W-w-6), ny = Math.max(4, bb.y - 16 - hh - Math.min(bb.t, 0.4)*40);
+    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, 'rgba(255,255,255,.08)');
+    lines.forEach((l,i)=> text2(l[0], nx+10, ny+6+i*20, l[1], 1)); ctx.globalAlpha = 1;
   }
   if (S.helpPop){
     const hp = S.helpPop, dur = hp.dur || 2.4, col = hp.col || '#e0708f', a = clamp(Math.min(hp.t/0.2, (dur-hp.t)/0.4), 0, 1);
@@ -1876,7 +1882,7 @@ function brightLight(a, t){
 /* shown at the end when achievements are missing */
 function missingCard(){
   const n = TOTAL() - S.stars, lines = [['ACHIEVEMENTS MISSING', '#f4f2ee'], [`${n} OF ${TOTAL()} LEFT, GO BACK`, '#e8746b'],
-    [S.partner ? 'TOGETHER IT MIGHT BE EASIER NOW' : '', '#e0708f'], [TOUCH ? 'TAP THE STAR FOR THE LIST' : 'PRESS A FOR THE LIST', '#b9b2a4']].filter(l => l[0]);
+    [S.partner ? 'TOGETHER IT MIGHT BE EASIER NOW' : '', '#e0708f'], [TOUCH ? 'TAP THE STAR FOR THE MENU' : 'PRESS A OR CLICK THE STAR FOR THE MENU', '#b9b2a4']].filter(l => l[0]);
   const w = Math.max(...lines.map(l => tw2(l[0]))) + 36, hh = 10 + lines.length*22, x = Math.round(W/2 - w/2), y = 40;
   panelBox(x, y, w, hh, 'rgba(10,12,17,.88)'); r(x, y+hh-1, w, 1, '#d2574f');
   lines.forEach((l, i) => textC2(l[0], W/2, y+10+i*22, l[1], 1));
@@ -2012,6 +2018,10 @@ function drawHUD(seg, cam){
     r(W/2-80, 138, 160, 2, '#f2c14e');
     textC2('A PIXEL CV', W/2, 152, '#f2c14e', 2);
     if (Math.floor(S.t*2)%2===0) textC2(TOUCH ? 'TAP TO START' : 'PRESS  >  TO START', W/2, 204, '#f4f2ee', 2);
+    textC2(TOUCH ? 'TAP THE STAR FOR THE MENU' : 'CLICK THE STAR FOR THE MENU', W/2, 250, '#b9b2a4', 1);
+    const b = S.btnRect;                                   // the star button stays visible above the start screen
+    if (b){ panelBox(b.x, b.y, b.w, b.h); r(b.x, b.y+19, b.w, 1, '#f2c14e'); draw(ICON.star, b.x+6, 10); text(`${S.stars}/${TOTAL()}`, b.x+24, 13, '#f2c14e', 1);
+      const p = 0.5 + 0.5*Math.sin(S.t*4); ctx.globalAlpha = 0.35*p; r(b.x-2, b.y-2, b.w+4, b.h+4, '#f2c14e'); ctx.globalAlpha = 1; }
   }
   if (paused && !panelOpen && S.started){ r(0,0,W,H,'rgba(8,9,13,.45)'); textC2('PAUSED', W/2, H/2-8, '#f4f2ee', 3); }
 }
@@ -2112,6 +2122,7 @@ function openPanel(open){
 document.getElementById('ovClose').onclick = ()=>openPanel(false);
 document.getElementById('ovClear').onclick = ()=>{ reset(); hideLinks(); updateTimeline(); refreshPanel(); };
 document.getElementById('ovAll').onclick = ()=>{
+  for (const f of S.fly) if (!f.done){ f.done = true; f.arrive(); }
   for (const b of BOXES){ if (b.hit) continue; b.hit = true; b.open = 1; S.stars++; if (b.wear) wear(b.wear); }
   for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
   for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
@@ -2206,9 +2217,9 @@ addEventListener('keyup', e=>{ keys[e.code] = false; });
 cv.addEventListener('click', e=>{
   userGesture();
   const rect = cv.getBoundingClientRect(), x = (e.clientX-rect.left)/rect.width*W, y = (e.clientY-rect.top)/rect.height*H;
-  if (!S.started){ startGame(false); return; }
   const b = S.btnRect;
-  if (b && x>=b.x && x<=b.x+b.w && y>=b.y-4 && y<=b.y+b.h+4) openPanel(!panelOpen);
+  if (b && x>=b.x-4 && x<=b.x+b.w+4 && y>=b.y-4 && y<=b.y+b.h+6){ openPanel(!panelOpen); return; }   // the star opens the menu, also on the start screen
+  if (!S.started){ startGame(false); return; }
 });
 function bindTouch(id, code){
   const el = document.getElementById(id); if (!el) return;
