@@ -74,17 +74,8 @@
   #ov tr.locked td{ color:#4a463f; } #ov tr.locked td.yr{ color:#4a463f; }
 
   #ov tr.locked td.tt{ color:#4a463f; }
-  #ov .map li.seen i{ background:#e8e6e1; }
   #ov footer{ display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:space-between; padding:8px 16px; border-top:1px solid var(--rule); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
   #ov footer a{ color:#9fc3ea; text-decoration:none; } #ov footer a.site{ color:var(--accent); } #ov footer a.cv{ color:#f4f2ee; }
-  #ov .map{ display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start; }
-  #ov .map canvas{ image-rendering:pixelated; width:420px; max-width:100%; height:auto; border:1px solid var(--rule); background:#0f1a26; }
-  #ov .map ol{ margin:0; padding:0; list-style:none; font-size:12px; columns:2; column-gap:24px; }
-  #ov .map li{ padding:3px 0; color:#b9b2a4; break-inside:avoid; } #ov .map li b{ color:var(--ink); font-weight:500; }
-  #ov .map li.on b{ color:var(--accent); }
-  #ov .map li i{ display:inline-block; width:8px; height:8px; margin-right:8px; background:#5a5448; vertical-align:middle; }
-  #ov .map li.on i{ background:var(--accent); }
-  @media (max-width:700px){ #ov .map{ grid-template-columns:1fr; } #ov .map ol{ columns:1; } }
   #hud{ font-size:12.5px; letter-spacing:.08em; color:var(--dim); text-align:center; line-height:1.8; }
   #hud b{ color:var(--ink); font-weight:500; }
   #endlinks{ display:none; gap:18px; justify-content:center; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
@@ -644,7 +635,7 @@ const FONT = {
  '!':['..#..','..#..','..#..','..#..','..#..','.....','..#..'], '?':['.###.','#...#','...#.','..#..','..#..','.....','..#..'],
  '/':['....#','...#.','...#.','..#..','.#...','.#...','#....'], '+':['.....','..#..','..#..','#####','..#..','..#..','.....'],
  '(':['..##.','.#...','.#...','.#...','.#...','.#...','..##.'], ')':['.##..','...#.','...#.','...#.','...#.','...#.','.##..'],
- '>':['.....','#....','.#...','..#..','.#...','#....','.....'], '<':['.....','....#','...#.','..#..','...#.','....#','.....'], '%':['##..#','##.#.','..#..','..#..','.#...','#..##','#..##'],
+ '>':['.....','#....','.#...','..#..','.#...','#....','.....'], '<':['.....','....#','...#.','..#..','...#.','....#','.....'], 'Ü':['.#.#.','.....','#...#','#...#','#...#','#...#','.###.'], '%':['##..#','##.#.','..#..','..#..','.#...','#..##','#..##'],
  '*':['.....','#.#.#','.###.','#####','.###.','#.#.#','.....'], ' ':['.....','.....','.....','.....','.....','.....','.....']
 };
 function drawIcon(grid, x, y, s=1){
@@ -689,7 +680,7 @@ const LEVEL = [
   { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015-2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
   { id:'f_bk',  kind:'flight', len:620,  route:'RDU > FRA', sub:'BACK TO KARLSRUHE' },
   { id:'ka2',   kind:'ground', len:1950, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
-  { id:'zh',    kind:'ground', len:1850, theme:'zurich',    name:'ZURICH',         years:'2019-2021', sub:'', map:'zh' },
+  { id:'zh',    kind:'ground', len:1350, theme:'zurich',    name:'ZURICH',         years:'2019-2021', sub:'', map:'zh' },
   { id:'f_mck', kind:'flight', len:2200, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
   { id:'ox',    kind:'ground', len:2300, theme:'oxford',    name:'OXFORD',         years:'2021-2023', sub:'', map:'ox' },
   { id:'lon',   kind:'ground', len:1500, theme:'london',    name:'LONDON',         years:'2023-2024', sub:'', map:'ox' },
@@ -704,20 +695,6 @@ const SEGID = Object.fromEntries(LEVEL.map(s=>[s.id,s]));
 function segAt(x){ for (const s of LEVEL) if (x < s.x1) return s; return LEVEL[LEVEL.length-1]; }
 const wx = (id, off) => SEGID[id].x0 + off;
 
-/* Map places: lon/lat for the overview map */
-const PLACES = {
-  ober:{ name:'Oberschefflenz, Osterburken', lon:9.3, lat:49.4 },
-  germ:{ name:'Germersheim', lon:8.4, lat:49.2 },
-  ka:  { name:'Karlsruhe', lon:8.4, lat:49.0 },
-  ral: { name:'Raleigh, USA', lon:-78.6, lat:35.8, inset:true },
-  zh:  { name:'Zurich', lon:8.5, lat:47.4 },
-  it:  { name:'Milan', lon:9.2, lat:45.5 },
-  fi:  { name:'Finland', lon:25.0, lat:60.2 },
-  ie:  { name:'Ireland', lon:-6.3, lat:53.3 },
-  sa:  { name:'Riyadh', lon:46.7, lat:24.7 },
-  ox:  { name:'Oxford', lon:-1.3, lat:51.8 },
-  muc: { name:'Munich', lon:11.6, lat:48.1 }
-};
 
 /* Boxes. t = life | edu | work.
    k = station (timeline / positions: square block) | degree | honour | volunteer (round medal).
@@ -756,7 +733,7 @@ BOXES.forEach((b,i)=>{ b.i=i; b.off = Math.round(b.off*UK); b.x = wx(b.seg, b.of
 /* Volunteering: no boxes, just small things Felix helps with on the way. Walking past collects them. */
 const HELPS = [
   { seg:'oster', off:560,  year:'2011-2012', tag:'FUND-RAISERS',     role:'Organiser of fund-raisers', desc:'', org:'', loc:'Awasa, Ethiopia', prop:'jar' },
-  { seg:'ka1',   off:330,  year:'2012-2018', tag:'PARTY GROUP HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
+  { seg:'ka1',   off:590,  year:'2012-2018', tag:'PARTY GROUP HEAD', role:'Head of political party group', desc:'', org:'', loc:'Schefflenz', prop:'lectern' },
   { seg:'ka1',   off:880,  year:'2013-2018', tag:'SOCCER CLUB TREASURER', role:'Treasurer soccer club', desc:'', org:'SC Oberschefflenz', loc:'Schefflenz', prop:'ball' },
   { seg:'ox',    off:550 ,  year:'2021-2024', tag:'PHD STUDENT REP', role:'PhD student representative', desc:'', org:'University of Oxford', loc:'UK', prop:'megaphone' },
   { seg:'zh2',   off:450 , year:'2025-',     tag:'DEPUTY DISTRICT CHAIRMAN', role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
@@ -769,7 +746,6 @@ const EVENTS = [
   { seg:'lon', off:150, fx:'mck_on', wear:'suit', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
 ];
 EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
-const FLYSTARS = [];
 const BUBBLE_T = 2.2;   // seconds a box bubble stays
 const boxX = tag => BOXES.find(b => b.tag === tag).x;
 const MCK_PERIODS = [[boxX('ENGAGEMENT MANAGER / PRINCIPAL'), boxX('DPHIL STUDIES')], [EVENTS.find(e => e.fx==='mck_on').x, boxX('AI & DATA LEAD / PORTFOLIO MANAGEMENT')]];   // no longer used, kept so older code paths stay valid
@@ -1043,11 +1019,6 @@ function onHit(b){
   refreshPanel();
   if (b.fx==='mck_on')  S.mck = true;
   if (b.fx==='mck_off') S.mck = false;
-  if (b.fx==='partner_unused'){
-    S.partner = { x:S.x+140, t:0 };
-    S.flash = 1;
-    for (let i=0;i<16;i++) popSparks(S.x+16, S.y-64, '#e0708f', 1, 80);
-  }
 }
 function camX(){ return clamp(S.x - 200, 0, WORLD_END - W); }
 </script>
@@ -1237,7 +1208,6 @@ function tram(x, y, t){
   r(x+4, y-4, 6, 4, '#333'); r(x+32, y-4, 6, 4, '#333'); r(x+60, y-4, 6, 4, '#333');
   r(x+34, y-40, 2, 12, '#666'); r(x+26, y-40, 18, 1, '#666');
 }
-function kitSign(x, y){ r(x+10, y-30, 3, 30, '#666'); r(x, y-42, 60, 14, '#2b3552'); text('KIT', x+16, y-40, '#f4f2ee', 3); }
 function belltower(x, y){
   r(x, y-96, 24, 96, '#9c5a42'); for (let yy=0; yy<96; yy+=5) for (let xx=((yy/5)|0)%2*4; xx<24; xx+=8) r(x+xx, y-110+yy, 3, 1, 'rgba(0,0,0,.14)');
   r(x-3, y-100, 30, 4, '#e4dccc'); r(x+6, y-90, 12, 18, '#3a3a3a'); r(x+8, y-90, 8, 18, '#1a1a1a');
@@ -1245,11 +1215,13 @@ function belltower(x, y){
   r(x-6, y-108, 36, 8, '#e4dccc'); tri(x+12, y-118, 10, 20, '#6a6a6a');
   r(x-20, y-16, 64, 16, '#e4dccc');
 }
-function brickHall(x, y, w=110, h=54){
+function brickHall(x, y, w=110, h=54, label=''){
   r(x, y-h, w, h, '#9c5a42'); for (let yy=0; yy<h; yy+=4) for (let xx=((yy/4)|0)%2*5; xx<w; xx+=10) r(x+xx, y-h+yy, 4, 1, 'rgba(0,0,0,.14)');
+  if (label){ const lw = tw(label) + 8; r(x + w/2 - lw/2, y-h+1, lw, 9, '#e4dccc'); text(label, x + w/2 - lw/2 + 4, y-h+2, '#5a2a1c'); }
   r(x, y-h-4, w, 4, '#e4dccc'); r(x+w/2-16, y-h-14, 32, 10, '#9c5a42'); tri(x+w/2, y-h-24, 10, 36, '#e4dccc');
   for (let i=8;i<w-8;i+=16){ r(x+i, y-h+10, 8, 12, '#e4dccc'); r(x+i+1, y-h+11, 6, 10, '#7aa2c0'); r(x+i, y-h+30, 8, 12, '#e4dccc'); r(x+i+1, y-h+31, 6, 10, '#7aa2c0'); }
   r(x+w/2-6, y-18, 12, 18, '#4a2a20'); for (let i=0;i<4;i++) r(x+w/2-14+i*8, y-24, 3, 24, '#f4efe2');
+  if (label){ const lw = tw(label) + 8; r(x + w/2 - lw/2, y-h+1, lw, 9, '#e4dccc'); text(label, x + w/2 - lw/2 + 4, y-h+2, '#5a2a1c'); }
 }
 function usFlag(x, y, t){
   r(x, y-64, 3, 64, '#d8d8d8'); r(x-1, y-67, 5, 3, '#f2c14e');
@@ -1260,9 +1232,10 @@ function pickup(x, y){ r(x, y-14, 44, 10, '#c8493f'); r(x+24, y-24, 18, 10, '#c8
 function ethBuilding(x, y){
   r(x, y-56, 150, 56, '#e3dccb'); r(x, y-56, 150, 3, '#f1ece0'); r(x-4, y-59, 158, 3, '#7f8f9a');
   r(x+50, y-78, 50, 22, '#e3dccb'); dome(x+75, y-78, 22, '#7f8f9a'); dome(x+75, y-99, 5, '#7f8f9a');
-  for (let i=8;i<142;i+=14){ r(x+i, y-48, 7, 12, '#6b7a86'); r(x+i, y-30, 7, 12, '#6b7a86'); }
+  for (let i=8;i<142;i+=14){ r(x+i, y-44, 7, 10, '#6b7a86'); r(x+i, y-28, 7, 12, '#6b7a86'); }
   for (let i=0;i<6;i++) r(x+22+i*22, y-56, 4, 56, '#d2cbb9');
   r(x+66, y-20, 18, 20, '#5a4a3a');
+  const lw = tw('ETH ZÜRICH') + 8; r(x+75-lw/2, y-55, lw, 9, '#f1ece0'); text('ETH ZÜRICH', x+75-lw/2+4, y-54, '#4f5f6b');
 }
 function grossmunster(x, y){
   for (const dx of [0, 34]){ r(x+dx, y-96, 22, 96, '#cfc7b5'); r(x+dx+4, y-100, 14, 6, '#8a8272'); dome(x+dx+11, y-100, 7, '#8a8272');
@@ -1294,7 +1267,6 @@ function aurora(cam, t){
   }
 }
 function snowfall(cam, t){ for (let i=0;i<90;i++){ const x = (hash(i)*W*1.3 + t*10*(0.5+hash(i+4)) ) % (W+20) - 10, y = (hash(i+9)*GROUND + t*(14+hash(i)*18)) % GROUND; r(x, y, 2, 2, 'rgba(255,255,255,.85)'); } }
-function rain(t){ for (let i=0;i<120;i++){ const x = (hash(i)*W*1.2 + t*40) % (W+40) - 20, y = (hash(i+7)*GROUND + t*(280+hash(i)*90)) % GROUND; r(x, y, 1, 7, 'rgba(200,215,230,.45)'); } }
 function roundTower(x, y){ r(x, y-80, 16, 80, '#8a8a80'); tri(x+8, y-96, 16, 18, '#5a5a52'); r(x+6, y-70, 4, 6, '#2a2a2a'); r(x+6, y-50, 4, 6, '#2a2a2a'); r(x-24, y-30, 24, 30, '#7f7f76'); }
 function cliffs(cam, p){
   const step = 170, first = Math.floor((cam*p)/step)-1;
@@ -1442,12 +1414,18 @@ function spireRow(cam, p, base, step){
   }
 }
 function gothicWindow(x, y, w, h, col){ r(x, y+2, w, h-2, col); dome(x+w/2, y+2, w/2, col); }
-function collegeFront(x, y){
+function collegeFront(x, y, label=''){
   r(x-10, y-3, 140, 3, '#6a9a5a');                                   // lawn
   r(x, y-46, 120, 46, STONE); r(x, y-46, 120, 2, STONE_L);
   for (let k=0;k<120;k+=6) r(x+k, y-50, 3, 4, STONE);                // battlements
-  for (let k=8;k<112;k+=14){ gothicWindow(x+k, y-40, 6, 12, WIN); gothicWindow(x+k, y-22, 6, 12, WIN); }
-  r(x+52, y-24, 16, 24, '#4a3a2a'); dome(x+60, y-24, 8, '#4a3a2a');   // gate
+  if (label){                                                         // name carved in a band between the window rows
+    for (let k=8;k<112;k+=14){ gothicWindow(x+k, y-42, 6, 12, WIN); if (k<48 || k>66) gothicWindow(x+k, y-16, 6, 11, WIN); }
+    r(x+2, y-28, 116, 9, '#b8a57a'); text(label, x+60-tw(label)/2, y-27, '#2b2418');
+    r(x+52, y-16, 16, 16, '#4a3a2a'); dome(x+60, y-16, 8, '#4a3a2a');
+  } else {
+    for (let k=8;k<112;k+=14){ gothicWindow(x+k, y-40, 6, 12, WIN); gothicWindow(x+k, y-22, 6, 12, WIN); }
+    r(x+52, y-24, 16, 24, '#4a3a2a'); dome(x+60, y-24, 8, '#4a3a2a');   // gate
+  }
   r(x-6, y-58, 10, 58, STONE_D); r(x+116, y-58, 10, 58, STONE_D);     // corner towers
   for (const tx of [x-6, x+116]){ r(tx, y-62, 3, 4, STONE_D); r(tx+7, y-62, 3, 4, STONE_D); }
 }
@@ -1521,11 +1499,13 @@ function londonEye(x, y, t){
 
 
 /* ---------- extra details per place ---------- */
-function ortsschild(x, y, name){                      // yellow German place-name sign
-  const w = tw(name) + 12;
+/* place-name signs in the style of the country: de yellow, ch blue, uk white, us green */
+const SIGN_STYLE = { de:['#15120f','#f2c14e','#15120f'], ch:['#f4f2ee','#1f4e9a','#f4f2ee'], uk:['#15120f','#f4f2ee','#15120f'], us:['#f4f2ee','#1f6b3a','#f4f2ee'] };
+function ortsschild(x, y, name, style='de'){
+  const [edge, fill, ink] = SIGN_STYLE[style], w = tw(name) + 12;
   r(x+4, y-26, 2, 26, '#8a8f96'); r(x+w-6, y-26, 2, 26, '#8a8f96');
-  r(x, y-40, w, 16, '#15120f'); r(x+1, y-39, w-2, 14, '#f2c14e'); r(x+2, y-38, w-4, 12, '#15120f'); r(x+3, y-37, w-6, 10, '#f2c14e');
-  text(name, x+6, y-35, '#15120f');
+  r(x, y-40, w, 16, '#15120f'); r(x+1, y-39, w-2, 14, fill); r(x+2, y-38, w-4, 12, edge); r(x+3, y-37, w-6, 10, fill);
+  text(name, x+6, y-35, ink);
 }
 function grundschule(x, y){
   r(x, y-38, 70, 38, '#e6d9bf'); r(x, y-38, 70, 2, '#f2e8d4'); tri(x+35, y-54, 16, 80, '#a34a3a');
@@ -1647,19 +1627,19 @@ const PROPS = {
   ober:  [[60,(x,y,t)=>halfTimbered(x,y,60,40)],[150,(x,y,t)=>barn(x,y)],[250,(x,y,t)=>ortsschild(x,y,'OBERSCHEFFLENZ')],[340,(x,y,t)=>cow(x,y)],[450,(x,y,t)=>grundschule(x,y)],[620,(x,y,t)=>church(x,y)],[760,(x,y,t)=>halfTimbered(x,y,50,34,'#7a4a3a')],[1030,(x,y,t)=>pitch(x,y,t)],[1250,(x,y,t)=>tractor(x,y)],[1340,(x,y,t)=>halfTimbered(x,y,56,38)]],
   oster: [[40,(x,y,t)=>romanTower(x,y)],[170,(x,y,t)=>ortsschild(x,y,'OSTERBURKEN')],[280,(x,y,t)=>schoolGTO(x,y)],[660,(x,y,t)=>townHall(x,y)],[900,(x,y,t)=>halfTimbered(x,y,60,40,'#6f4a3a')],[1060,(x,y,t)=>halfTimbered(x,y,44,32)]],
   germ:  [[40,(x,y,t)=>hangar(x,y,150)],[230,(x,y,t)=>controlTower(x,y)],[290,(x,y,t)=>deFlagPole(x,y,t)],[340,(x,y,t)=>jetParked(x,y)],[470,(x,y,t)=>ortsschild(x,y,'GERMERSHEIM')],[570,(x,y,t)=>windsock(x,y,t)],[620,(x,y,t)=>barracks(x,y)],[830,(x,y,t)=>fortressGate(x,y)]],
-  ka1:   [[40,(x,y,t)=>schloss(x,y)],[260,(x,y,t)=>tram(x,y,t)],[420,(x,y,t)=>pyramid(x,y)],[640,(x,y,t)=>kitSign(x,y)],[720,(x,y,t)=>brickHall(x,y,120,50)]],
-  ral:   [[60,(x,y,t)=>brickHall(x,y)],[240,(x,y,t)=>belltower(x,y)],[330,(x,y,t)=>usFlag(x,y,t)],[520,(x,y,t)=>pickup(x,y)],[620,(x,y,t)=>brickHall(x,y,100,60)]],
-  ka2:   [[40,(x,y,t)=>brickHall(x,y,120,50)],[240,(x,y,t)=>tram(x,y,t)],[500,(x,y,t)=>kitSign(x,y)],[580,(x,y,t)=>halfTimbered(x,y,60,44,'#6f4a3a')],[860,(x,y,t)=>schloss(x,y)],[1050,(x,y,t)=>pylon(x,y)],[1120,(x,y,t)=>windTurbine(x,y,t)],[1180,(x,y,t)=>carFactory(x,y)],[1360,(x,y,t)=>lectureHall(x,y,'DHBW')],[1690,(x,y,t)=>smartHouse(x,y)],[1850,(x,y,t)=>tram(x,y,t)]],
-  zh:    [[60,(x,y,t)=>ethBuilding(x,y-16)],[420,(x,y,t)=>grossmunster(x,y-16)],[640,(x,y,t)=>tram(x,y,t)],[880,(x,y,t)=>primeTower(x,y)],[1050,(x,y,t)=>cityRowLocal(x,y)],[1300,(x,y,t)=>tram(x,y,t)]],
+  ka1:   [[40,(x,y,t)=>schloss(x,y)],[210,(x,y,t)=>ortsschild(x,y,'KARLSRUHE')],[300,(x,y,t)=>tram(x,y,t)],[450,(x,y,t)=>pyramid(x,y)],[700,(x,y,t)=>brickHall(x,y,120,50,'KIT')]],
+  ral:   [[60,(x,y,t)=>brickHall(x,y,110,54,'NC STATE')],[240,(x,y,t)=>belltower(x,y)],[330,(x,y,t)=>usFlag(x,y,t)],[430,(x,y,t)=>ortsschild(x,y,'RALEIGH','us')],[520,(x,y,t)=>pickup(x,y)],[620,(x,y,t)=>brickHall(x,y,100,60)]],
+  ka2:   [[40,(x,y,t)=>brickHall(x,y,120,50,'KIT')],[175,(x,y,t)=>ortsschild(x,y,'KARLSRUHE')],[260,(x,y,t)=>tram(x,y,t)],[580,(x,y,t)=>halfTimbered(x,y,60,44,'#6f4a3a')],[860,(x,y,t)=>schloss(x,y)],[1050,(x,y,t)=>pylon(x,y)],[1120,(x,y,t)=>windTurbine(x,y,t)],[1180,(x,y,t)=>carFactory(x,y)],[1360,(x,y,t)=>lectureHall(x,y,'DHBW')],[1690,(x,y,t)=>smartHouse(x,y)],[1850,(x,y,t)=>tram(x,y,t)]],
+  zh:    [[60,(x,y,t)=>ethBuilding(x,y-16)],[225,(x,y,t)=>ortsschild(x,y,'ZÜRICH','ch')],[420,(x,y,t)=>grossmunster(x,y-16)],[640,(x,y,t)=>tram(x,y,t)],[880,(x,y,t)=>primeTower(x,y)],[1050,(x,y,t)=>cityRowLocal(x,y)]],
   it:    [[60,(x,y,t)=>duomo(x,y)],[300,(x,y,t)=>vespa(x,y)],[480,(x,y,t)=>halfTimbered(x,y,60,44,'#c9432f')]],
   fi:    [[80,(x,y,t)=>saunaHut(x,y)],[420,(x,y,t)=>saunaHut(x,y)]],
   ie:    [[80,(x,y,t)=>roundTower(x,y)],[260,(x,y,t)=>sheep(x,y)],[300,(x,y,t)=>sheep(x,y)],[470,(x,y,t)=>pub(x,y)]],
   sa:    [[40,(x,y,t)=>palm(x,y)],[160,(x,y,t)=>kingdomTower(x,y)],[460,(x,y,t)=>palm(x,y)],[520,(x,y,t)=>palm(x,y)]],
-  ox:    [[40,(x,y,t)=>radcliffe(x,y)],[200,(x,y,t)=>collegeFront(x,y)],[400,(x,y,t)=>bicycle(x,y)],[430,(x,y,t)=>bicycle(x,y)],[640,(x,y,t)=>tomTower(x,y)],[780,(x,y,t)=>punt(x,y,t)],
+  ox:    [[40,(x,y,t)=>radcliffe(x,y)],[200,(x,y,t)=>collegeFront(x,y,'UNIVERSITY OF OXFORD')],[335,(x,y,t)=>ortsschild(x,y,'OXFORD','uk')],[400,(x,y,t)=>bicycle(x,y)],[430,(x,y,t)=>bicycle(x,y)],[640,(x,y,t)=>tomTower(x,y)],[780,(x,y,t)=>punt(x,y,t)],
           [900,(x,y,t)=>bridgeOfSighs(x,y)],[1120,(x,y,t)=>magdalenTower(x,y)],[1250,(x,y,t)=>collegeFront(x,y)],[1470,(x,y,t)=>bicycle(x,y)],[1560,(x,y,t)=>spires(x,y)],[1760,(x,y,t)=>radcliffe(x,y)],[1940,(x,y,t)=>tomTower(x,y)],[2100,(x,y,t)=>bicycle(x,y)]],
-  lon:   [[60,(x,y,t)=>bigBen(x,y)],[300,(x,y,t)=>phoneBox(x,y)],[400,(x,y,t)=>doubleDecker(x,y,t)],[620,(x,y,t)=>londonEye(x,y,t)],[960,(x,y,t)=>phoneBox(x,y)],[1080,(x,y,t)=>towerBridge(x,y)],[1360,(x,y,t)=>doubleDecker(x,y,t)]],
-  zh2:   [[60,(x,y,t)=>grossmunster(x,y-16)],[330,(x,y,t)=>tram(x,y,t)],[560,(x,y,t)=>primeTower(x,y)],[700,(x,y,t)=>cityRowLocal(x,y)],[1050,(x,y,t)=>ethBuilding(x,y-16)],[1350,(x,y,t)=>tram(x,y,t)]],
-  muc:   [[40,(x,y,t)=>frauenkirche(x,y)],[260,(x,y,t)=>beerTable(x,y)],[420,(x,y,t)=>maibaum(x,y)],[620,(x,y,t)=>podium(x,y)],[660,(x,y,t)=>poster(x,y)],[800,(x,y,t)=>frauenkirche(x,y)],[980,(x,y,t)=>olympiaturm(x,y)],[1100,(x,y,t)=>beerTable(x,y)]],
+  lon:   [[60,(x,y,t)=>bigBen(x,y)],[195,(x,y,t)=>ortsschild(x,y,'LONDON','uk')],[300,(x,y,t)=>phoneBox(x,y)],[400,(x,y,t)=>doubleDecker(x,y,t)],[620,(x,y,t)=>londonEye(x,y,t)],[960,(x,y,t)=>phoneBox(x,y)],[1080,(x,y,t)=>towerBridge(x,y)],[1360,(x,y,t)=>doubleDecker(x,y,t)]],
+  zh2:   [[60,(x,y,t)=>grossmunster(x,y-16)],[190,(x,y,t)=>ortsschild(x,y,'ZÜRICH','ch')],[255,(x,y,t)=>tram(x,y,t)],[560,(x,y,t)=>primeTower(x,y)],[700,(x,y,t)=>cityRowLocal(x,y)],[1050,(x,y,t)=>ethBuilding(x,y-16)],[1330,(x,y,t)=>tram(x,y,t)]],
+  muc:   [[40,(x,y,t)=>frauenkirche(x,y)],[150,(x,y,t)=>ortsschild(x,y,'MÜNCHEN')],[260,(x,y,t)=>beerTable(x,y)],[420,(x,y,t)=>maibaum(x,y)],[620,(x,y,t)=>podium(x,y)],[660,(x,y,t)=>poster(x,y)],[800,(x,y,t)=>frauenkirche(x,y)],[980,(x,y,t)=>olympiaturm(x,y)],[1100,(x,y,t)=>beerTable(x,y)]],
   end:   [[40,(x,y,t)=>beerTable(x,y)]]
 };
 function cityRowLocal(x, y){ for (let i=0;i<4;i++){ const h = 40+((i*37)%30); r(x+i*38, y-h, 32, h, '#cfc7b5'); for (let yy=6; yy<h-6; yy+=10) for (let xx=4; xx<28; xx+=8) r(x+i*38+xx, y-h+yy, 4, 5, '#6b7a86'); } }
@@ -2062,7 +2042,6 @@ function drawHUD(seg, cam){
    8. OVERVIEW (DOM): achievements table + map, and the timeline bar
    ===================================================================== */
 const ov = document.getElementById('ov'), ovBody = document.getElementById('ovBody'), ovCount = document.getElementById('ovCount');
-let ovTab = 'ach';
 const iconURL = {};
 function iconDataURL(name){
   if (iconURL[name]) return iconURL[name];
@@ -2116,38 +2095,6 @@ function refreshPanel(){
     <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
     <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Volunteering',HELPS]]]])}</div></div>`;
 }
-function outlookBlock(){
-  const open = S.ended || S.allUnlocked;
-  const body = open
-    ? `<div class="out"><p>Private life, location, work and education: all open. And it looks bright.</p>
-       <div class="chips"><span>Private ?</span><span>Location ?</span><span>Work ?</span><span>Education ?</span></div></div>`
-    : `<div class="out locked"><p>Reach the end of the game to see the outlook.</p></div>`;
-  return `<table><tbody><tr><th class="next">Outlook</th></tr><tr><td class="outtd">${body}</td></tr></tbody></table>`;
-}
-function drawMap(){
-  const c = document.getElementById('mapc'); if (!c) return;
-  const g = c.getContext('2d');
-  const cur = segAt(S.x).map || (S.lastSeg && S.lastSeg.map);
-  g.fillStyle = '#0f1a26'; g.fillRect(0,0,84,44);
-  g.fillStyle = '#2f4a3a';
-  for (let y=0;y<44;y++) for (let x=0;x<84;x++) if (MAP_EU[y][x]==='#') g.fillRect(x,y,1,1);
-  // USA inset, bottom left
-  g.fillStyle = '#0f1a26'; g.fillRect(0, 26, 22, 18); g.fillStyle = '#3a4a5a'; g.fillRect(0, 26, 22, 1); g.fillRect(22, 26, 1, 18);
-  g.fillStyle = '#2f4a3a';
-  for (let y=0;y<20;y+=1) for (let x=0;x<30;x+=1) if (MAP_US[y][x]==='#' && x*0.7<21 && y*0.85<17) g.fillRect(Math.floor(x*0.7), 27+Math.floor(y*0.85), 1, 1);
-  const visited = new Set(); for (const s of LEVEL) if (s.map && s.x0 <= S.x) visited.add(s.map);
-  const list = document.getElementById('mapl'); let items = '';
-  for (const [k,p] of Object.entries(PLACES)){
-    let px, py;
-    if (p.inset){ px = Math.floor((p.lon - MAP_US_BOX.lon0)/(MAP_US_BOX.lon1-MAP_US_BOX.lon0)*30*0.7); py = 27 + Math.floor((MAP_US_BOX.lat1 - p.lat)/(MAP_US_BOX.lat1-MAP_US_BOX.lat0)*20*0.85); }
-    else { px = Math.floor((p.lon - MAP_EU_BOX.lon0)/(MAP_EU_BOX.lon1-MAP_EU_BOX.lon0)*84); py = Math.floor((MAP_EU_BOX.lat1 - p.lat)/(MAP_EU_BOX.lat1-MAP_EU_BOX.lat0)*44); }
-    const on = k===cur, seen = visited.has(k);
-    g.fillStyle = on ? '#f2c14e' : seen ? '#e8e6e1' : '#5a5448';
-    g.fillRect(px-1, py-1, 3, 3); if (on){ g.fillRect(px-2, py, 1, 1); g.fillRect(px+2, py, 1, 1); g.fillRect(px, py-2, 1, 1); g.fillRect(px, py+2, 1, 1); }
-    items += `<li class="${on?'on':(seen?'seen':'')}"><i></i><b>${esc(p.name)}</b>${seen||on ? '' : ' <span style="color:#4a463f">(not yet)</span>'}</li>`;
-  }
-  list.innerHTML = items;
-}
 function openPanel(open){
   panelOpen = open; ov.classList.toggle('open', open);
   if (open) refreshPanel();
@@ -2184,11 +2131,12 @@ function updateTimeline(){
 }
 /* hide year labels that would overlap on narrow screens */
 function layoutTimeline(){
-  let lastRight = -1e9;
-  tl.querySelectorAll('.lab').forEach(l => {
+  let lastRight = -1e9, lastVis = null;
+  const next = tl.querySelector('.lab.next'), nb = next ? next.getBoundingClientRect() : null;
+  tl.querySelectorAll('.lab:not(.next)').forEach(l => {
     l.style.visibility = 'visible';
     const b = l.getBoundingClientRect();
-    if (b.left < lastRight + 6 && !l.classList.contains('next')) l.style.visibility = 'hidden'; else lastRight = b.right;
+    if (b.left < lastRight + 6 || (nb && b.right > nb.left - 6)) l.style.visibility = 'hidden'; else { lastRight = b.right; lastVis = l; }
   });
 }
 layoutTimeline(); addEventListener('resize', layoutTimeline); addEventListener('orientationchange', ()=>setTimeout(layoutTimeline, 200));
