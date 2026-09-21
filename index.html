@@ -164,7 +164,7 @@
    ===================================================================== */
 const W = 640, H = 320;
 const cv = document.getElementById('c');
-const ctx = cv.getContext('2d', { alpha:false });
+let ctx = cv.getContext('2d', { alpha:false });   // let: scenery is sometimes drawn into an offscreen canvas
 ctx.imageSmoothingEnabled = false;
 let SK=1, SOX=0, SOY=0;           // optional scale around an anchor, snapped to whole pixels
 const r = (x,y,w,h,col) => {
@@ -703,7 +703,7 @@ const BOXES = [
   { seg:'oster', off:800,  t:'edu',  k:'degree',  y:94,  year:'2012',      tag:'ABITUR 1.3',       role:'Abitur',           desc:'Grade 1.3', org:'GTO', loc:'Osterburken', icon:'scroll' },
   { seg:'germ',  off:140 ,  t:'work', k:'station', y:98,  year:'2012-2013', tag:'MILITARY SERVICE', role:'Military service', desc:'Voluntary service', org:'German airforce', loc:'Germersheim', icon:'wings', wear:'uniform' },
   { seg:'ka1',   off:150 ,  t:'edu',  k:'station', y:94,  year:'2013-2016', tag:'B.SC. STUDIES',    role:'B.Sc.',            desc:'Industrial Engineering', org:'KIT', loc:'Karlsruhe', icon:'hardhat', wear:['student','hardhat'] },
-  { seg:'ka1',   off:720,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
+  { seg:'ka1',   off:540,  t:'edu',  k:'honour',  y:100, year:'2013-2019', tag:'SCHOLARSHIP',      role:'Scholarship',      desc:'', org:'Konrad-Adenauer Foundation', loc:'Germany', icon:'medal' },
   { seg:'ral',   off:150 ,  t:'edu',  k:'station', y:98,  year:'2015-2015', tag:'EXCHANGE SEMESTER',role:'Exchange semester',desc:'Finance, aerospace', org:'NC State University', loc:'Raleigh, USA', icon:'rocket' },
   { seg:'ral',   off:600,  t:'edu',  k:'honour',  y:94,  year:'2015',      tag:'GPA 4.0',          role:'Exchange semester', desc:'GPA 4.0', org:'NC State University', loc:'Raleigh, USA', icon:'star' },
   { seg:'ka2',   off:430 ,  t:'work', k:'station', y:96,  year:'2015-2018', tag:'TEACHING ASSISTANT', role:'Teaching assistant', desc:'Statistics 1 and 2', org:'KIT', loc:'Karlsruhe', icon:'pointer' },
@@ -1394,22 +1394,22 @@ const THEMES = {
   village:   { particles:{col:'#fff6c8',n:26,vx:12,vy:-6}, sky:['#86c1e6','#dcecf6'], sun:{x:380,y:30,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'grass', top:'#5a8a3c', body:'#6b4a2e'},
     far(cam,t){ clouds(cam,.12,'#ffffff'); hills(cam,.22,'#8fb46e',70,320,3); hills(cam,.32,'#6f9a55',48,260,5); },
     mid(cam,t){ treeline(cam,.55,'#3f6b43',GROUND-2,26,30,true); } },
-  town:      { particles:{col:'#fff6c8',n:18,vx:12,vy:-6}, sky:['#8cc0e2','#e6eef2'], sun:{x:400,y:34,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'cobble', top:'#7c8a6a', body:'#6f6659'},
+  town:      { particles:{col:'#fff6c8',n:18,vx:12,vy:-6}, sky:['#8cc0e2','#e6eef2'], sun:{x:380,y:34,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'cobble', top:'#7c8a6a', body:'#6f6659'},
     far(cam,t){ clouds(cam,.12,'#ffffff'); hills(cam,.22,'#8fb46e',60,340,7); },
     mid(cam,t){ treeline(cam,.5,'#4f8f5a',GROUND-2,44,28,false); } },
   airbase:  { sky:['#7d93aa','#cfd8e0'], sun:null, ground:{kind:'tarmac', top:'#6a7078', body:'#5a6068'},
     far(cam,t){ clouds(cam,.10,'#e8eef2',50,300,4); hills(cam,.18,'#8a9280',24,420,2); jetFly(((t*60)%(W+200))-100, 70); },
     mid(cam,t){ fence(-((cam*0.7)%12), GROUND-2, W+24); } },
-  karlsruhe: { particles:{col:'#f4f2ee',n:14,vx:10,vy:-4}, sky:['#86bde0','#e8eef0'], sun:{x:330,y:30,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'cobble', top:'#7a8a70', body:'#68604f'},
+  karlsruhe: { particles:{col:'#f4f2ee',n:14,vx:10,vy:-4}, sky:['#86bde0','#e8eef0'], sun:{x:380,y:30,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'cobble', top:'#7a8a70', body:'#68604f'},
     far(cam,t){ clouds(cam,.12,'#ffffff'); hills(cam,.2,'#9ab08a',34,400,9); },
     mid(cam,t){ treeline(cam,.5,'#4f8f5a',GROUND-2,50,30,false); } },
   raleigh:   { particles:{col:'#fff6c8',n:18,vx:14,vy:-5}, sky:['#5fa9e0','#e6f3fb'], sun:{x:380,y:26,col:'#fff9d6',glow:'#fff9d6'}, ground:{kind:'brick', top:'#a06a4a', body:'#8a5a3e'},
     far(cam,t){ clouds(cam,.10,'#ffffff'); hills(cam,.2,'#8fb069',40,380,4); },
     mid(cam,t){ treeline(cam,.5,'#3f8f4f',GROUND-2,46,34,false); } },
-  zurich:    { particles:{col:'#ffffff',n:10,vx:8,vy:-3}, sky:['#7fc0dd','#eef6f8'], sun:{x:400,y:28,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'grass', top:'#5e8f66', body:'#4e5a52'},
+  zurich:    { particles:{col:'#ffffff',n:10,vx:8,vy:-3}, sky:['#7fc0dd','#eef6f8'], sun:{x:380,y:28,col:'#fff4c4',glow:'#fff4c4'}, ground:{kind:'grass', top:'#5e8f66', body:'#4e5a52'},
     far(cam,t){ clouds(cam,.10,'#ffffff',30); mountains(cam,.15,'#8ea7b8','#eef4f7',62,200,GROUND-48,1); mountains(cam,.24,'#6f8b9e','#e6eef2',42,160,GROUND-48,4); lake(cam,t,GROUND-48,GROUND-16); boat(120-(cam*0.3)%400+200, GROUND-22, t); r(0,GROUND-16,W,16,'#6f8a5e'); r(0,GROUND-16,W,2,'#84a06e'); },
     mid(cam,t){} },
-  milan:     { particles:{col:'#ffe3b0',n:16,vx:8,vy:-3}, sky:['#f0b268','#fbe4c2'], sun:{x:300,y:44,col:'#fff1c8',glow:'#ffd9a0'}, ground:{kind:'cobble', top:'#9a8a6a', body:'#7d6d50'},
+  milan:     { particles:{col:'#ffe3b0',n:16,vx:8,vy:-3}, sky:['#f0b268','#fbe4c2'], sun:{x:380,y:44,col:'#fff1c8',glow:'#ffd9a0'}, ground:{kind:'cobble', top:'#9a8a6a', body:'#7d6d50'},
     far(cam,t){ clouds(cam,.10,'#fff0da',50); cityRow(cam,.25,['#d9a074','#c98a5a','#e0b480','#b8875f'],GROUND-10,60,30,50,'#6b4a3a',3,true); },
     mid(cam,t){} },
   finland:  { sky:['#1c2a4a','#5f7f9a'], sun:null, ground:{kind:'snow', top:'#e8eef2', body:'#3b4a3c'},
@@ -1418,16 +1418,16 @@ const THEMES = {
   ireland:  { sky:['#9bb7c4','#e0e9ed'], sun:null, ground:{kind:'grass', top:'#4e8f4a', body:'#4a5a44'},
     far(cam,t){ clouds(cam,.12,'#f2f5f7',40,200,7); r(0,GROUND-50,W,50,'#5f8fa8'); for (let i=0;i<W;i+=9) r(i, GROUND-44+((i*13+Math.floor(t*6))%40), 5, 1, 'rgba(255,255,255,.3)'); cliffs(cam,.3); },
     mid(cam,t){} },
-  riyadh:    { particles:{col:'#f0dcae',n:40,vx:60,vy:2}, sky:['#f2c98a','#fdeecb'], sun:{x:320,y:20,col:'#fff7d6',glow:'#ffe2a0'}, ground:{kind:'sand', top:'#e2c48a', body:'#b58f5c'},
+  riyadh:    { particles:{col:'#f0dcae',n:40,vx:60,vy:2}, sky:['#f2c98a','#fdeecb'], sun:{x:380,y:20,col:'#fff7d6',glow:'#ffe2a0'}, ground:{kind:'sand', top:'#e2c48a', body:'#b58f5c'},
     far(cam,t){ dunes(cam,.2); cityRow(cam,.3,['#c9c2b4','#b9b2a4','#d4cdbf'],GROUND-12,44,34,60,'#8fa0b0',8,true); },
     mid(cam,t){} },
-  oxford:   { sky:['#8fb6d4','#e6eef3'], sun:{x:360,y:34,col:'#fff6d8',glow:'#fff6d8'}, ground:{kind:'cobble', top:'#6f7a5a', body:'#5a5245'},
+  oxford:   { sky:['#8fb6d4','#e6eef3'], sun:{x:380,y:34,col:'#fff6d8',glow:'#fff6d8'}, ground:{kind:'cobble', top:'#6f7a5a', body:'#5a5245'},
     far(cam,t){ clouds(cam,.12,'#c5ced4',30,220,7); hills(cam,.2,'#8a9a84',26,420,2); },
     mid(cam,t){ treeline(cam,.5,'#4a6b43',GROUND-2,60,30,false); } },
-  munich:    { particles:{col:'#ffe08a',n:22,vx:6,vy:-8}, sky:['#e2874e','#f7d9a8'], sun:{x:330,y:52,col:'#ffd27a',glow:'#ffb86a'}, ground:{kind:'cobble', top:'#5e6b4a', body:'#4a3d30'},
+  munich:    { particles:{col:'#ffe08a',n:22,vx:6,vy:-8}, sky:['#e2874e','#f7d9a8'], sun:{x:380,y:52,col:'#ffd27a',glow:'#ffb86a'}, ground:{kind:'cobble', top:'#5e6b4a', body:'#4a3d30'},
     far(cam,t){ mountains(cam,.12,'#8a7a90','#f0dcd0',44,200,GROUND-50,2); cityRow(cam,.3,['#b98f6a','#a97f5a','#c49a76'],GROUND-4,52,40,70,'#f0c06a',5,true); },
     mid(cam,t){} },
-  flight:   { sky:['#2f6fb0','#bfe0f4'], sun:{x:400,y:20,col:'#fff9d6',glow:'#fff9d6'}, ground:{kind:'grass', top:'#5a8a3c', body:'#6b4a2e'},
+  flight:   { sky:['#2f6fb0','#bfe0f4'], sun:{x:380,y:20,col:'#fff9d6',glow:'#fff9d6'}, ground:{kind:'grass', top:'#5a8a3c', body:'#6b4a2e'},
     far(cam,t){}, mid(cam,t){} }
 };
 
@@ -1549,22 +1549,10 @@ function panelBox(x, y, w, h, col='rgba(10,12,17,.8)'){ r(x, y, w, h, col); r(x,
 function render(){
   const cam = camX();
   const seg = segAt(S.x);
-  const theme = THEMES[seg.kind==='flight' ? 'flight' : seg.theme];
   const t = S.t;
 
-  skyGrad(theme.sky[0], theme.sky[1]);
-  if (theme.sun) sun(theme.sun.x, theme.sun.y, 12, theme.sun.col, theme.sun.glow);
-  if (seg.kind==='flight'){
-    scaled(0, GROUND, UK, ()=>{ clouds(cam/UK, .25, 'rgba(255,255,255,.85)', 30, 240, 6); hills(cam/UK, .08, '#7fa0b8', 22, 500, 11); });
-    for (let i=-1;i<W/64+2;i++){ const k = Math.floor(cam*0.5/64)+i, x = i*64 - (cam*0.5)%64; const cols=['#7fa85a','#a8b86a','#8fa35a','#c9b877']; r(x, GROUND-38, 63, H-GROUND+38, cols[Math.abs(k)%4]); r(x, GROUND-38, 63, 1, 'rgba(0,0,0,.15)'); r(x+((k*13)%50), GROUND-38, 1, 90, 'rgba(0,0,0,.12)'); if (k%3===0) for (let yy=GROUND-30; yy<H; yy+=9) r(x+8, yy, 40, 1, 'rgba(0,0,0,.07)'); }
-    for (let yy=GROUND-38; yy<H; yy+=16) r(0, yy, W, 1, 'rgba(0,0,0,.05)');
-    scaled(0, GROUND, UK, ()=>{ clouds(cam/UK, .55, '#ffffff', 96, 190, 7); clouds(cam/UK, .85, '#ffffff', 134, 160, 8); });
-  } else {
-    drawGroundScene(seg, cam, t);
-    if (S.flyBlend > 0){ ctx.globalAlpha = S.flyBlend*0.8; scaled(0, GROUND, UK, ()=>clouds(cam/UK, .6, '#ffffff', 96, 170, 7)); ctx.globalAlpha = 1; }
-  }
-  /* soft veil over the scenery, so boxes, items and the figures stand out */
-  ctx.globalAlpha = 0.36; r(0, 0, W, GROUND, theme.sky[1]); ctx.globalAlpha = 0.26; r(0, GROUND, W, H-GROUND, '#e9e4da'); ctx.globalAlpha = 1;
+  drawScenery(cam, t);
+  if (seg.kind!=='flight' && S.flyBlend > 0){ ctx.globalAlpha = S.flyBlend*0.8; scaled(0, GROUND, UK, ()=>clouds(cam/UK, .6, '#ffffff', 96, 170, 7)); ctx.globalAlpha = 1; }
 
   for (const fl of MCK_FLAGS){
     const sx = fl.x - cam; if (sx<-30||sx>W+30) continue;
@@ -1721,17 +1709,51 @@ function outlookCard(a){
   ctx.globalAlpha = 1;
 }
 
-function drawGroundScene(seg, cam, t){
-  const theme = THEMES[seg.theme];
-  scaled(0, GROUND, UK, ()=>{ theme.far(cam/UK, t); theme.mid(cam/UK, t); });
-  const i = LEVEL.indexOf(seg);
-  for (const sg of [LEVEL[i-1], seg, LEVEL[i+1]]){
-    if (!sg || sg.kind!=='ground') continue;
-    if (sg === LEVEL[i+1] && sg.theme !== seg.theme) continue;   // no buildings floating over the wrong scenery
-    for (const [off, fn] of (PROPS[sg.id]||[])){ const sx = sg.x0 + Math.round(off*UK) - cam; if (sx < -360 || sx > W+100) continue; scaled(sx, GROUND, UK, ()=>fn(sx, GROUND, t)); }
+/* ---------- scenery: every area draws its own full scene; where two areas meet on screen,
+   the next one fades in across a soft seam, so walking from one place into the next is continuous ---------- */
+const OFF = document.createElement('canvas'); OFF.width = W; OFF.height = H;
+const offCtx = OFF.getContext('2d'); offCtx.imageSmoothingEnabled = false;
+const sceneKey = s => s.kind==='flight' ? 'flight' : s.theme;
+function drawScene(key, cam, t){
+  const theme = THEMES[key];
+  skyGrad(theme.sky[0], theme.sky[1]);
+  if (theme.sun) sun(theme.sun.x, theme.sun.y, 12, theme.sun.col, theme.sun.glow);
+  if (key==='flight'){
+    scaled(0, GROUND, UK, ()=>{ clouds(cam/UK, .25, 'rgba(255,255,255,.85)', 30, 240, 6); hills(cam/UK, .08, '#7fa0b8', 22, 500, 11); });
+    for (let i=-1;i<W/64+2;i++){ const k = Math.floor(cam*0.5/64)+i, x = i*64 - (cam*0.5)%64; const cols=['#7fa85a','#a8b86a','#8fa35a','#c9b877']; r(x, GROUND-38, 63, H-GROUND+38, cols[Math.abs(k)%4]); r(x, GROUND-38, 63, 1, 'rgba(0,0,0,.15)'); r(x+((k*13)%50), GROUND-38, 1, 90, 'rgba(0,0,0,.12)'); if (k%3===0) for (let yy=GROUND-30; yy<H; yy+=9) r(x+8, yy, 40, 1, 'rgba(0,0,0,.07)'); }
+    for (let yy=GROUND-38; yy<H; yy+=16) r(0, yy, W, 1, 'rgba(0,0,0,.05)');
+    scaled(0, GROUND, UK, ()=>{ clouds(cam/UK, .55, '#ffffff', 96, 190, 7); clouds(cam/UK, .85, '#ffffff', 134, 160, 8); });
+  } else {
+    scaled(0, GROUND, UK, ()=>{ theme.far(cam/UK, t); theme.mid(cam/UK, t); });
+    let bandSeg = null;
+    for (const sg of LEVEL){
+      if (sg.kind!=='ground' || sg.theme!==key || sg.x1 < cam - 600 || sg.x0 > cam + W + 600) continue;
+      bandSeg = bandSeg || sg;
+      for (const [off, fn] of (PROPS[sg.id]||[])){ const sx = sg.x0 + Math.round(off*UK) - cam; if (sx < -360 || sx > W+100) continue; scaled(sx, GROUND, UK, ()=>fn(sx, GROUND, t)); }
+    }
+    groundBand(bandSeg || LEVEL[0], cam, theme);
   }
-  groundBand(seg, cam, theme);
-  if (seg.theme==='riyadh'){ ctx.globalAlpha = .12; r(0,0,W,GROUND,'#ffb060'); ctx.globalAlpha = 1; }
+  /* soft veil over the scenery, so boxes, items and the figures stand out */
+  ctx.globalAlpha = 0.36; r(0, 0, W, GROUND, theme.sky[1]); ctx.globalAlpha = 0.26; r(0, GROUND, W, H-GROUND, '#e9e4da'); ctx.globalAlpha = 1;
+}
+const SEAM = 180;   // width of the soft change between two areas, in pixels
+function drawScenery(cam, t){
+  const areas = [];
+  for (const s of LEVEL){
+    if (s.x1 <= cam - SEAM || s.x0 >= cam + W + SEAM) continue;
+    const k = sceneKey(s), last = areas[areas.length-1];
+    if (last && last.key === k) last.x1 = s.x1; else areas.push({ key:k, x0:s.x0, x1:s.x1 });
+  }
+  drawScene(areas[0].key, cam, t);
+  for (let i=1; i<areas.length; i++){
+    const seam = areas[i].x0 - cam, main = ctx;
+    ctx = offCtx; drawScene(areas[i].key, cam, t); ctx = main;
+    offCtx.save(); offCtx.globalCompositeOperation = 'destination-in';
+    const g = offCtx.createLinearGradient(seam - SEAM/2, 0, seam + SEAM/2, 0);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+    offCtx.fillStyle = g; offCtx.fillRect(0, 0, W, H); offCtx.restore();
+    ctx.drawImage(OFF, 0, 0);
+  }
 }
 
 /* ---------- HUD ---------- */
