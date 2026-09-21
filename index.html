@@ -1,5 +1,23 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Felix Krones Pixel CV</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Felix H. Krones, PhD. A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich.">
+<meta name="author" content="Felix H. Krones">
+<link rel="canonical" href="https://felixkrones.de/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Crect width='12' height='12' fill='%2312100d'/%3E%3Cpath fill='%23f2c14e' d='M5 1h2v2h1v1h3v1h-1v1h-1v1h1v2h-1v-1h-2v-1h-2v1h-2v1h-1v-2h1v-1h-1v-1h-1v-1h3v-1h1z'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://felixkrones.de/">
+<meta property="og:title" content="Felix H. Krones, PhD">
+<meta property="og:description" content="A playable pixel CV: from the Odenwald through KIT, ETH, McKinsey and Oxford to Waterland in Munich.">
+<meta property="og:image" content="https://felixkrones.de/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://felixkrones.de/og.png">
+<meta name="theme-color" content="#12100d">
+<title>Felix H. Krones, PhD</title>
 <style>
   :root{ --ink:#f0ece4; --dim:#8b8578; --rule:#2a2620; --ground:#12100d; --panel:#1a1713; --accent:#f2c14e;
          --life:#d2574f; --edu:#f2c14e; --work:#9aa6b4; }
@@ -61,7 +79,9 @@
     background:var(--panel); border:1px solid var(--rule); border-radius:8px; touch-action:manipulation; }
   #touch button:active{ background:#2a251f; }
   @media (pointer:coarse){ #touch{ display:flex; } #hud{ display:none; } #wrap,#tl{ width:100%; } }
-</style></head><body>
+</style>
+</head>
+<body>
 <div id="shell">
   <div id="wrap">
     <canvas id="c" width="640" height="320"></canvas>
@@ -740,7 +760,7 @@ function step(dt){
   if (S.manual && !wantFly){
     let dir = 0;
     if (keys.ArrowRight || keys.KeyD) dir = 1;
-    if (keys.ArrowLeft  || keys.KeyA) dir = -1;
+    if (keys.ArrowLeft) dir = -1;
     S.x += dir*speed*dt;
     if (dir) S.facing = dir;
     if ((keys.ArrowUp || keys.KeyW) && S.onGround && S.flyBlend===0){ S.vy = JUMPV; S.onGround=false; sfx('jump'); }
@@ -1113,8 +1133,17 @@ function snowfall(cam, t){ for (let i=0;i<90;i++){ const x = (hash(i)*W*1.3 + t*
 function rain(t){ for (let i=0;i<120;i++){ const x = (hash(i)*W*1.2 + t*40) % (W+40) - 20, y = (hash(i+7)*GROUND + t*(280+hash(i)*90)) % GROUND; r(x, y, 1, 7, 'rgba(200,215,230,.45)'); } }
 function roundTower(x, y){ r(x, y-80, 16, 80, '#8a8a80'); tri(x+8, y-96, 16, 18, '#5a5a52'); r(x+6, y-70, 4, 6, '#2a2a2a'); r(x+6, y-50, 4, 6, '#2a2a2a'); r(x-24, y-30, 24, 30, '#7f7f76'); }
 function cliffs(cam, p){
-  const step = 160, first = Math.floor((cam*p)/step)-1;
-  for (let i=first;i<first+6;i++){ const x = i*step - cam*p, h = 60 + hash(i)*40; r(x, GROUND-h, step-14, h, '#6e6a5a'); r(x, GROUND-h, step-14, 7, '#4e8f4a'); for (let yy=10; yy<h; yy+=6) r(x + hash(i+yy)*(step-40), GROUND-h+yy, 18, 2, '#5e5a4c'); }
+  const step = 170, first = Math.floor((cam*p)/step)-1;
+  for (let i=first;i<first+6;i++){
+    const x = i*step - cam*p, h = 58 + hash(i)*36, w = step - 30;
+    for (let yy=0; yy<h; yy++){                     // headland: slanted sea face on the right
+      const t = yy/h, inset = Math.round((1-t)*18*hash(i+2)), face = Math.round(t*10);
+      r(x + inset, GROUND-h+yy, w - inset + face, 1, yy%9<2 ? '#5d5a4c' : (yy%9<5 ? '#6f6b5b' : '#676353'));
+      r(x + w - inset + face - 6, GROUND-h+yy, 6, 1, '#4f4c40');
+    }
+    for (let k=0;k<w;k+=3){ const gh = 5 + ((k*7+i)%4); r(x + k, GROUND-h-1, 3, gh, k%6 ? '#4e8f4a' : '#5ea455'); }
+    r(x + w + 6, GROUND-10, 16, 3, 'rgba(255,255,255,.7)'); r(x + w + 2, GROUND-6, 24, 2, 'rgba(255,255,255,.5)');
+  }
 }
 function sheep(x, y){ r(x, y-12, 18, 10, '#f4f2ee'); r(x+2, y-14, 14, 3, '#f4f2ee'); r(x+15, y-15, 7, 7, '#2e2a26'); r(x+2, y-2, 2, 2, '#2e2a26'); r(x+7, y-2, 2, 2, '#2e2a26'); r(x+13, y-2, 2, 2, '#2e2a26'); }
 function pub(x, y){ r(x, y-44, 70, 44, '#2f5a3f'); r(x, y-44, 70, 2, '#3f7a54'); r(x+4, y-38, 62, 12, '#f2c14e'); text('PUB', x+22, y-36, '#2f5a3f', 2); r(x+8, y-22, 14, 12, '#f0c06a'); r(x+48, y-22, 14, 12, '#f0c06a'); r(x+30, y-16, 10, 16, '#4a2a20'); tri(x+35, y-56, 12, 80, '#4a3a2a'); }
@@ -1261,7 +1290,7 @@ const THEMES = {
     far(cam,t){ aurora(cam,t); for (let i=0;i<40;i++) r((hash(i)*W*2 - cam*0.05)%W, hash(i+3)*80, 1, 1, '#fff'); hills(cam,.18,'#2e4a5a',40,360,6); },
     mid(cam,t){ treeline(cam,.5,'#1f3f2f',GROUND-2,22,40,true); snowfall(cam,t); } },
   ireland:  { sky:['#9bb7c4','#e0e9ed'], sun:null, ground:{kind:'grass', top:'#4e8f4a', body:'#4a5a44'},
-    far(cam,t){ clouds(cam,.12,'#f2f5f7',40,200,7); r(0,GROUND-50,W,50,'#5f8fa8'); cliffs(cam,.3); },
+    far(cam,t){ clouds(cam,.12,'#f2f5f7',40,200,7); r(0,GROUND-50,W,50,'#5f8fa8'); for (let i=0;i<W;i+=9) r(i, GROUND-44+((i*13+Math.floor(t*6))%40), 5, 1, 'rgba(255,255,255,.3)'); cliffs(cam,.3); },
     mid(cam,t){} },
   riyadh:    { particles:{col:'#f0dcae',n:40,vx:60,vy:2}, sky:['#f2c98a','#fdeecb'], sun:{x:320,y:20,col:'#fff7d6',glow:'#ffe2a0'}, ground:{kind:'sand', top:'#e2c48a', body:'#b58f5c'},
     far(cam,t){ dunes(cam,.2); cityRow(cam,.3,['#c9c2b4','#b9b2a4','#d4cdbf'],GROUND-12,44,34,60,'#8fa0b0',8,true); },
@@ -1343,7 +1372,7 @@ function drawFelix(px, feetY){
   const h = SH(), top = feetY - h;
   const legsSet = S.kid===2 ? LEGS_S : S.kid===1 ? LEGS_M : LEGS_A;
   const torso = S.kid===2 ? TORSO_S : S.kid===1 ? TORSO_M : TORSO;
-  const walking = S.flyBlend===0 && S.onGround && (!S.manual || keys.ArrowRight || keys.ArrowLeft || keys.KeyD || keys.KeyA);
+  const walking = S.flyBlend===0 && S.onGround && (!S.manual || keys.ArrowRight || keys.ArrowLeft || keys.KeyD);
   const f = Math.floor(S.t*9*(S.fast||1))%4;
   let legs = legsSet.STAND, bob = 0;
   if (S.flyBlend>0) legs = legsSet.STAND;
@@ -1656,6 +1685,7 @@ addEventListener('keydown', e=>{
   userGesture();
   if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)) e.preventDefault();
   keys[e.code] = true;
+  if (panelOpen && e.code!=='KeyA' && e.code!=='KeyC' && e.code!=='Escape'){ keys[e.code] = false; return; }
   if (['ArrowLeft','ArrowRight','ArrowUp','KeyD','KeyW'].includes(e.code)) startGame(false);
   if (e.code==='Enter') startGame(true);
   if (e.code==='Space' || e.code==='KeyP'){ if (!S.started) startGame(false); else paused = !paused; }
@@ -1709,4 +1739,6 @@ window.GAME = {
   get time(){ return S.t; }, get done(){ return S.ended && S.endT > 3.5; }
 };
 </script>
-</body></html>
+
+</body>
+</html>
