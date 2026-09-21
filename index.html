@@ -356,21 +356,17 @@ const P_BODY = [
 ];
 /* ---- Worn items, offsets from the sprite origin ---- */
 const WEAR = {
-  satchel: { dx:17, dy:26, g:[
-      'a.........',
-      '.a........',
-      '..a.......',
-      '...a......',
-      '....a.....',
-      '.....a....',
-      '......a...',
-      '.....NNNNN',
-      '.....Nbbbb',
-      '.....Nbbbb',
-      '.....Nbyby',
-      '.....Nbbbb',
-      '.....Nbbbb',
-      '.....NNNNN'
+  satchel:  { dx:2, dy:22, g:[
+      '.....bb.............bb......',
+      '.....bb.............bb......',
+      '.....bb.............bb......',
+      '....bb...............bb.....',
+      'Nbbbb.................bbbbN.',
+      'Nbyyb.................byybN.',
+      'Nbyyb.................byybN.',
+      'Nbbbb.................bbbbN.',
+      '.Nbb...................bbN..',
+      '..NN...................NN...'
     ] },
   backpack: { dx:2, dy:22, g:[
       '.....GG.............GG......',
@@ -533,7 +529,7 @@ const PLANE = [
 /* ---- 12x12 icons: pop out of the box, then live in the HUD and the CV ---- */
 const ICON = {
   home:   ['.....RR.....','....RRRR....','...RRRRRR...','..RRRRRRRR..','.RRRRRRRRRR.','..WWWWWWWW..','..WWWBBWWW..','..WWWBBWWW..','..WWWWWWWW..','..WWWWWWWW..','..WWWWWWWW..','............'],
-  satchel:['....aaaa....','...a....a...','...a....a...','..bbbbbbbb..','..bbbbbbbb..','..bbybbybb..','..bbbbbbbb..','..bbbbbbbb..','..bbbbbbbb..','...bbbbbb...','............','............'],
+  satchel:['....bbbb....','...bbbbbb...','..bbbbbbbb..','..bbbbbbbb..','..bbyyyybb..','..bbyyyybb..','..bbbbbbbb..','..bbbbbbbb..','..bbbbbbbb..','...bbbbbb...','............','............'],
   backpack:['....GGGG....','...GGGGGG...','..GGGGGGGG..','..GGGGGGGG..','..GGzzzzGG..','..GGzzzzGG..','..GGGGGGGG..','..GGGGGGGG..','..GGGGGGGG..','...GGGGGG...','............','............'],
   globe:  ['....BBBB....','..BBGGBBGB..','.BGGGBBBGBB.','.BBGGBGGBBB.','BBBBGGBBBBGB','BBGGGBBBGGBB','BGGGBBBGGGBB','.BBBBGGGBBB.','.BBGGBBBBBB.','..BBBBGGBB..','....BBBB....','............'],
   scroll: ['..WWWWWWWW..','.WWWWWWWWWW.','.WWyyyyyyWW.','.WWWWWWWWWW.','.WWyyyyyWWW.','.WWWWWWWWWW.','.WWyyyyyyWW.','.WWWWWWWWWW.','.WWWWWWWWWW.','..WWWWWWWW..','...RR.RR....','............'],
