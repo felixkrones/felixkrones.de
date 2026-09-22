@@ -27,7 +27,7 @@
   #shell{ min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:8px; padding:10px 16px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); }
   #wrap{ position:relative; width:min(100%, calc((100vh - 100px) * 2)); max-width:2000px; }
-  canvas#c{ image-rendering:pixelated; display:block; width:100%; height:auto;
+  canvas#c{ display:block; width:100%; height:auto;
     border:1px solid var(--rule); box-shadow:0 20px 50px rgba(0,0,0,.55); cursor:pointer; }
   /* timeline under the game */
   #tl{ width:min(100%, calc((100vh - 100px) * 2)); max-width:2000px; position:relative; height:28px; }
@@ -161,8 +161,19 @@
    ===================================================================== */
 const W = 640, H = 320;
 const cv = document.getElementById('c');
-let ctx = cv.getContext('2d', { alpha:false });   // let: scenery is sometimes drawn into an offscreen canvas
+/* the game draws at 640x320; present() copies each frame to the page canvas enlarged by a whole number,
+   and the browser does only the last small step, so every pixel has the same size on any screen */
+const LO = document.createElement('canvas'); LO.width = W; LO.height = H;
+let ctx = LO.getContext('2d', { alpha:false });   // let: scenery is sometimes drawn into an offscreen canvas
 ctx.imageSmoothingEnabled = false;
+const cvCtx = cv.getContext('2d', { alpha:false });
+let CVK = 0;
+function fitCanvas(){
+  const k = Math.min(6, Math.max(1, Math.ceil(cv.getBoundingClientRect().width * (window.devicePixelRatio || 1) / W)));
+  if (k !== CVK){ CVK = k; cv.width = W*k; cv.height = H*k; }
+}
+function present(){ if (!CVK) fitCanvas(); cvCtx.imageSmoothingEnabled = false; cvCtx.drawImage(LO, 0, 0, W*CVK, H*CVK); }
+addEventListener('resize', fitCanvas); addEventListener('orientationchange', () => setTimeout(fitCanvas, 200));
 let SK=1, SOX=0, SOY=0;           // optional scale around an anchor, snapped to whole pixels
 const r = (x,y,w,h,col) => {
   ctx.fillStyle = col;
@@ -866,7 +877,7 @@ const EVENTS = [
   { seg:'lon', off:150, fx:'mck_on', wear:'suit', lines:['BACK AT QUANTUMBLACK', 'ENGAGEMENT MANAGER', 'DPHIL NOW PART-TIME'], col:'#9fc3ea' }
 ];
 EVENTS.forEach(e=>{ e.x = wx(e.seg, Math.round(e.off*UK)); });
-const BUBBLE_T = 2.2;   // seconds a box bubble stays
+const BUBBLE_T = 2.8;   // seconds a box bubble stays (a new bubble nearby lets the older one fade out early)
 const boxX = tag => BOXES.find(b => b.tag === tag).x;
 const MCK_PERIODS = [[boxX('ENGAGEMENT MANAGER / PRINCIPAL'), boxX('DPHIL STUDIES')], [EVENTS.find(e => e.fx==='mck_on').x, boxX('AI & DATA LEAD / PORTFOLIO MANAGEMENT')]];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['gb','UNITED KINGDOM'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
@@ -1094,9 +1105,21 @@ function step(dt){
   for (const e of EVENTS){
     if (e.done || S.x < e.x) continue;
     e.done = true; if (e.fx==='mck_on') S.mck = true; if (e.wear) wear(e.wear);
-    if (e.lines){ S.helpPop = { h:{ lines:e.lines }, t:0, col:e.col, dur:3.2 }; sfx('wear'); }
+    if (e.lines){ S.helpPop = { h:{ lines:e.lines }, t:0, col:e.col, dur:3.8 }; sfx('wear'); }
   }
-  if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > (S.helpPop.dur || 2.4)) S.helpPop = null; }
+  if (S.helpPop && S.bubbles.length){   // the note next to Felix goes where he goes: if it runs into a box bubble, the older of the two fades out
+    const hp = S.helpPop, cam = camX(), [px, py, pw, ph] = popRect(hp, cam);
+    for (const bb of S.bubbles){
+      const [bx, by, bw, bh] = bubbleRect(bb, cam);
+      if (!(px < bx+bw && bx < px+pw && py < by+bh && by < py+ph)) continue;
+      if (bb.t < hp.t) hp.t = Math.max(hp.t, (hp.dur || 3) - 0.3); else bb.t = Math.max(bb.t, BUBBLE_T - 0.25);
+    }
+  }
+  if (S.helpPop && S.helpPop.t > 0.5){   // a note that would cover a box still to be hit makes way
+    const hp = S.helpPop, cam = camX(), [px, py, pw, ph] = popRect(hp, cam);
+    if (BOXES.some(b => !b.hit && !b.virtual && b.x - cam < px+pw && px < b.x - cam + 32 && py < b.y+32 && b.y < py+ph)) hp.t = Math.max(hp.t, (hp.dur || 3) - 0.3);
+  }
+  if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > (S.helpPop.dur || 3)) S.helpPop = null; }
   if (!S.partner && GF.on && S.x > PARTNER_X && S.flyBlend === 0){ S.partner = { x:S.x+140, t:0 }; }
 
   tickTimers(dt);
@@ -1152,6 +1175,7 @@ function onHit(b){
   popSparks(b.x+16, b.y, BOXSTYLE[b.t].a, 14, 140);
   sfx('hit');
   S.stars++;
+  for (const bb of S.bubbles) bb.t = Math.max(bb.t, BUBBLE_T - 0.25);   // an older bubble makes way and fades out
   S.bubbles.push({ lines:[[b.tag, '#f4f2ee'], [b.org || b.loc || '', '#b9b2a4'], [b.year, '#f2c14e']].filter(l => l[0]), x:b.x+16, y:b.y-10, t:0 });
   /* items you wear fly into Felix quickly and change the outfit when they arrive; others fly to the star button */
   const item = { icon:b.icon, x:b.x-2, y:b.y-10, t:0, phase:0, sc:3, fast:!!b.wear,
@@ -1169,6 +1193,19 @@ function onHit(b){
   if (b.fx==='mck_off') S.mck = false;
 }
 function camX(){ return clamp(S.x - 200, 0, WORLD_END - W); }
+/* where the text boxes sit on screen: [x, y, w, h] */
+function bubbleRect(bb, cam){
+  const w = Math.max(...bb.lines.map(l=>tw2(l[0])))+20, hh = 8 + bb.lines.length*20;
+  return [clamp(bb.x - cam - w/2, 6, W-w-6), Math.max(4, bb.y - 16 - hh - Math.min(bb.t, 0.4)*40), w, hh];
+}
+function popRect(hp, cam){
+  const lines = hp.h.lines, w = Math.max(...lines.map(l=>tw2(l))) + 20, hh = 8 + lines.length*20, rise = 6 - Math.min(hp.t, 0.3)*20;
+  if (hp.above) return [clamp(S.x - cam - w/2, 6, W-w-6), GROUND - SH() - hh - 10 + rise, w, hh];   // over his head, so the robot in front stays in sight
+  const x = clamp(S.x - cam + 44, 6, W-w-6);
+  /* on foot the note stands on the ground next to him, below the boxes, and stays put when he jumps; in the plane it flies along */
+  const y = S.flyBlend > 0 ? S.y - SH() - 4 - (lines.length-2)*20 + rise - 6 : GROUND - 4 - hh + rise;
+  return [x, y, w, hh];
+}
 
 /* ---- the robot: idle at home, charges when Felix comes near, pushes him back on contact, mastered when he lands on it ---- */
 const ROBOT_TLAND = (() => { const apex = JUMPV*JUMPV/(2*GRAV); return -JUMPV/GRAV + Math.sqrt(2*Math.max(0, apex - ROBOT_H)/GRAV); })();   // s from take-off to landing on its head
@@ -1187,7 +1224,7 @@ function stepGym(dt){
       g.phase = 'out'; g.t = 0; S.buff = true; g.done = true;
       S.vy = -250; S.onGround = false; sfx('star');
       popSparks(S.x, GROUND - 40, '#ffffff', 14, 130); popSparks(S.x, GROUND - 40, g.col, 10, 110);
-      S.helpPop = { h:{ lines:[g.tag, g.org.toUpperCase() + ', ' + g.loc.toUpperCase(), g.year] }, t:0, col:g.col, dur:3.2 };
+      S.helpPop = { h:{ lines:[g.tag, g.org.toUpperCase() + ', ' + g.loc.toUpperCase(), g.year] }, t:0, col:g.col, dur:3.8 };
       S.btnGlow = 1; refreshPanel();
     }
   } else if (g.phase === 'out'){
@@ -1224,13 +1261,13 @@ function stepRobot(dt){
       S.y = rTop; S.vy = JUMPV*0.55; S.onGround = false;
       S.stars++; S.btnGlow = 1; refreshPanel(); sfx('star');
       popSparks(rb.x, rTop, '#7fc0dd', 14, 120);
-      S.helpPop = { h:{ lines:[rb.tag, 'AI EXPERT', rb.year] }, t:0, col:'#7fc0dd', dur:2.6 };
+      S.helpPop = { h:{ lines:[rb.tag, 'AI EXPERT', rb.year] }, t:0, col:'#7fc0dd', dur:3.2 };
       S.fly.push({ icon:rb.icon, x:rb.x - 18, y:rTop - 34, t:0, phase:0, sc:3, fast:false, target: () => [W - 40 + camX(), 6], arrive: () => { S.btnGlow = 1; refreshPanel(); } });
     } else if (!S.kb && S.y > rTop + 18){
       /* walked into it: pushed back, the robot backs off for a moment */
       S.kb = { t:0.45, vx:dir*300 }; if (S.onGround){ S.vy = -190; S.onGround = false; }
       rb.flash = 0.5; rb.state = 'retreat'; rb.wait = 1.6; rb.bumps++; sfx('buzz');
-      S.helpPop = { h:{ lines:['BEEP', 'JUMP ON IT'] }, t:0, col:'#e8746b', dur:1.8 };
+      S.helpPop = { h:{ lines:['BEEP', 'JUMP ON IT'] }, t:0, col:'#e8746b', dur:1.8, above:true };
     }
   }
 }
@@ -2044,7 +2081,7 @@ function render(){
   for (const b of BOXES){ if (b.virtual) continue; const sx = b.x - cam; if (sx < -40 || sx > W+40) continue; drawBox(b, sx); }
 
   if (S.flyBlend > 0){
-    ctx.globalAlpha = clamp((S.flyBlend-0.45)*1.9, 0, 1);
+    ctx.globalAlpha = clamp((S.flyBlend-0.1)*3, 0, 1);   // the plane is there as soon as he leaves the ground, and until just before he lands
     const fx = Math.round(S.x - cam), pxp = fx - 58, pyp = Math.round(S.y) - 12;
     ctx.save(); if (S.facing < 0){ ctx.translate(2*fx, 0); ctx.scale(-1, 1); }   // the plane turns round when flying back
     draw(PLANE, pxp, pyp);
@@ -2079,16 +2116,14 @@ function render(){
   }
   /* bubble: what, where, when (stays where the box was, independent of the flying item) */
   for (const bb of S.bubbles){
-    const a = clamp(Math.min(bb.t/0.15, (BUBBLE_T - bb.t)/0.3), 0, 1), lines = bb.lines;
-    const w = Math.max(...lines.map(l=>tw2(l[0])))+20, hh = 8 + lines.length*20, nx = clamp(bb.x - cam - w/2, 6, W-w-6), ny = Math.max(4, bb.y - 16 - hh - Math.min(bb.t, 0.4)*40);
-    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, 'rgba(255,255,255,.08)');
+    const a = clamp(Math.min(bb.t/0.15, (BUBBLE_T - bb.t)/0.3), 0, 1), lines = bb.lines, [nx, ny, w, hh] = bubbleRect(bb, cam);
+    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.9)'); r(nx, ny+hh-1, w, 1, 'rgba(255,255,255,.08)');
     lines.forEach((l,i)=> text2(l[0], nx+10, ny+6+i*20, l[1], 1)); ctx.globalAlpha = 1;
   }
   if (S.helpPop){
-    const hp = S.helpPop, dur = hp.dur || 2.4, col = hp.col || '#e0708f', a = clamp(Math.min(hp.t/0.2, (dur-hp.t)/0.4), 0, 1);
-    const lines = hp.h.lines || [hp.h.tag, hp.h.year];
-    const w = Math.max(...lines.map(l=>tw2(l))) + 20, hh = 8 + lines.length*20, nx = clamp(S.x - cam + 44, 6, W-w-6), ny = S.y - SH() - 4 - (lines.length-2)*20 - Math.min(hp.t, 0.3)*20;
-    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.86)'); r(nx, ny+hh-1, w, 1, col);
+    const hp = S.helpPop, dur = hp.dur || 3, col = hp.col || '#e0708f', a = clamp(Math.min(hp.t/0.2, (dur-hp.t)/0.4), 0, 1);
+    const lines = hp.h.lines, [nx, ny, w, hh] = popRect(hp, cam);
+    ctx.globalAlpha = a; panelBox(nx, ny, w, hh, 'rgba(10,12,17,.9)'); r(nx, ny+hh-1, w, 1, col);
     lines.forEach((l,i)=> text2(l, nx+10, ny+6+i*20, i===lines.length-1 ? col : i===0 ? '#f4f2ee' : '#b9b2a4', 1)); ctx.globalAlpha = 1;
   }
   for (const p of S.sparks){ ctx.globalAlpha = Math.min(1, p.life*2); r(p.x-cam, p.y, 3, 3, p.col); ctx.globalAlpha = 1; }
@@ -2119,6 +2154,7 @@ function render(){
   if (S.outlook > 0) outlookCard(S.outlook);
   if (S.warn) missingCard();
   drawHUD(seg, cam);
+  present();
 }
 
 /* volunteering props: small things on the way, a heart shows there is something to help with */
@@ -2515,18 +2551,18 @@ let sunTaps = 0, sunTapAt = 0;
 function allSecrets(){
   const fresh = ['gym', 'gf', 'llm'].filter(w => secretFound(w, true));
   if (!fresh.length) return;
-  S.toast = { lines:['ALL SECRETS UNLOCKED', 'GYM, GADGETS AND PARTNER'], t:0, dur:3.6, col:'#f2c14e' }; sfx('flag');
+  S.toast = { lines:['ALL SECRETS UNLOCKED', 'GYM, GADGETS AND PARTNER'], t:0, dur:4.2, col:'#f2c14e' }; sfx('flag');
 }
 function secretFound(which, quiet){
   if (which === 'gym'){
     if (GYM.on) return false; GYM.on = true;
-    S.toast = { lines:['SECRET UNLOCKED', 'FITNESS FIRST OPENS IN MUNICH'], t:0, dur:3.6, col:GYM.col };
+    S.toast = { lines:['SECRET UNLOCKED', 'FITNESS FIRST OPENS IN MUNICH'], t:0, dur:4.2, col:GYM.col };
   } else if (which === 'gf'){
     if (GF.on) return false; GF.on = true;
-    S.toast = { lines:['SECRET UNLOCKED', S.started && S.x > PARTNER_X ? 'YOUR PARTNER JOINS YOU NOW' : 'YOUR PARTNER JOINS IN LONDON'], t:0, dur:3.6, col:GF.col };
+    S.toast = { lines:['SECRET UNLOCKED', S.started && S.x > PARTNER_X ? 'YOUR PARTNER JOINS YOU NOW' : 'YOUR PARTNER JOINS IN LONDON'], t:0, dur:4.2, col:GF.col };
   } else if (which === 'llm'){
     if (AI.on) return false; AI.on = true;
-    S.toast = { lines:['SECRET UNLOCKED', 'TWO GADGETS FOR THE ROBOT IN MUNICH'], t:0, dur:3.6, col:AI.col };
+    S.toast = { lines:['SECRET UNLOCKED', 'TWO GADGETS FOR THE ROBOT IN MUNICH'], t:0, dur:4.2, col:AI.col };
   }
   if (quiet){ S.toast = null; return true; }
   sfx('flag'); return true;
