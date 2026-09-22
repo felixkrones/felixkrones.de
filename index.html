@@ -78,7 +78,7 @@
   #ov footer a{ color:#9fc3ea; text-decoration:none; } #ov footer a.site{ color:var(--accent); } #ov footer a.cv{ color:#f4f2ee; }
   #hud{ font-size:12.5px; letter-spacing:.08em; color:var(--dim); text-align:center; line-height:1.8; }
   #hud b{ color:var(--ink); font-weight:500; }
-  #hud .codes{ color:#2a2620; }                          /* the secret codes, barely there */
+  #hud .codes{ color:#3a352d; margin-left:28px; }        /* the secret codes, barely there */
   #endlinks{ display:none; gap:18px; justify-content:center; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
   #endlinks a{ text-decoration:none; padding-bottom:2px; }
   #touch{ display:none; gap:10px; justify-content:center; width:100%; max-width:640px; }
@@ -151,7 +151,7 @@
     <button id="tC" aria-label="menu">&#9733;</button>
   </div>
   <div id="rot">Turn your phone sideways for a bigger view</div>
-  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart <span class="codes">&nbsp;&middot;&nbsp; gf &middot; gym &middot; ai</span></div>
+  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart<span class="codes">gf &middot; gym &middot; llm</span></div>
 </div>
 <script>
 "use strict";
@@ -840,10 +840,10 @@ const HELPS = [
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'vol'; h.k = 'volunteer'; });
-/* Secret (type A I): two small upgrades for the robot, own projects (2026), picked up on the way through Munich. Not achievements. */
+/* Secret (type L L M): two small upgrades for the robot, own projects (2026), picked up on the way through Munich. Not achievements. */
 const UPGRADES = [
   { seg:'muc', off:380,  year:'2026-', tag:'OWN AI ASSISTANT',   role:'Own AI assistant',   desc:'Raspberry Pi, OpenClaw', org:'Own project', loc:'', icon:'chip16',    up:'board' },
-  { seg:'muc', off:1230, year:'2026-', tag:'SMART-GLASSES APPS', role:'Smart-glasses apps', desc:'Video analysis',        org:'Own project', loc:'', icon:'glasses16', up:'glasses' }
+  { seg:'muc', off:480,  year:'2026-', tag:'SMART-GLASSES APPS', role:'Smart-glasses apps', desc:'Video analysis',        org:'Own project', loc:'', icon:'glasses16', up:'glasses' }
 ];
 UPGRADES.forEach((u,i)=>{ u.i = i; u.x = wx(u.seg, Math.round(u.off*UK)); u.t = 'work'; u.k = 'upgrade'; });
 /* Secret (type G Y M): a Fitness First club opens in Munich. Felix walks in, trains and comes out stronger.
@@ -2410,8 +2410,8 @@ function refreshPanel(){
   const degHon = BOXES.filter(b=>b.t==='edu' && (b.k==='degree' || b.k==='honour')).map((b,i)=>[b,i])
     .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
   ovBody.innerHTML = `<div class="cols">
-    <div class="col">${table([['life','Life',[['',[...by('life'), ...(GYM.done ? [Object.assign({ got:true, t:'life', k:'secret' }, GYM)] : [])]]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
-    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT, ...UPGRADES.filter(u => u.got)]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
+    <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
+    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
 }
 function openPanel(open){
   panelOpen = open; ov.classList.toggle('open', open);
@@ -2514,7 +2514,7 @@ function secretFound(which){
   } else if (which === 'gf'){
     if (GF.on) return false; GF.on = true;
     S.toast = { lines:['SECRET UNLOCKED', S.started && S.x > PARTNER_X ? 'YOUR PARTNER JOINS YOU NOW' : 'YOUR PARTNER JOINS IN LONDON'], t:0, dur:3.6, col:GF.col };
-  } else {
+  } else if (which === 'llm'){
     if (AI.on) return false; AI.on = true;
     S.toast = { lines:['SECRET UNLOCKED', 'TWO GADGETS FOR THE ROBOT IN MUNICH'], t:0, dur:3.6, col:AI.col };
   }
@@ -2527,14 +2527,14 @@ addEventListener('keydown', e=>{
   let secret = false;                                                                  // type G Y M (any case, any keyboard layout)
   if (e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){
     typed = (typed + e.key.toLowerCase()).slice(-3);
-    if (typed === 'gym'){ secret = true; secretFound('gym'); } else if (typed.endsWith('gf')) secretFound('gf'); else if (typed.endsWith('ai') && secretFound('ai') && panelOpen) openPanel(false);   // the A of the code had just opened the menu
+    if (typed === 'gym'){ secret = true; secretFound('gym'); } else if (typed.endsWith('gf')) secretFound('gf'); else if (typed === 'llm'){ secret = true; secretFound('llm'); }
   }
   if (panelOpen && e.code!=='KeyA' && e.code!=='KeyC' && e.code!=='Escape'){ keys[e.code] = false; return; }
   if (['ArrowLeft','ArrowRight','ArrowUp','KeyD','KeyW'].includes(e.code)) startGame(false);
   if (e.code==='Enter') startGame(true);
   if (e.code==='Space' || e.code==='KeyP'){ if (!S.started) startGame(false); else paused = !paused; }
   if (e.code==='KeyR'){ reset(); openPanel(false); paused = false; hideLinks(); }
-  if (e.code==='KeyM' && !secret) muted = !muted;                                     // the M of the secret code does not touch the sound
+  if (e.code==='KeyM' && !secret) muted = !muted;                                     // the M of gym or llm does not touch the sound
   if (e.code==='KeyA' || e.code==='KeyC') openPanel(!panelOpen);
   if (e.code==='Escape') openPanel(false);
 });
