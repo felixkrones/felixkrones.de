@@ -79,6 +79,7 @@
   #hud{ font-size:12.5px; letter-spacing:.08em; color:var(--dim); text-align:center; line-height:1.8; }
   #hud b{ color:var(--ink); font-weight:500; }
   #hud .codes{ color:#3a352d; margin-left:48px; }        /* the secret codes, barely there */
+  #rot .codes{ color:#3a352d; display:block; margin-top:4px; }
   #endlinks{ display:none; gap:18px; justify-content:center; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
   #endlinks a{ text-decoration:none; padding-bottom:2px; }
   #touch{ display:none; gap:10px; justify-content:center; width:100%; max-width:640px; }
@@ -150,7 +151,7 @@
     <button id="tJ" aria-label="jump">&uarr;</button>
     <button id="tC" aria-label="menu">&#9733;</button>
   </div>
-  <div id="rot">Turn your phone sideways for a bigger view</div>
+  <div id="rot">Turn your phone sideways for a bigger view<span class="codes">sun &times; 5</span></div>
   <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart<span class="codes">gym &middot; llm &middot; gf</span></div>
 </div>
 <script>
@@ -1253,7 +1254,9 @@ function skyGrad(top, bot){
   }
 }
 function disc(cx, cy, rad, col){ for (let k=-rad;k<=rad;k++){ const ww = Math.round(Math.sqrt(rad*rad-k*k)*2); r(cx-ww/2, cy+k, Math.max(1,ww), 1, col); } }
+let SUNPOS = { x:380, y:42 };   // where the sun was drawn last: tapping it five times opens all secrets (phones have no keyboard)
 function sun(x, y, rad, col, glow){
+  SUNPOS = { x, y:y+rad };
   if (glow){ ctx.globalAlpha = .16; disc(x, y+rad, rad*1.9, glow); ctx.globalAlpha = 1; }
   disc(x, y+rad, rad, col);
 }
@@ -2337,6 +2340,7 @@ function drawHUD(seg, cam){
   /* start screen */
   if (!S.started){
     r(0,0,W,H,'rgba(8,9,13,.88)');
+    ctx.globalAlpha = .28; disc(SUNPOS.x, SUNPOS.y, 12, '#fff4c4'); ctx.globalAlpha = .1; disc(SUNPOS.x, SUNPOS.y, 22, '#fff4c4'); ctx.globalAlpha = 1;   // the sun shows through, faintly
     textC2('FELIX H. KRONES, PHD', W/2, 108, '#f4f2ee', 3);
     r(W/2-80, 138, 160, 2, '#f2c14e');
     textC2('A PIXEL CV', W/2, 152, '#f2c14e', 2);
@@ -2507,7 +2511,13 @@ function userGesture(){ const a = ac(); if (a && a.state==='suspended') a.resume
    10. INPUT + LOOP
    ===================================================================== */
 let typed = '';   // the last letters typed, for the secret codes
-function secretFound(which){
+let sunTaps = 0, sunTapAt = 0;
+function allSecrets(){
+  const fresh = ['gym', 'gf', 'llm'].filter(w => secretFound(w, true));
+  if (!fresh.length) return;
+  S.toast = { lines:['ALL SECRETS UNLOCKED', 'GYM, GADGETS AND PARTNER'], t:0, dur:3.6, col:'#f2c14e' }; sfx('flag');
+}
+function secretFound(which, quiet){
   if (which === 'gym'){
     if (GYM.on) return false; GYM.on = true;
     S.toast = { lines:['SECRET UNLOCKED', 'FITNESS FIRST OPENS IN MUNICH'], t:0, dur:3.6, col:GYM.col };
@@ -2518,6 +2528,7 @@ function secretFound(which){
     if (AI.on) return false; AI.on = true;
     S.toast = { lines:['SECRET UNLOCKED', 'TWO GADGETS FOR THE ROBOT IN MUNICH'], t:0, dur:3.6, col:AI.col };
   }
+  if (quiet){ S.toast = null; return true; }
   sfx('flag'); return true;
 }
 addEventListener('keydown', e=>{
@@ -2544,6 +2555,11 @@ cv.addEventListener('click', e=>{
   const rect = cv.getBoundingClientRect(), x = (e.clientX-rect.left)/rect.width*W, y = (e.clientY-rect.top)/rect.height*H;
   const b = S.btnRect;
   if (b && x>=b.x-4 && x<=b.x+b.w+4 && y>=b.y-4 && y<=b.y+b.h+6){ openPanel(!panelOpen); return; }   // the star opens the menu, also on the start screen
+  if (Math.hypot(x - SUNPOS.x, y - SUNPOS.y) < 40){                                                  // five quick taps on the sun: all secrets (for phones)
+    const now = performance.now(); sunTaps = now - sunTapAt < 1500 ? sunTaps + 1 : 1; sunTapAt = now;
+    if (sunTaps >= 5){ sunTaps = 0; allSecrets(); }
+    return;
+  }
   if (!S.started){ startGame(false); return; }
 });
 function bindTouch(id, codes){
@@ -2588,7 +2604,7 @@ window.GAME = {
   seek(sec){ reset(); openPanel(false); startGame(true); const n = Math.round(sec/DT); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   advance(n=1){ if (!S.started) startGame(true); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   get time(){ return S.t; }, get x(){ return S.x; }, get done(){ return S.ended && S.endT > 8; },
-  secret(which='gym'){ secretFound(which); }, get gym(){ return { on:GYM.on, phase:GYM.phase, done:GYM.done, buff:S.buff, gf:GF.on, partner:!!S.partner, ai:AI.on, ups:UPGRADES.filter(u=>u.got).length, secrets:SECRETS() }; }
+  secret(which='gym'){ secretFound(which); }, all(){ allSecrets(); }, get gym(){ return { on:GYM.on, phase:GYM.phase, done:GYM.done, buff:S.buff, gf:GF.on, partner:!!S.partner, ai:AI.on, ups:UPGRADES.filter(u=>u.got).length, secrets:SECRETS() }; }
 };
 </script>
 
