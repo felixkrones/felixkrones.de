@@ -24,7 +24,7 @@
   html,body{ height:100%; }
   body{ margin:0; background:var(--ground); color:var(--ink);
     font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
-  #shell{ min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  #shell{ min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:8px; padding:10px 16px; padding-bottom:calc(10px + env(safe-area-inset-bottom,0px)); }
   #wrap{ position:relative; width:min(100%, calc((100vh - 100px) * 2)); max-width:2000px; }
   canvas#c{ image-rendering:pixelated; display:block; width:100%; height:auto;
@@ -806,7 +806,7 @@ const boxX = tag => BOXES.find(b => b.tag === tag).x;
 const MCK_PERIODS = [[boxX('ENGAGEMENT MANAGER / PRINCIPAL'), boxX('DPHIL STUDIES')], [EVENTS.find(e => e.fx==='mck_on').x, boxX('AI & DATA LEAD / PORTFOLIO MANAGEMENT')]];   // no longer used, kept so older code paths stay valid
 const MCK_COUNTRIES = [['ch','SWITZERLAND'],['de','GERMANY'],['ie','IRELAND'],['gb','UNITED KINGDOM'],['fi','FINLAND'],['se','SWEDEN'],['fr','FRANCE'],['li','LIECHTENSTEIN'],['it','ITALY'],['cz','CZECH REPUBLIC'],['ua','UKRAINE'],['sa','SAUDI ARABIA']];
 const MCK_FLAGS = MCK_COUNTRIES.map(([c,n],k)=>({ c, name:n, k, x: SEGID.f_mck.x0 + 380 + k*270, got:false }));
-const PARTNER_X = SEGID.muc.x0 + Math.round(1000*UK);
+const PARTNER_X = SEGID.lon.x0 + Math.round(1000*UK);   // she joins in London, after the PhysioNet trophy
 
 const BOXSTYLE = {
   edu:  { a:'#f2c14e', b:'#c99423', c:'#8a6410', hi:'#fbe3a0', mark:'#5a3f08', name:'EDUCATION' },
@@ -2390,8 +2390,10 @@ links.innerHTML = '<a href="https://scholar.google.com/citations?user=tX8UpusAAA
                   '<a href="https://felixkrones.de/CV_Felix_Krones.pdf" target="_blank" rel="noopener" style="color:#f4f2ee;border-bottom:1px solid #8b8578">CV (PDF)</a>' +
                   '<a href="https://www.linkedin.com/in/felixkrones" target="_blank" rel="noopener" style="color:#9fc3ea;border-bottom:1px solid #3d6fb4">LinkedIn</a>';
 document.getElementById('tl').after(links);
-function showLinks(){ links.style.display = 'flex'; }
-function hideLinks(){ links.style.display = 'none'; }
+/* at the end the links take the place of the key hints, so the page keeps its height and nothing scrolls */
+const hud = document.getElementById('hud');
+function showLinks(){ links.style.display = 'flex'; hud.style.display = 'none'; }
+function hideLinks(){ links.style.display = 'none'; hud.style.display = ''; }
 
 const DT = 1/60;
 if (!RECORD){
