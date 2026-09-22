@@ -655,6 +655,8 @@ const ICON = {
   mortar16: ['................','................','.......NN.......','.....NNnnNN.....','...NNnnnnnnNN...','.NNnnnnnnnnnnNN.','NnnnnnnnnnnnnnnN','.NNnnnnnnnnnnNNY','...NNnnnnnnNN.Y.','....NnNNNNnN..Y.','....NnnnnnnN.YYY','....NnnnnnnN.YYY','.....NNNNNN.....','................','................','................'],
   briefcase16: ['................','................','......NNNN......','.....NaNNaN.....','..NNNNNNNNNNNN..','.NbbbbbbbbbbbbN.','.NHHHHHHHHHHHHN.','.NbbbbbYYbbbbbN.','.NaaaaaYYaaaaaN.','.NbbbbbbbbbbbbN.','.NbbbbbbbbbbbbN.','.NbbbbbbbbbbbbN.','.NaaaaaaaaaaaaN.','..NNNNNNNNNNNN..','................','................'],
   robot16: ['.......NN.......','......NGGN......','.......NN.......','.......nn.......','..NNNNNNNNNNNN..','.NhhhhhhhhhhhhN.','.NhgNNNNNNNNggN.','.NhgNnGGnGGnNgN.','.NhgNnGGnGGnNgN.','.NhgNnnGGGGnNgN.','.NhgNNNNNNNNggN.','.NhgggggggggggN.','.NnnnnnnnnnnnnN.','..NNNNNNNNNNNN..','....NnnN.NnnN...','....NNNN.NNNN...'],
+  chip16: ['................','................','..N..N..N..N....','..N..N..N..N....','.NNNNNNNNNNNNN..','.NGGGGGGGGGGGN..','.NGYNNNGGNNNGN..','.NGYNhNGGNhNGN..','.NGGNNNGGNNNGN..','.NGGGGGGGGGGGN..','.NGwGwGwGwGwGN..','.NNNNNNNNNNNNN..','..N..N..N..N....','..N..N..N..N....','................','................'],
+  glasses16: ['................','................','................','................','................','NNNNNNN..NNNNNNN','NhhhhhhNNhhhhhhN','NhNNNNNhhNNNNNhN','NhNwNNNhhNNNNNhN','NhNNNNNhhNNNNchN','NhhhhhhNNhhhhhhN','NNNNNNN..NNNNNNN','................','................','................','................'],
   heart16: ['................','................','..NNNN...NNNN...','.NqqqqN.NqqqqN..','NqWWqqqNqqqqqqN.','NqWqqqqqqqqqqqN.','NqqqqqqqqqqqqxN.','.NqqqqqqqqqqxN..','..NqqqqqqqqxN...','...NqqqqqqxN....','....NqqqqxN.....','.....NqqxN......','......NxN.......','.......N........','................','................'],
   star:   ['.....YY.....','.....YY.....','....YYYY....','YYYYYYYYYYYY','.YYYYYYYYYY.','..YYYYYYYY..','...YYYYYY...','..YYYYYYYY..','..YYY..YYY..','.YY......YY.','............','............']
 };
@@ -792,6 +794,12 @@ const HELPS = [
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'vol'; h.k = 'volunteer'; });
+/* Own projects (2026): two small upgrades for the robot, picked up on the way through Munich */
+const UPGRADES = [
+  { seg:'muc', off:380,  year:'2026-', tag:'OWN AI ASSISTANT',   role:'Own AI assistant',   desc:'Raspberry Pi, OpenClaw', org:'Own project', loc:'', icon:'chip16',    up:'board' },
+  { seg:'muc', off:1230, year:'2026-', tag:'SMART-GLASSES APPS', role:'Smart-glasses apps', desc:'Video analysis',        org:'Own project', loc:'', icon:'glasses16', up:'glasses' }
+];
+UPGRADES.forEach((u,i)=>{ u.i = i; u.x = wx(u.seg, Math.round(u.off*UK)); u.t = 'work'; u.k = 'upgrade'; });
 /* A robot waits at the end of the Karlsruhe years (2018). It hunts Felix; he has to jump on it. Once mastered, it follows him like a pet. */
 const ROBOT = { year:'2018-', tag:'MASTERING AI', role:'AI expert', desc:'Multimodal AI, LLMs, data', org:'Oxford, QuantumBlack, Waterland', loc:'', icon:'robot16', t:'work', k:'robot',
   home: wx('ka2', Math.round(2150*UK)), hunt:250, walk:36, charge:90 };
@@ -841,7 +849,8 @@ function reset(){
   MCK_FLAGS.forEach(f=>f.got=false);
   HELPS.forEach(h=>h.got=false);
   EVENTS.forEach(e=>e.done=false);
-  Object.assign(ROBOT, { got:false, x:ROBOT.home, vx:0, face:-1, state:'idle', t:0, flash:0, squash:0, wait:0, bumps:0 });
+  Object.assign(ROBOT, { got:false, x:ROBOT.home, vx:0, face:-1, state:'idle', t:0, flash:0, squash:0, wait:0, bumps:0, board:false, glasses:false });
+  UPGRADES.forEach(u=>u.got=false);
 }
 reset();
 const SH = () => SPRH[S.kid];
@@ -1010,6 +1019,12 @@ function step(dt){
     if (h.got || S.x < h.x) continue;
     h.got = true; S.stars++; S.btnGlow = 1; refreshPanel(); S.helpPop = { h:{ lines:[h.tag, h.org || h.loc || '', h.year].filter(Boolean) }, t:0 }; sfx('wear');
     popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
+  }
+  for (const u of UPGRADES){
+    if (u.got || S.x < u.x) continue;
+    u.got = true; ROBOT[u.up] = true; S.stars++; S.btnGlow = 1; refreshPanel(); sfx('wear');
+    S.helpPop = { h:{ lines:[u.tag, u.desc, u.year] }, t:0, col:'#7fc0dd' };
+    popSparks(u.x + 12, GROUND - 40, '#7fc0dd', 8, 80);
   }
   for (const e of EVENTS){
     if (e.done || S.x < e.x) continue;
@@ -1883,6 +1898,11 @@ function drawRobot(px, t, feetY){
   const eye = rb.got ? '#5ad86a' : rb.flash > 0 ? '#ffffff' : (Math.floor(t*6)%4 ? '#e0463c' : '#8b1e2d');
   const ant = rb.got ? '#5ad86a' : (Math.floor(t*4)%2 ? '#e0463c' : '#5a1a14');
   drawRemap(ROBOT_BODY, 0, 0, 'EV', (x, y, ch) => ch==='E' ? eye : ant);
+  if (rb.board){ r(9, 23, 6, 3, '#3f8f4f'); r(10, 24, 1, 1, '#f2c14e'); r(13, 24, 1, 1, '#15120f'); for (let k=0;k<3;k++) r(9+k*2, 25, 1, 1, '#c6ccd2'); }   // own assistant: a small green board on the chest
+  if (rb.glasses){                                                                                                                       // smart glasses over the screen face, with a tiny camera dot
+    for (const gx of [9, 13]){ r(gx, 10, 4, 1, '#c6ccd2'); r(gx, 13, 4, 1, '#c6ccd2'); r(gx, 11, 1, 2, '#c6ccd2'); r(gx+3, 11, 1, 2, '#c6ccd2'); }
+    r(10, 11, 1, 1, '#ffffff'); r(16, 10, 1, 1, '#7fc0dd');
+  }
   draw(ROBOT_LEG, 4, 30 - (walking && f===0 ? 2 : 0)); draw(ROBOT_LEG, 13, 30 - (walking && f===1 ? 2 : 0));
   ctx.restore();
   if (rb.got && S.t - rb.tamedAt < 2.6){                                   // a heart rises: it is on his side now
@@ -1920,6 +1940,7 @@ function render(){
     ctx.globalAlpha = 1;
   }
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
+  for (const u of UPGRADES){ const sx = u.x - cam; if (sx > -60 && sx < W+60) drawUpgrade(u, sx, t); }
   if (S.outlook > 0) brightLight(S.outlook, t);
   if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
   { const sx = ROBOT.x - cam; if (sx > -40 && sx < W + 40){ ctx.globalAlpha = fadeRight(sx); drawRobot(sx, t, ROBOT.got && S.flyBlend > 0 ? S.y : GROUND); ctx.globalAlpha = 1; } }
@@ -2017,6 +2038,17 @@ function drawHelp(h, sx, t){
   if (!h.got) drawIcon(ICON.heart16, x + 4, Math.round(g - 84 + Math.sin(t*3 + h.i)*3), 2);
 }
 
+/* robot upgrades on the way: a small crate with the item on it, the item icon floats above until collected */
+function drawUpgrade(u, sx, t){
+  const x = Math.round(sx), g = GROUND;
+  shadow(x + 13, g, 22);
+  scaled(x, g, UK, ()=>{
+    r(x, g-8, 22, 8, '#a8743f'); r(x, g-8, 22, 1, '#c48f55'); r(x, g-4, 22, 1, '#8a5a33'); r(x+10, g-8, 1, 8, '#8a5a33');   // crate
+    if (u.up === 'board'){ r(x+4, g-13, 14, 5, '#3f8f4f'); r(x+4, g-13, 14, 1, '#5ea455'); r(x+6, g-11, 2, 2, '#f2c14e'); r(x+10, g-11, 2, 2, '#15120f'); r(x+14, g-11, 2, 2, '#15120f'); for (let k=0;k<7;k++) r(x+4+k*2, g-15, 1, 2, '#c6ccd2'); }
+    else { r(x+3, g-13, 7, 5, '#15120f'); r(x+12, g-13, 7, 5, '#15120f'); r(x+4, g-12, 5, 3, '#7fc0dd'); r(x+13, g-12, 5, 3, '#7fc0dd'); r(x+10, g-12, 2, 1, '#15120f'); r(x+5, g-12, 1, 1, '#ffffff'); r(x+17, g-13, 1, 1, '#f2c14e'); }
+  });
+  if (!u.got) drawIcon(ICON[u.icon], x + 4, Math.round(g - 84 + Math.sin(t*3 + u.i)*3), 2);
+}
 /* outlook at the end: a signpost with open directions, and a short message */
 const SIGNS = [ { t:'PRIVATE', d:1 }, { t:'LOCATION', d:1 }, { t:'WORK', d:1 }, { t:'EDUCATION', d:1 } ];
 function signpost(px, a){
@@ -2154,7 +2186,7 @@ function drawScenery(cam, t){
 }
 
 /* ---------- HUD ---------- */
-const TOTAL = () => BOXES.length + HELPS.length + 1;   // boxes, volunteering, and the robot
+const TOTAL = () => BOXES.length + HELPS.length + 1 + UPGRADES.length;   // boxes, volunteering, the robot and its upgrades
 const TOUCH = matchMedia('(pointer:coarse)').matches;
 function drawHUD(seg, cam){
   /* achievements button, top right, small */
@@ -2261,7 +2293,7 @@ function refreshPanel(){
     .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
   ovBody.innerHTML = `<div class="cols">
     <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
-    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
+    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT, ...UPGRADES]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
 }
 function openPanel(open){
   panelOpen = open; ov.classList.toggle('open', open);
@@ -2275,6 +2307,7 @@ document.getElementById('ovAll').onclick = ()=>{
   for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
   for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
   if (!ROBOT.got){ ROBOT.got = true; ROBOT.state = 'tamed'; ROBOT.vx = 0; ROBOT.tamedAt = -10; ROBOT.x = S.x - 40; S.stars++; }
+  for (const u of UPGRADES){ if (!u.got){ u.got = true; ROBOT[u.up] = true; S.stars++; } }
   S.kid = 0; S.visible = true; S.fly = []; S.allUnlocked = true; userGesture(); sfx('flag'); refreshPanel();
 };
 
