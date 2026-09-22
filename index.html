@@ -264,6 +264,50 @@ const TORSO = [
   '...NSDSN.NtttttttttttttN.NSDSN..',
   '....NNN..NNNNNNNNNNNNNNN..NNN...'
 ];   // rows 22..37
+/* ---- after the secret workout: broader shoulders and bigger arms, the same body width so the legs still fit ---- */
+const TORSO_BUFF = [
+  '..........NNTTTTTTTTTNN.........',
+  '......NNNNTTTTTTTTTTTTTNNNN.....',
+  '...NNTTTTTTTTTUUTTTTTTTTTTTTNN..',
+  '..NTTTTTTTTTTTUUTTTTTTTTTTTTTTN.',
+  '.NTTTTTTTTTTTTUUTTTTTTTTTTTTTTTN',
+  '.NTTTtTTTTTTTTUUTTTTTTTTTTTtTTTN',
+  '.NTTTtTNNTTTTTUUTTTTTTTTNNTtTTTN',
+  '.NtttttN.NTTTTUUTTTTTTTN.NtttttN',
+  '.NSSSSSN.NTTTTTTTTTTTTTN.NSSSSSN',
+  '.NSSSSSN.NTTTTTTTTTTTTTN.NSSSSSN',
+  '.NSSDSSN.NTTTTTTTTTTTTTN.NSSDSSN',
+  '.NSDSSSN.NTTTTTTTTTTTTTN.NSSSDSN',
+  '.NDSSSSN.NTTTTTTTTTTTTTN.NSSSSDN',
+  '.NDSSSSN.NtTTTTTTTTTTTtN.NSSSSDN',
+  '.NSDDSSN.NtttttttttttttN.NSSDDSN',
+  '..NNNNN..NNNNNNNNNNNNNNN..NNNNN.'
+];
+/* flex pose right after the workout: both arms up, drawn 6 rows higher than the torso (origin row 16) */
+const TORSO_FLEX = [
+  '..NNNNN...................NNNNN.',
+  '.NSSSSSN.................NSSSSSN',
+  '.NSDSDSN.................NSDSDSN',
+  '.NSSSSSN.................NSSSSSN',
+  '.NDSSSSN.................NSSSSDN',
+  '.NDSSSSN.................NSSSSDN',
+  '.NDSSSSN..NNTTTTTTTTTNN..NSSSSDN',
+  '.NDSSSSNNNTTTTTTTTTTTTTNNNSSSSDN',
+  '.NSSSSSNNTTTTTUUTTTTTTTTNNSSSSSN',
+  '.NSSSSSNNTTTTTUUTTTTTTTTNNSSSSSN',
+  '.NSSSSSSNTTTTTUUTTTTTTTTNSSSSSSN',
+  '.NSSSSSSNTTTTTTTTTTTTTTTNSSSSSSN',
+  '.NDSSSSSNTTTTTTTTTTTTTTTNSSSSSDN',
+  '.NNNNNNNNNTTTTTTTTTTTTTNNNNNNNNN',
+  '.........NTTTTTTTTTTTTTN........',
+  '.........NTTTTTTTTTTTTTN........',
+  '.........NTTTTTTTTTTTTTN........',
+  '.........NTTTTTTTTTTTTTN........',
+  '.........NTTTTTTTTTTTTTN........',
+  '.........NtTTTTTTTTTTTtN........',
+  '.........NtttttttttttttN........',
+  '.........NNNNNNNNNNNNNNN........'
+];
 const LEGS_BASE = [
   '.........NPPPPPPPPPPPPPN........',
   '.........NPPPPPPPPPPPPPN........',
@@ -657,6 +701,7 @@ const ICON = {
   robot16: ['.......NN.......','......NGGN......','.......NN.......','.......nn.......','..NNNNNNNNNNNN..','.NhhhhhhhhhhhhN.','.NhgNNNNNNNNggN.','.NhgNnGGnGGnNgN.','.NhgNnGGnGGnNgN.','.NhgNnnGGGGnNgN.','.NhgNNNNNNNNggN.','.NhgggggggggggN.','.NnnnnnnnnnnnnN.','..NNNNNNNNNNNN..','....NnnN.NnnN...','....NNNN.NNNN...'],
   chip16: ['................','................','..N..N..N..N....','..N..N..N..N....','.NNNNNNNNNNNNN..','.NGGGGGGGGGGGN..','.NGYNNNGGNNNGN..','.NGYNhNGGNhNGN..','.NGGNNNGGNNNGN..','.NGGGGGGGGGGGN..','.NGwGwGwGwGwGN..','.NNNNNNNNNNNNN..','..N..N..N..N....','..N..N..N..N....','................','................'],
   glasses16: ['................','................','................','................','................','NNNNNNN..NNNNNNN','NhhhhhhNNhhhhhhN','NhNNNNNhhNNNNNhN','NhNwNNNhhNNNNNhN','NhNNNNNhhNNNNchN','NhhhhhhNNhhhhhhN','NNNNNNN..NNNNNNN','................','................','................','................'],
+  dumbbell16: ['................','................','................','.NNNN......NNNN.','.NhhN......NhhN.','.NggN......NggN.','.NggN......NggN.','gNggNhhhhhhNggNg','gNggNggggggNggNg','.NggN......NggN.','.NgnN......NngN.','.NnnN......NnnN.','.NNNN......NNNN.','................','................','................'],
   heart16: ['................','................','..NNNN...NNNN...','.NqqqqN.NqqqqN..','NqWWqqqNqqqqqqN.','NqWqqqqqqqqqqqN.','NqqqqqqqqqqqqxN.','.NqqqqqqqqqqxN..','..NqqqqqqqqxN...','...NqqqqqqxN....','....NqqqqxN.....','.....NqqxN......','......NxN.......','.......N........','................','................'],
   star:   ['.....YY.....','.....YY.....','....YYYY....','YYYYYYYYYYYY','.YYYYYYYYYY.','..YYYYYYYY..','...YYYYYY...','..YYYYYYYY..','..YYY..YYY..','.YY......YY.','............','............']
 };
@@ -800,6 +845,13 @@ const UPGRADES = [
   { seg:'muc', off:1230, year:'2026-', tag:'SMART-GLASSES APPS', role:'Smart-glasses apps', desc:'Video analysis',        org:'Own project', loc:'', icon:'glasses16', up:'glasses' }
 ];
 UPGRADES.forEach((u,i)=>{ u.i = i; u.x = wx(u.seg, Math.round(u.off*UK)); u.t = 'work'; u.k = 'upgrade'; });
+/* Secret (type G Y M): a Fitness First club opens in Munich. Felix walks in, trains and comes out stronger.
+   Not one of the achievements, so the end stays reachable without it. GYM.on survives a restart, the workout does not. */
+const GYM = { on:false, phase:null, t:0, done:false, seg:'muc', off:1040, w:100, door:1090, tIn:2.4, tHop:0.45, tFlex:1.3,
+  year:'2026-', tag:'STRONGER THAN EVER', role:'Workout', desc:'Secret found', org:'Fitness First', loc:'Munich', icon:'dumbbell16', col:'#e0463c' };
+GYM.x = wx(GYM.seg, Math.round(GYM.off*UK)); GYM.doorX = wx(GYM.seg, Math.round(GYM.door*UK));
+/* Secret (type G F): his partner joins, in London as the story goes, or right away when he is already past London. GF.on survives a restart. */
+const GF = { on:false, col:'#e0708f' };
 /* A robot waits at the end of the Karlsruhe years (2018). It hunts Felix; he has to jump on it. Once mastered, it follows him like a pet. */
 const ROBOT = { year:'2018-', tag:'MASTERING AI', role:'AI expert', desc:'Multimodal AI, LLMs, data', org:'Oxford, QuantumBlack, Waterland', loc:'', icon:'robot16', t:'work', k:'robot',
   home: wx('ka2', Math.round(2150*UK)), hunt:250, walk:36, charge:90 };
@@ -843,8 +895,10 @@ function reset(){
     lastSeg:null, manual:false,
     fly:[], sparks:[], pops:[], bubbles:[],
     started:false, auto:false, startT:0,
-    intro:null, btnGlow:0, helpPop:null, allUnlocked:false, kb:null
+    intro:null, btnGlow:0, helpPop:null, allUnlocked:false, kb:null,
+    buff:false, toast:null
   };
+  Object.assign(GYM, { phase:null, t:0, done:false });
   BOXES.forEach(b=>{ b.hit=false; b.bump=0; b.open=0; });
   MCK_FLAGS.forEach(f=>f.got=false);
   HELPS.forEach(h=>h.got=false);
@@ -929,7 +983,7 @@ function step(dt){
   S.flyBlend = clamp(S.flyBlend + (wantFly ? dt*2.2 : -dt*2.2), 0, 1);
 
   /* horizontal */
-  let fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) : 1;   // together even faster
+  let fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) + (S.buff ? 0.6 : 0) : 1;   // together even faster, and after the secret workout faster still
   if (!S.manual && !ROBOT.got && Math.abs(ROBOT.x - S.x) < 600) fast = 1;         // playing by itself: walk when the robot is near, so the jump lands
   const speed = (wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) : SPD) * fast;   // Shift also speeds up the plane
   S.fast = fast;
@@ -937,6 +991,8 @@ function step(dt){
   if (S.kb){
     /* pushed back by the robot: no control for a moment */
     S.kb.t -= dt; S.x += S.kb.vx*dt; if (S.kb.t <= 0) S.kb = null;
+  } else if (GYM.phase){
+    stepGym(dt);
   } else if (S.ended){
     /* the end: both stroll to the right, into the bright light */
     S.x += 92*dt; S.facing = 1;
@@ -947,7 +1003,7 @@ function step(dt){
     if (keys.ArrowLeft) dir = -1;
     S.x += dir*speed*dt;
     if (dir) S.facing = dir;
-    if ((keys.ArrowUp || keys.KeyW) && S.onGround && S.flyBlend===0){ S.vy = JUMPV; S.onGround=false; sfx('jump'); }
+    if ((keys.ArrowUp || keys.KeyW) && S.onGround && S.flyBlend===0){ S.vy = S.buff ? JUMPV*1.15 : JUMPV; S.onGround=false; sfx('jump'); }   // a little higher after the workout
   } else {
     if (!S.ended) S.x += speed*dt;
     S.facing = 1;
@@ -1026,13 +1082,17 @@ function step(dt){
     S.helpPop = { h:{ lines:[u.tag, u.desc, u.year] }, t:0, col:'#7fc0dd' };
     popSparks(u.x + 12, GROUND - 40, '#7fc0dd', 8, 80);
   }
+  /* the secret club: walking up to its door takes him inside */
+  if (GYM.on && !GYM.done && !GYM.phase && S.onGround && S.flyBlend === 0 && !S.kb && S.x >= GYM.doorX && S.x < GYM.doorX + 60){
+    GYM.phase = 'in'; GYM.t = 0; S.x = GYM.doorX; S.facing = 1; sfx('wear');
+  }
   for (const e of EVENTS){
     if (e.done || S.x < e.x) continue;
     e.done = true; if (e.fx==='mck_on') S.mck = true; if (e.wear) wear(e.wear);
     if (e.lines){ S.helpPop = { h:{ lines:e.lines }, t:0, col:e.col, dur:3.2 }; sfx('wear'); }
   }
   if (S.helpPop){ S.helpPop.t += dt; if (S.helpPop.t > (S.helpPop.dur || 2.4)) S.helpPop = null; }
-  if (!S.partner && S.x > PARTNER_X){ S.partner = { x:S.x+140, t:0 }; }
+  if (!S.partner && GF.on && S.x > PARTNER_X && S.flyBlend === 0){ S.partner = { x:S.x+140, t:0 }; }
 
   tickTimers(dt);
   tickFly(dt);
@@ -1046,7 +1106,7 @@ function step(dt){
     S.partner.t += dt;
     if (S.flyBlend > 0.3) S.partner.x = S.x - 30*S.facing;                    // on the plane she sits right behind him
     else {                                                                     // she walks close behind him in either direction, a little lag even when running
-      const want = S.x - 34*S.facing;
+      const want = S.x - (GYM.phase ? 70 : 34)*S.facing;                  // she waits a step away from the club door
       S.partner.x += (want - S.partner.x) * Math.min(1, dt*12);
       S.partner.x = clamp(S.partner.x, want - 22, want + 22);
     }
@@ -1113,13 +1173,30 @@ function robotAutoJump(speed, endX){
   const closing = rb.vx - (felixAt > S.x + 1 ? speed : 0) < 0;      // is the gap shrinking or growing?
   if (gap >= (closing ? -16 : -7) && gap <= (closing ? 7 : 16)){ S.vy = JUMPV; S.onGround = false; sfx('jump'); }
 }
+/* ---- the secret workout: inside for a moment (clanks, sweat), then out with a hop, a flex and bigger arms ---- */
+function stepGym(dt){
+  const g = GYM, t0 = g.t; g.t += dt;
+  if (g.phase === 'in'){
+    if (Math.floor(g.t/0.6) !== Math.floor(t0/0.6) && g.t < g.tIn){ sfx('clank'); popSparks(g.doorX + (Math.random()-0.5)*40, GROUND - 70, '#9fc3ea', 4, 60); }
+    if (g.t >= g.tIn){
+      g.phase = 'out'; g.t = 0; S.buff = true; g.done = true;
+      S.vy = -250; S.onGround = false; sfx('star');
+      popSparks(S.x, GROUND - 40, '#ffffff', 14, 130); popSparks(S.x, GROUND - 40, g.col, 10, 110);
+      S.helpPop = { h:{ lines:[g.tag, g.org.toUpperCase() + ', ' + g.loc.toUpperCase(), g.year] }, t:0, col:g.col, dur:3.2 };
+      S.btnGlow = 1; refreshPanel();
+    }
+  } else if (g.phase === 'out'){
+    /* the hop, then the flex on the ground; movement returns afterwards */
+    if (g.t >= g.tHop + g.tFlex && S.onGround) g.phase = null;
+  }
+}
 function stepRobot(dt){
   const rb = ROBOT; rb.t += dt; rb.flash = Math.max(0, rb.flash - dt); rb.squash = Math.max(0, rb.squash - dt*2.8);
   if (rb.got){
     /* mastered: it follows him like a pet (behind the partner once she is there); on the plane it sits at the front */
     const x0 = rb.x;
     if (S.flyBlend > 0.3) rb.x = S.x + 30*S.facing;
-    else { const want = S.x - (S.partner ? 74 : 40)*S.facing; rb.x += (want - rb.x)*Math.min(1, dt*8); rb.x = clamp(rb.x, want - 30, want + 30); }
+    else { const want = S.x - ((S.partner ? 74 : 40) + (GYM.phase ? 36 : 0))*S.facing; rb.x += (want - rb.x)*Math.min(1, dt*8); rb.x = clamp(rb.x, want - 30, want + 30); }
     rb.vx = (rb.x - x0)/Math.max(dt, 1e-4); rb.face = S.facing;
     return;
   }
@@ -1700,6 +1777,32 @@ function maibaum(x, y){
 function olympiaturm(x, y){
   r(x+10, y-150, 6, 150, '#c6ccd2'); r(x+4, y-126, 18, 10, '#aeb6be'); r(x+6, y-130, 14, 4, '#c6ccd2'); r(x+12, y-170, 2, 20, '#9aa2ae');
 }
+/* the secret Fitness First club in Munich: red name band, big glass windows with weights inside, a glass door in the middle */
+function gymClub(x, y, t){
+  const w = GYM.w, dark = '#3a3f46', darker = '#2b3138', red = '#d2322d', glass = '#8fb9d8', glassL = '#b8d8ea', iron = '#22262c';
+  const inside = GYM.phase === 'in', flash = inside && Math.floor(t*5)%2 === 0;
+  r(x, y-54, w, 54, dark); r(x, y-54, w, 1, '#6a7078'); r(x, y-1, w, 1, darker);
+  r(x, y-52, w, 13, red); r(x, y-52, w, 1, '#e8746b'); r(x, y-40, w, 1, '#8b1e2d');
+  text('FITNESS FIRST', x + Math.round((w - tw('FITNESS FIRST'))/2), y-49, '#ffffff', 1);
+  for (const wx0 of [x+5, x+63]){                                            // two windows
+    r(wx0, y-36, 32, 27, darker); r(wx0+1, y-35, 30, 25, flash ? glassL : glass);
+    for (let k=0;k<12;k++) r(wx0+1+k, y-35+k, 1, 1, glassL);                  // light streak
+    r(wx0+16, y-35, 1, 25, darker); r(wx0+1, y-23, 30, 1, darker);            // frame
+  }
+  const dumb = (dx, dy) => { r(dx, dy-1, 9, 1, '#9aa2ae'); r(dx, dy, 9, 1, '#6a7078'); r(dx-1, dy-3, 2, 5, iron); r(dx+8, dy-3, 2, 5, iron); };
+  dumb(x+25, y-14); dumb(x+25, y-21); r(x+23, y-11, 12, 1, '#6a7078');       // dumbbell rack, left window
+  r(x+68, y-13, 24, 3, iron); r(x+69, y-14, 22, 1, '#3a3f46'); r(x+88, y-30, 3, 17, iron); r(x+86, y-32, 7, 4, '#6a7078'); r(x+88, y-31, 3, 2, flash ? '#fbe3a0' : '#f2c14e');   // treadmill, right window
+  const px = x+6, py = y-30, fig = inside ? (Math.floor(t*6)%2) : 0;         // somebody lifting behind the left window
+  r(px+8, py-2, 4, 4, '#e8b48a'); r(px+7, py+2, 6, 8, '#2b3552'); r(px+7, py+10, 2, 5, '#232c44'); r(px+11, py+10, 2, 5, '#232c44');
+  r(px+3, py+3-fig*4, 14, 1, '#9aa2ae'); r(px+2, py+1-fig*4, 2, 5, iron); r(px+16, py+1-fig*4, 2, 5, iron);
+  /* door in the middle: two glass panes that slide open while he is inside, a warm light behind */
+  const dx0 = x + Math.round((GYM.door - GYM.off)) - 8, open = GYM.phase === 'in' ? 5 : (GYM.phase === 'out' && GYM.t < 0.5 ? Math.round((0.5 - GYM.t)*10) : 0);
+  r(dx0-1, y-31, 18, 31, darker); r(dx0, y-30, 16, 30, GYM.phase ? '#4e3a28' : '#1f2329');
+  if (GYM.phase) r(dx0+1, y-29, 14, 28, flash ? '#f6d9a6' : '#e0bd84');
+  r(dx0, y-30, 8-open, 30, glass); r(dx0+8+open, y-30, 8-open, 30, glass); r(dx0+7-open, y-30, 1, 30, darker); r(dx0+8+open, y-30, 1, 30, darker);
+  r(dx0-3, y-2, 22, 2, red);                                                  // mat
+  r(dx0+3, y-36, 10, 1, '#ffffff'); r(dx0+1, y-38, 2, 5, '#ffffff'); r(dx0+13, y-38, 2, 5, '#ffffff');   // small white dumbbell over the door
+}
 function towerBridge(x, y){
   const st = '#cdbd98', bl = '#6f9ac0';
   for (const tx of [x, x+100]){ r(tx, y-96, 26, 96, st); r(tx, y-96, 26, 2, '#e0d2b0'); tri(tx+13, y-116, 20, 26, '#5a6570'); for (const dx of [0, 22]) r(tx+dx, y-104, 4, 8, st);
@@ -1770,7 +1873,7 @@ const PROPS = {
           [900,(x,y,t)=>bridgeOfSighs(x,y)],[1120,(x,y,t)=>magdalenTower(x,y)],[1250,(x,y,t)=>collegeFront(x,y)],[1470,(x,y,t)=>bicycle(x,y)],[1560,(x,y,t)=>spires(x,y)],[1760,(x,y,t)=>radcliffe(x,y)],[1940,(x,y,t)=>tomTower(x,y)],[2100,(x,y,t)=>bicycle(x,y)]],
   lon:   [[60,(x,y,t)=>bigBen(x,y)],[195,(x,y,t)=>ortsschild(x,y,'LONDON','uk')],[300,(x,y,t)=>phoneBox(x,y)],[400,(x,y,t)=>doubleDecker(x,y,t)],[620,(x,y,t)=>londonEye(x,y,t)],[960,(x,y,t)=>phoneBox(x,y)],[1080,(x,y,t)=>towerBridge(x,y)],[1360,(x,y,t)=>doubleDecker(x,y,t)]],
   zh2:   [[60,(x,y,t)=>grossmunster(x,y-16)],[190,(x,y,t)=>ortsschild(x,y,'ZÜRICH','ch')],[255,(x,y,t)=>tram(x,y,t)],[560,(x,y,t)=>primeTower(x,y)],[700,(x,y,t)=>cityRowLocal(x,y)],[1050,(x,y,t)=>ethBuilding(x,y-16)],[1330,(x,y,t)=>tram(x,y,t)]],
-  muc:   [[40,(x,y,t)=>frauenkirche(x,y)],[150,(x,y,t)=>ortsschild(x,y,'MÜNCHEN')],[260,(x,y,t)=>beerTable(x,y)],[420,(x,y,t)=>maibaum(x,y)],[620,(x,y,t)=>podium(x,y)],[660,(x,y,t)=>poster(x,y)],[800,(x,y,t)=>frauenkirche(x,y)],[980,(x,y,t)=>olympiaturm(x,y)],[1100,(x,y,t)=>beerTable(x,y)]],
+  muc:   [[40,(x,y,t)=>frauenkirche(x,y)],[150,(x,y,t)=>ortsschild(x,y,'MÜNCHEN')],[260,(x,y,t)=>beerTable(x,y)],[420,(x,y,t)=>maibaum(x,y)],[620,(x,y,t)=>podium(x,y)],[660,(x,y,t)=>poster(x,y)],[800,(x,y,t)=>frauenkirche(x,y)],[980,(x,y,t)=>olympiaturm(x,y)],[1040,(x,y,t)=>GYM.on ? gymClub(x,y,t) : beerTable(x+60,y)]],   // the secret club takes the place of the beer table
   end:   [[40,(x,y,t)=>beerTable(x,y)]]
 };
 function cityRowLocal(x, y){ for (let i=0;i<4;i++){ const h = 40+((i*37)%30); r(x+i*38, y-h, 32, h, '#cfc7b5'); for (let yy=6; yy<h-6; yy+=10) for (let xx=4; xx<28; xx+=8) r(x+i*38+xx, y-h+yy, 4, 5, '#6b7a86'); } }
@@ -1828,8 +1931,10 @@ function shadow(px, feetY, wdt){
 function drawFelix(px, feetY){
   const h = SH(), top = feetY - h;
   const legsSet = S.kid===2 ? LEGS_S : S.kid===1 ? LEGS_M : LEGS_A;
-  const torso = S.kid===2 ? TORSO_S : S.kid===1 ? TORSO_M : TORSO;
-  const walking = S.flyBlend===0 && S.onGround && (S.ended || !S.manual || keys.ArrowRight || keys.ArrowLeft || keys.KeyD);
+  const flex = GYM.phase === 'out' && S.onGround && S.kid===0 && (!S.worn.body || S.worn.body==='quarterzip');   // the flex after the workout
+  const torso = S.kid===2 ? TORSO_S : S.kid===1 ? TORSO_M : flex ? TORSO_FLEX : S.buff ? TORSO_BUFF : TORSO;
+  const ty = flex ? 16 : 22;                                                 // the flex pose starts 6 rows higher (arms up)
+  const walking = S.flyBlend===0 && S.onGround && !GYM.phase && (S.ended || !S.manual || keys.ArrowRight || keys.ArrowLeft || keys.KeyD);
   const f = Math.floor(S.t*9*(S.fast||1))%4;
   let legs = legsSet.STAND, bob = 0;
   if (S.flyBlend>0) legs = legsSet.STAND;
@@ -1841,15 +1946,16 @@ function drawFelix(px, feetY){
   if (S.facing < 0){ ctx.scale(-1, 1); }
   ctx.translate(-16, 0);
   const w = S.worn;
-  if (w.legs==='camo') drawRemap(legs, 0, 22 + torso.length, 'Pp', (x,y,ch) => ch==='p' ? '#3c4630' : camo(x, y + 40));
-  else if (w.legs==='chinos') drawRemap(legs, 0, 22 + torso.length, 'Pp', (x,y,ch) => ch==='p' ? PAL.X : PAL.A);
-  else draw(legs, 0, 22 + torso.length);
+  if (w.legs==='camo') drawRemap(legs, 0, ty + torso.length, 'Pp', (x,y,ch) => ch==='p' ? '#3c4630' : camo(x, y + 40));
+  else if (w.legs==='chinos') drawRemap(legs, 0, ty + torso.length, 'Pp', (x,y,ch) => ch==='p' ? PAL.X : PAL.A);
+  else draw(legs, 0, ty + torso.length);
   if (w.body==='uniform' && S.kid===0){
-    drawRemap(torso, 0, 22, 'TtU', (x,y,ch) => ch==='t' ? '#3c4630' : camo(x, y));
+    drawRemap(torso, 0, ty, 'TtU', (x,y,ch) => ch==='t' ? '#3c4630' : camo(x, y));
     r(12, 22, 8, 2, '#4d5a38'); r(15, 23, 2, 3, '#3c4630');                    // collar
     r(24, 26, 3, 1, '#15120f'); r(24, 27, 3, 1, '#c8493f'); r(24, 28, 3, 1, '#f2c14e');   // flag on the sleeve
   } else if (w.body==='quarterzip' && S.kid===0){
-    drawRemap(torso, 0, 22, 'TtU', (x,y,ch) => ch==='t' ? PAL.Z : ch==='U' ? (y < 6 ? '#c6ccd2' : PAL.Q) : PAL.Q);
+    const zip = 6 + (22 - ty);                                             // the light zip pull sits in the top rows of the jumper
+    drawRemap(torso, 0, ty, 'TtU', (x,y,ch) => ch==='t' ? PAL.Z : ch==='U' ? (y < zip ? '#c6ccd2' : PAL.Q) : PAL.Q);
     r(11, 22, 4, 2, '#f4f2ee'); r(17, 22, 4, 2, '#f4f2ee'); r(13, 24, 2, 1, '#f4f2ee'); r(17, 24, 2, 1, '#f4f2ee');   // shirt collar
     r(10, 22, 12, 1, PAL.Q); r(10, 22, 1, 3, PAL.Z); r(21, 22, 1, 3, PAL.Z);   // zip collar of the jumper
   } else if (w.body==='dphilgown' && S.kid===0){         // Oxford DPhil gown: scarlet with dark blue facings
@@ -1862,7 +1968,7 @@ function drawFelix(px, feetY){
       return (x + y) % 7 === 0 ? '#9c1c25' : '#b3202a';
     });
   } else if (w.body && WEAR[w.body] && S.kid===0) draw(WEAR[w.body].g, WEAR[w.body].dx, WEAR[w.body].dy);
-  else draw(torso, 0, 22);
+  else draw(torso, 0, ty);
   if (w.back && WEAR[w.back]) draw(WEAR[w.back].g, WEAR[w.back].dx, WEAR[w.back].dy);
   if (w.neck && S.kid===0){                                  // degree medal on a ribbon, worn until the next station
     for (let k=0;k<6;k++){ r(12+k*0.6|0, 22+k, 1, 1, '#c8493f'); r(20-(k*0.6|0), 22+k, 1, 1, '#3d6fb4'); }
@@ -1874,7 +1980,7 @@ function drawFelix(px, feetY){
       if (y >= 16 || x <= 8 || x >= 23 || (y === 15 && x >= 12 && x <= 20)) r(x, y, 1, 1, (x + y) % 3 ? '#3f3026' : '#2a2019'); }
   }
   if (w.hat && WEAR[w.hat]) draw(WEAR[w.hat].g, WEAR[w.hat].dx, WEAR[w.hat].dy);
-  if (w.hand && WEAR[w.hand]) draw(WEAR[w.hand].g, WEAR[w.hand].dx, WEAR[w.hand].dy);
+  if (w.hand && WEAR[w.hand]) draw(WEAR[w.hand].g, flex ? 32 : WEAR[w.hand].dx, flex ? h - 12 : WEAR[w.hand].dy);   // the briefcase stands on the ground while he flexes
   if (w.hold && WEAR[w.hold]) draw(WEAR[w.hold].g, WEAR[w.hold].dx, WEAR[w.hold].dy);
   ctx.restore();
 }
@@ -1941,6 +2047,7 @@ function render(){
   }
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
   for (const u of UPGRADES){ const sx = u.x - cam; if (sx > -60 && sx < W+60) drawUpgrade(u, sx, t); }
+  if (GYM.on && !GYM.done){ const sx = GYM.doorX - cam; if (sx > -40 && sx < W+40) drawIcon(ICON.dumbbell16, Math.round(sx) - 16, Math.round(GROUND - 122 + Math.sin(t*3)*3), 2); }   // the secret club is open
   if (S.outlook > 0) brightLight(S.outlook, t);
   if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
   { const sx = ROBOT.x - cam; if (sx > -40 && sx < W + 40){ ctx.globalAlpha = fadeRight(sx); drawRobot(sx, t, ROBOT.got && S.flyBlend > 0 ? S.y : GROUND); ctx.globalAlpha = 1; } }
@@ -1956,7 +2063,7 @@ function render(){
     const sx = (S.x - cam + 6) + (S.t - S.startT - 3.6)*190, sy = 64 - (S.t - S.startT - 3.6)*16;
     if (sx < W+60) scaled(sx, sy, UK, ()=>stork(sx, sy, S.t, false));
   }
-  if (S.visible){ ctx.globalAlpha = fadeRight(S.x - cam); drawFelix(S.x - cam, S.y); ctx.globalAlpha = 1; }
+  if (S.visible && GYM.phase !== 'in'){ ctx.globalAlpha = fadeRight(S.x - cam); drawFelix(S.x - cam, S.y); ctx.globalAlpha = 1; }   // inside the club he is out of sight
 
   for (const f of S.fly){
     const sx = f.x - cam, sc = f.sc || 1, half = 6*sc;
@@ -2236,6 +2343,13 @@ function drawHUD(seg, cam){
       const p = 0.5 + 0.5*Math.sin(S.t*4); ctx.globalAlpha = 0.35*p; r(b.x-2, b.y-2, b.w+4, b.h+4, '#f2c14e'); ctx.globalAlpha = 1; }
   }
   if (paused && !panelOpen && S.started){ r(0,0,W,H,'rgba(8,9,13,.45)'); textC2('PAUSED', W/2, H/2-8, '#f4f2ee', 3); }
+  /* short note at the top, also over the start screen (the secret code) */
+  if (S.toast){
+    const ts = S.toast, a = clamp(Math.min(ts.t/0.2, (ts.dur - ts.t)/0.4), 0, 1), lines = ts.lines;
+    const w = Math.max(...lines.map(l=>tw2(l))) + 24, hh = 8 + lines.length*20, x = Math.round(W/2 - w/2), y = 34 - Math.min(ts.t, 0.3)*10;
+    ctx.globalAlpha = a; panelBox(x, y, w, hh, 'rgba(10,12,17,.88)'); r(x, y+hh-1, w, 1, ts.col);
+    lines.forEach((l,i)=> textC2(l, W/2, y+6+i*20, i===0 ? '#f4f2ee' : ts.col, 1)); ctx.globalAlpha = 1;
+  }
 }
 
 /* =====================================================================
@@ -2286,13 +2400,13 @@ function table(groups){
 }
 const yStart = b => parseInt(b.year, 10) || 0;
 function refreshPanel(){
-  ovCount.textContent = `${S.stars} / ${TOTAL()} achievements`;
+  ovCount.textContent = `${S.stars} / ${TOTAL()} achievements` + (GYM.done ? ' + 1 secret' : '');
   if (!panelOpen) return;
   const by = (t,k) => BOXES.filter(b=>b.t===t && (!k || b.k===k));
   const degHon = BOXES.filter(b=>b.t==='edu' && (b.k==='degree' || b.k==='honour')).map((b,i)=>[b,i])
     .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
   ovBody.innerHTML = `<div class="cols">
-    <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
+    <div class="col">${table([['life','Life',[['',[...by('life'), ...(GYM.done ? [Object.assign({ got:true, t:'life', k:'secret' }, GYM)] : [])]]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
     <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT, ...UPGRADES]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
 }
 function openPanel(open){
@@ -2308,6 +2422,7 @@ document.getElementById('ovAll').onclick = ()=>{
   for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
   if (!ROBOT.got){ ROBOT.got = true; ROBOT.state = 'tamed'; ROBOT.vx = 0; ROBOT.tamedAt = -10; ROBOT.x = S.x - 40; S.stars++; }
   for (const u of UPGRADES){ if (!u.got){ u.got = true; ROBOT[u.up] = true; S.stars++; } }
+  if (GYM.on && !GYM.done){ GYM.done = true; GYM.phase = null; S.buff = true; }   // the secret only if the code was typed
   S.kid = 0; S.visible = true; S.fly = []; S.allUnlocked = true; userGesture(); sfx('flag'); refreshPanel();
 };
 
@@ -2365,6 +2480,7 @@ function sfx(k){
   else if (k==='wear'){ tone(523,.06,'triangle',.06); tone(784,.12,'triangle',.06,.06); }
   else if (k==='flag'){ [523,659,784,1046].forEach((f,i)=>tone(f,.18,'square',.05,i*.12)); }
   else if (k==='buzz'){ tone(150,.16,'sawtooth',.04); tone(110,.14,'square',.03,.05); }
+  else if (k==='clank'){ tone(1760,.05,'square',.03); tone(880,.14,'triangle',.05,.03); }
 }
 const N = n => 440*Math.pow(2,(n-69)/12);
 const LEAD = [72,76,79,76, 69,72,76,72, 65,69,72,69, 67,71,74,71, 72,76,79,84, 83,79,76,74, 77,76,74,72, 74,67,0,0];
@@ -2384,16 +2500,32 @@ function userGesture(){ const a = ac(); if (a && a.state==='suspended') a.resume
 /* =====================================================================
    10. INPUT + LOOP
    ===================================================================== */
+let typed = '';   // the last letters typed, for the secret codes
+function secretFound(which){
+  if (which === 'gym'){
+    if (GYM.on) return false; GYM.on = true;
+    S.toast = { lines:['SECRET UNLOCKED', 'FITNESS FIRST OPENS IN MUNICH'], t:0, dur:3.6, col:GYM.col };
+  } else {
+    if (GF.on) return false; GF.on = true;
+    S.toast = { lines:['SECRET UNLOCKED', S.started && S.x > PARTNER_X ? 'YOUR PARTNER JOINS YOU NOW' : 'YOUR PARTNER JOINS IN LONDON'], t:0, dur:3.6, col:GF.col };
+  }
+  sfx('flag'); return true;
+}
 addEventListener('keydown', e=>{
   userGesture();
   if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(e.code)) e.preventDefault();
   keys[e.code] = true;
+  let secret = false;                                                                  // type G Y M (any case, any keyboard layout)
+  if (e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){
+    typed = (typed + e.key.toLowerCase()).slice(-3);
+    if (typed === 'gym'){ secret = true; secretFound('gym'); } else if (typed.endsWith('gf')) secretFound('gf');
+  }
   if (panelOpen && e.code!=='KeyA' && e.code!=='KeyC' && e.code!=='Escape'){ keys[e.code] = false; return; }
   if (['ArrowLeft','ArrowRight','ArrowUp','KeyD','KeyW'].includes(e.code)) startGame(false);
   if (e.code==='Enter') startGame(true);
   if (e.code==='Space' || e.code==='KeyP'){ if (!S.started) startGame(false); else paused = !paused; }
   if (e.code==='KeyR'){ reset(); openPanel(false); paused = false; hideLinks(); }
-  if (e.code==='KeyM') muted = !muted;
+  if (e.code==='KeyM' && !secret) muted = !muted;                                     // the M of the secret code does not touch the sound
   if (e.code==='KeyA' || e.code==='KeyC') openPanel(!panelOpen);
   if (e.code==='Escape') openPanel(false);
 });
@@ -2434,6 +2566,7 @@ if (!RECORD){
   (function frame(now){
     const dt = Math.min(0.05, (now-last)/1000); last = now;
     if (!paused && !panelOpen) step(dt);
+    if (S.toast){ S.toast.t += dt; if (S.toast.t > S.toast.dur) S.toast = null; }
     render(); music(); updateTimeline();
     if (S.ended && S.endT > 1.5) showLinks();
     requestAnimationFrame(frame);
@@ -2445,7 +2578,8 @@ window.GAME = {
   reset, step, render,
   seek(sec){ reset(); openPanel(false); startGame(true); const n = Math.round(sec/DT); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   advance(n=1){ if (!S.started) startGame(true); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
-  get time(){ return S.t; }, get x(){ return S.x; }, get done(){ return S.ended && S.endT > 8; }
+  get time(){ return S.t; }, get x(){ return S.x; }, get done(){ return S.ended && S.endT > 8; },
+  secret(which='gym'){ secretFound(which); }, get gym(){ return { on:GYM.on, phase:GYM.phase, done:GYM.done, buff:S.buff, gf:GF.on, partner:!!S.partner }; }
 };
 </script>
 
