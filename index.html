@@ -533,15 +533,6 @@ const WEAR = {
       'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN..',
       'NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN..'
     ] },
-  bonnet: { dx:3, dy:-8, g:[
-      '.........NNNNNNNN.........',
-      '......NNNnnnnnnnnNNN......',
-      '....NNnnnnnnnnnnnnnnNN....',
-      '...NnnnnnnnnnnnnnnnnnnN...',
-      '..NnnnnnnnnnnnnnnnnnnnnN..',
-      '.NYYYYYYYYYYYYYYYYYYYYYYN.',
-      'NNNNNNNNNNNNNNNNNNNNNNNNNN'
-    ] },
   mortar: { dx:-2, dy:-6, g:[
       '..NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN..',
       '.NnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnN.',
@@ -938,7 +929,7 @@ function wear(name){
   else if (name==='degreemedal') w.neck = 'medal';                                     // worn until the next station
   else if (name==='beard') w.beard = true;
   else if (name==='subfusc'){ w.body='gown'; w.legs=null; w.hat='mortar'; w.back=null; w.neck=null; }   // black Oxford academic dress
-  else if (name==='dphil'){ w.body='dphilgown'; w.legs=null; w.hat='bonnet'; w.back=null; w.neck=null; } // scarlet DPhil gown and bonnet
+  else if (name==='dphil'){ w.body='dphilgown'; w.legs=null; w.hat='mortar'; w.back=null; w.neck=null; } // scarlet DPhil gown; an Oxford DPhil wears the square (mortarboard), not the bonnet
   else if (name==='uniform'){ w.body='uniform'; w.legs='camo'; w.hat='beret'; w.back=null; w.neck=null; }
   else if (name==='student'){ w.body=null; w.legs=null; w.hat=null; w.back='backpack'; }
   else if (name==='hardhat' || name==='ethcap') w.hat = name;
@@ -2180,9 +2171,10 @@ function render(){
     const k = p.t/1.1, sx = p.x - cam, y = p.y - k*56; ctx.globalAlpha = 1-k;
     drawIcon(ICON.star, sx-12, y-12, 2); text2('+1', sx+16, y-8, '#f2c14e'); ctx.globalAlpha = 1;
   }
-  if (S.partner && S.partner.t < 3.5){
+  if (S.partner && S.partner.t < 2.2){   // a short moment of hearts when she joins
+    const fade = Math.min(1, (2.2 - S.partner.t)/0.5);
     for (let i=0;i<5;i++){ const k = (S.partner.t*1.2 + i*0.2) % 1, hx = S.x - cam - 34 + Math.sin(k*7+i)*16 + i*10, hy = GROUND - 90 - k*64;
-      const hc = '#e0708f'; ctx.globalAlpha = 1-k; drawIcon(ICON.heart16, Math.round(hx), Math.round(hy), 1); ctx.globalAlpha = 1; }
+      ctx.globalAlpha = (1-k)*fade; drawIcon(ICON.heart16, Math.round(hx), Math.round(hy), 1); ctx.globalAlpha = 1; }
   }
   /* ambient particles */
   const pt = (seg.kind==='ground' && THEMES[seg.theme].particles);
