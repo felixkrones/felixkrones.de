@@ -7,4 +7,4 @@ A pixel CV, served by GitHub Pages at https://felixkrones.de.
 - `CV_Felix_Krones.pdf` is the CV linked from the page.
 - `og.png` is the link preview image.
 - Update: replace `index.html`, commit, push. GitHub Pages redeploys in about a minute.
-- Two small secrets are hidden in the game, opened by short codes typed on the keyboard.
+- Three small secrets are hidden in the game, opened by short codes typed on the keyboard.

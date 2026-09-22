@@ -78,6 +78,7 @@
   #ov footer a{ color:#9fc3ea; text-decoration:none; } #ov footer a.site{ color:var(--accent); } #ov footer a.cv{ color:#f4f2ee; }
   #hud{ font-size:12.5px; letter-spacing:.08em; color:var(--dim); text-align:center; line-height:1.8; }
   #hud b{ color:var(--ink); font-weight:500; }
+  #hud .codes{ color:#2a2620; }                          /* the secret codes, barely there */
   #endlinks{ display:none; gap:18px; justify-content:center; font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
   #endlinks a{ text-decoration:none; padding-bottom:2px; }
   #touch{ display:none; gap:10px; justify-content:center; width:100%; max-width:640px; }
@@ -150,7 +151,7 @@
     <button id="tC" aria-label="menu">&#9733;</button>
   </div>
   <div id="rot">Turn your phone sideways for a bigger view</div>
-  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart</div>
+  <div id="hud"><b>&larr; &rarr;</b> move &nbsp;&middot;&nbsp; <b>&uarr;</b> jump &nbsp;&middot;&nbsp; <b>Shift</b> run &nbsp;&middot;&nbsp; <b>A</b> menu / CV &nbsp;&middot;&nbsp; <b>M</b> sound &nbsp;&middot;&nbsp; <b>R</b> restart <span class="codes">&nbsp;&middot;&nbsp; gf &middot; gym &middot; ai</span></div>
 </div>
 <script>
 "use strict";
@@ -839,7 +840,7 @@ const HELPS = [
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
 HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'vol'; h.k = 'volunteer'; });
-/* Own projects (2026): two small upgrades for the robot, picked up on the way through Munich */
+/* Secret (type A I): two small upgrades for the robot, own projects (2026), picked up on the way through Munich. Not achievements. */
 const UPGRADES = [
   { seg:'muc', off:380,  year:'2026-', tag:'OWN AI ASSISTANT',   role:'Own AI assistant',   desc:'Raspberry Pi, OpenClaw', org:'Own project', loc:'', icon:'chip16',    up:'board' },
   { seg:'muc', off:1230, year:'2026-', tag:'SMART-GLASSES APPS', role:'Smart-glasses apps', desc:'Video analysis',        org:'Own project', loc:'', icon:'glasses16', up:'glasses' }
@@ -852,6 +853,9 @@ const GYM = { on:false, phase:null, t:0, done:false, seg:'muc', off:1040, w:100,
 GYM.x = wx(GYM.seg, Math.round(GYM.off*UK)); GYM.doorX = wx(GYM.seg, Math.round(GYM.door*UK));
 /* Secret (type G F): his partner joins, in London as the story goes, or right away when he is already past London. GF.on survives a restart. */
 const GF = { on:false, col:'#e0708f' };
+const AI = { on:false, col:'#7fc0dd' };
+/* secrets found so far: partner there, workout done, both robot upgrades collected */
+const SECRETS = () => (S.partner ? 1 : 0) + (GYM.done ? 1 : 0) + (UPGRADES.every(u => u.got) ? 1 : 0);
 /* A robot waits at the end of the Karlsruhe years (2018). It hunts Felix; he has to jump on it. Once mastered, it follows him like a pet. */
 const ROBOT = { year:'2018-', tag:'MASTERING AI', role:'AI expert', desc:'Multimodal AI, LLMs, data', org:'Oxford, QuantumBlack, Waterland', loc:'', icon:'robot16', t:'work', k:'robot',
   home: wx('ka2', Math.round(2150*UK)), hunt:250, walk:36, charge:90 };
@@ -1077,8 +1081,8 @@ function step(dt){
     popSparks(h.x + 12, GROUND - 40, '#e0708f', 8, 80);
   }
   for (const u of UPGRADES){
-    if (u.got || S.x < u.x) continue;
-    u.got = true; ROBOT[u.up] = true; S.stars++; S.btnGlow = 1; refreshPanel(); sfx('wear');
+    if (!AI.on || u.got || S.x < u.x) continue;
+    u.got = true; ROBOT[u.up] = true; S.btnGlow = 1; refreshPanel(); sfx('wear');
     S.helpPop = { h:{ lines:[u.tag, u.desc, u.year] }, t:0, col:'#7fc0dd' };
     popSparks(u.x + 12, GROUND - 40, '#7fc0dd', 8, 80);
   }
@@ -2046,7 +2050,7 @@ function render(){
     ctx.globalAlpha = 1;
   }
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
-  for (const u of UPGRADES){ const sx = u.x - cam; if (sx > -60 && sx < W+60) drawUpgrade(u, sx, t); }
+  if (AI.on) for (const u of UPGRADES){ const sx = u.x - cam; if (sx > -60 && sx < W+60) drawUpgrade(u, sx, t); }
   if (GYM.on && !GYM.done){ const sx = GYM.doorX - cam; if (sx > -40 && sx < W+40) drawIcon(ICON.dumbbell16, Math.round(sx) - 16, Math.round(GROUND - 122 + Math.sin(t*3)*3), 2); }   // the secret club is open
   if (S.outlook > 0) brightLight(S.outlook, t);
   if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
@@ -2293,7 +2297,7 @@ function drawScenery(cam, t){
 }
 
 /* ---------- HUD ---------- */
-const TOTAL = () => BOXES.length + HELPS.length + 1 + UPGRADES.length;   // boxes, volunteering, the robot and its upgrades
+const TOTAL = () => BOXES.length + HELPS.length + 1;   // boxes, volunteering and the robot (the secrets do not count)
 const TOUCH = matchMedia('(pointer:coarse)').matches;
 function drawHUD(seg, cam){
   /* achievements button, top right, small */
@@ -2400,14 +2404,14 @@ function table(groups){
 }
 const yStart = b => parseInt(b.year, 10) || 0;
 function refreshPanel(){
-  ovCount.textContent = `${S.stars} / ${TOTAL()} achievements` + (GYM.done ? ' + 1 secret' : '');
+  const ns = SECRETS(); ovCount.textContent = `${S.stars} / ${TOTAL()} achievements` + (ns ? ` + ${ns} secret${ns > 1 ? 's' : ''}` : '');
   if (!panelOpen) return;
   const by = (t,k) => BOXES.filter(b=>b.t===t && (!k || b.k===k));
   const degHon = BOXES.filter(b=>b.t==='edu' && (b.k==='degree' || b.k==='honour')).map((b,i)=>[b,i])
     .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
   ovBody.innerHTML = `<div class="cols">
     <div class="col">${table([['life','Life',[['',[...by('life'), ...(GYM.done ? [Object.assign({ got:true, t:'life', k:'secret' }, GYM)] : [])]]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
-    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT, ...UPGRADES]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
+    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT, ...UPGRADES.filter(u => u.got)]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
 }
 function openPanel(open){
   panelOpen = open; ov.classList.toggle('open', open);
@@ -2421,8 +2425,10 @@ document.getElementById('ovAll').onclick = ()=>{
   for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
   for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
   if (!ROBOT.got){ ROBOT.got = true; ROBOT.state = 'tamed'; ROBOT.vx = 0; ROBOT.tamedAt = -10; ROBOT.x = S.x - 40; S.stars++; }
-  for (const u of UPGRADES){ if (!u.got){ u.got = true; ROBOT[u.up] = true; S.stars++; } }
-  if (GYM.on && !GYM.done){ GYM.done = true; GYM.phase = null; S.buff = true; }   // the secret only if the code was typed
+  /* the secrets only if their codes were typed */
+  if (AI.on) for (const u of UPGRADES){ if (!u.got){ u.got = true; ROBOT[u.up] = true; } }
+  if (GYM.on && !GYM.done){ GYM.done = true; GYM.phase = null; S.buff = true; }
+  if (GF.on && !S.partner) S.partner = { x:S.x - 34, t:10 };
   S.kid = 0; S.visible = true; S.fly = []; S.allUnlocked = true; userGesture(); sfx('flag'); refreshPanel();
 };
 
@@ -2505,9 +2511,12 @@ function secretFound(which){
   if (which === 'gym'){
     if (GYM.on) return false; GYM.on = true;
     S.toast = { lines:['SECRET UNLOCKED', 'FITNESS FIRST OPENS IN MUNICH'], t:0, dur:3.6, col:GYM.col };
-  } else {
+  } else if (which === 'gf'){
     if (GF.on) return false; GF.on = true;
     S.toast = { lines:['SECRET UNLOCKED', S.started && S.x > PARTNER_X ? 'YOUR PARTNER JOINS YOU NOW' : 'YOUR PARTNER JOINS IN LONDON'], t:0, dur:3.6, col:GF.col };
+  } else {
+    if (AI.on) return false; AI.on = true;
+    S.toast = { lines:['SECRET UNLOCKED', 'TWO GADGETS FOR THE ROBOT IN MUNICH'], t:0, dur:3.6, col:AI.col };
   }
   sfx('flag'); return true;
 }
@@ -2518,7 +2527,7 @@ addEventListener('keydown', e=>{
   let secret = false;                                                                  // type G Y M (any case, any keyboard layout)
   if (e.key && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){
     typed = (typed + e.key.toLowerCase()).slice(-3);
-    if (typed === 'gym'){ secret = true; secretFound('gym'); } else if (typed.endsWith('gf')) secretFound('gf');
+    if (typed === 'gym'){ secret = true; secretFound('gym'); } else if (typed.endsWith('gf')) secretFound('gf'); else if (typed.endsWith('ai') && secretFound('ai') && panelOpen) openPanel(false);   // the A of the code had just opened the menu
   }
   if (panelOpen && e.code!=='KeyA' && e.code!=='KeyC' && e.code!=='Escape'){ keys[e.code] = false; return; }
   if (['ArrowLeft','ArrowRight','ArrowUp','KeyD','KeyW'].includes(e.code)) startGame(false);
@@ -2579,7 +2588,7 @@ window.GAME = {
   seek(sec){ reset(); openPanel(false); startGame(true); const n = Math.round(sec/DT); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   advance(n=1){ if (!S.started) startGame(true); for (let i=0;i<n;i++) step(DT); render(); updateTimeline(); },
   get time(){ return S.t; }, get x(){ return S.x; }, get done(){ return S.ended && S.endT > 8; },
-  secret(which='gym'){ secretFound(which); }, get gym(){ return { on:GYM.on, phase:GYM.phase, done:GYM.done, buff:S.buff, gf:GF.on, partner:!!S.partner }; }
+  secret(which='gym'){ secretFound(which); }, get gym(){ return { on:GYM.on, phase:GYM.phase, done:GYM.done, buff:S.buff, gf:GF.on, partner:!!S.partner, ai:AI.on, ups:UPGRADES.filter(u=>u.got).length, secrets:SECRETS() }; }
 };
 </script>
 
