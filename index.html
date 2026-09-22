@@ -20,7 +20,7 @@
 <title>Felix H. Krones, PhD</title>
 <style>
   :root{ --ink:#f0ece4; --dim:#8b8578; --rule:#2a2620; --ground:#12100d; --panel:#1a1713; --accent:#f2c14e;
-         --life:#d2574f; --edu:#f2c14e; --work:#9aa6b4; }
+         --life:#d2574f; --edu:#f2c14e; --work:#9aa6b4; --vol:#e0708f; }
   html,body{ height:100%; }
   body{ margin:0; background:var(--ground); color:var(--ink);
     font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
@@ -66,7 +66,7 @@
   #ov .out.locked p{ color:#4a463f; }
   #ov .out .chips{ display:flex; flex-wrap:wrap; gap:6px; }
   #ov .out .chips span{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#f2c14e; border:1px solid #5a4a22; padding:3px 8px; border-radius:3px; }
-  #ov th.life{ background:var(--life);} #ov th.edu{ background:var(--edu);} #ov th.work{ background:var(--work);}
+  #ov th.life{ background:var(--life);} #ov th.edu{ background:var(--edu);} #ov th.work{ background:var(--work);} #ov th.vol{ background:var(--vol);}
   #ov td{ padding:2px 5px; border-bottom:1px solid #1f1c17; vertical-align:middle; }
   #ov td.ic{ width:18px; } #ov td.ic canvas{ display:block; image-rendering:pixelated; width:14px; height:14px; }
   #ov td.yr{ width:78px; color:#b9b2a4; font-variant-numeric:tabular-nums; }
@@ -223,8 +223,8 @@ function draw(grid, ox, oy, flip){
 
 /* ---- Felix: 32 wide x 58 tall, outlined and shaded. Origin = top-left; feet on row 57. ---- */
 const HEAD = [
-  '...........NNNNNNNNNN...........',
-  '.........NNKKKKKKKKKKNN.........',
+  '..........NNNN..NNNNNNN.........',
+  '.........NKkkKNNKKkKKKKN........',
   '........NKKKkkKKKKKKKKKN........',
   '.......NKKKkkKKKKKKKKKKKN.......',
   '......NKKKKkKKKKKKKKKKKKKN......',
@@ -233,14 +233,14 @@ const HEAD = [
   '......NKKSSSSSSSSSSSSSKKKN......',
   '.....NKSSSSSSSSSSSSSSSSKKKN.....',
   '.....NDSSSSSSSSSSSSSSSSSSDN.....',
-  '.....NDSSSKKSSSSSSSKKSSSSDN.....',
+  '.....NDSSKKKSSSSSSKKKSSSSDN.....',
   '.....NSSSSWESSSSSSSWESSSSSN.....',
   '......NSSSEESSSSSSSEESSSSN......',
   '......NSSSSSSSSDSSSSSSSSSN......',
   '......NSSSSSSSSDDSSSSSSSSN......',
-  '.......NSSSSSSSSSSSSSSSSN.......',
-  '.......NSSSSSMMMMMMMSSSSN.......',
-  '........NSSSSSSSSSSSSSSN........',
+  '.......NSSSSMSSSSSSSMSSSN.......',
+  '.......NSSSSMWWWWWWWMSSSN.......',
+  '........NSSSSMMMMMMMSSSN........',
   '.........NSSSSSSSSSSSSN.........',
   '..........NNSSSSSSSSNN..........',
   '............NDDDDDDDN...........',
@@ -306,37 +306,38 @@ const LEGS_M = { STAND:pick(LEGS_STAND,L_M), L:pick(LEGS_L,L_M), R:pick(LEGS_R,L
 const LEGS_S = { STAND:pick(LEGS_STAND,L_S), L:pick(LEGS_L,L_S), R:pick(LEGS_R,L_S), JUMP:pick(LEGS_JUMP,L_S) };
 const SPRH = [58, 22+T_M.length+L_M.length, 22+T_S.length+L_S.length];   // adult 58, medium 44, small 38
 const PARTNER_H = 55;
+const P_SKIN = '#c58c63', P_SKIN_D = '#a5714d';   // her skin, a warm brown
 
 /* ---- Partner: long dark wavy hair, dress ---- */
 const P_HEAD = [
   '..........NNNNNNNNNNNN..........',
-  '........NNKKKKKKKKKKKKNN........',
+  '........NNKKkKKKKKkKKKNN........',
   '.......NKKKKkkKKKKKKKKKKN.......',
-  '......NKKKKkkKKKKKKKKKKKKN......',
-  '.....NKKKKKkKKKKKKKKKKKKKKN.....',
-  '.....NKKKKKKKKKKKKKKKKKKKKN.....',
+  '......NKKKkKkkKKKKkKKKKKKN......',
+  '.....NKKKKKkKKKKKKKKKkKKKKN.....',
+  '....NKKkKKKKKKKKKKKKKKKKkKKN....',
   '....NKKKKKSSSSSSSSSSSKKKKKKN....',
-  '....NKKKKSSSSSSSSSSSSSKKKKKN....',
-  '....NKKKSSSSSSSSSSSSSSSKKKKN....',
+  '...NKKkKKSSSSSSSSSSSSSKKKkKKN...',
+  '...NKKKKSSSSSSSSSSSSSSSKKKKKN...',
   '....NKKKSSSSSSSSSSSSSSSSKKKN....',
-  '....NKKKSSSKKSSSSSSSKKSSKKKN....',
-  '....NKKSSSSWESSSSSSSWESSSKKN....',
-  '....NKKSSSSEESSSSSSSEESSSKKN....',
+  '....NKkKSSKKKSSSSSSKKKSSKkKN....',
+  '...NKKKSSSSWESSSSSSSWESSSKKKN...',
+  '...NKKkSSSSEESSSSSSSEESSSKkKN...',
   '....NKKSSSSSSSSDSSSSSSSSSKKN....',
   '....NKKSSSSSSSSDDSSSSSSSSKKN....',
-  '....NKKKSSSSSSSSSSSSSSSSKKKN....',
-  '....NKKKSSSSSMMMMMMMSSSSKKKN....',
-  '....NKKKKSSSSSSSSSSSSSSKKKKN....',
-  '....NKKKKKSSSSSSSSSSSSKKKKKN....',
-  '....NKKKKKKNSSSSSSSSNKKKKKKN....',
+  '...NKKKKSSSSMSSSSSSSMSSSKKKKN...',
+  '...NKkKKSSSSMWWWWWWWMSSSKKkKN...',
+  '....NKKKKSSSSMMMMMMMSSSKKKKN....',
+  '...NKKKKKKSSSSSSSSSSSSKKKKKKN...',
+  '...NKKkKKKKNSSSSSSSSNKKKKkKKN...',
   '....NKKKKKKKNDDDDDDDNKKKKKKN....',
-  '....NKKKKKKKNDDDDDDDNKKKKKKN....'
+  '...NKKKKKKKKNDDDDDDDNKKKKKKKN...'
 ];
 const P_BODY = [
-  '....NKKKKKNqqqqqqqqqNKKKKKKN....',
+  '...NKKkKKKNqqqqqqqqqNKKKKkKKN...',
   '....NKKKKNqqqqqqqqqqqNKKKKKN....',
-  '....NKKKNqqqqqqqqqqqqqNKKKKN....',
-  '....NKKNqqqqqqqqqqqqqqqNKKKN....',
+  '...NKKKKNqqqqqqqqqqqqqNKKKKKN...',
+  '....NKkNqqqqqqqqqqqqqqqNKkKN....',
   '....NKNSSqqqqqqqqqqqqqSSNKKN....',
   '....NNNSSNqqqqqqqqqqqNSSNNNN....',
   '.....NSSSNqqqqqqqqqqqNSSSN......',
@@ -524,6 +525,43 @@ const WEAR = {
     ] },
 };
 
+/* ---- Robot: 24 wide, body rows 0..29 (antenna on top), legs drawn separately so it can walk. Feet on row 34. ----
+   E = eyes and mouth, V = antenna light: recoloured red while it hunts, green once mastered. */
+const ROBOT_BODY = [
+  '...........NN...........',
+  '..........NVVN..........',
+  '..........NVVN..........',
+  '...........NN...........',
+  '...........nn...........',
+  '...........nn...........',
+  '.....NNNNNNNNNNNNNN.....',
+  '....NhhhhhhhhhhhhhhN....',
+  '....NhgggggggggggggN....',
+  '....NhgNNNNNNNNNNggN....',
+  '....NhgNnnnnnnnnNggN....',
+  '....NhgNnEEnnEEnNggN....',
+  '....NhgNnEEnnEEnNggN....',
+  '....NhgNnnnnnnnnNggN....',
+  '....NhgNnnEEEEnnNggN....',
+  '....NhgNNNNNNNNNNggN....',
+  '....NhgggggggggggggN....',
+  '....NnnnnnnnnnnnnnnN....',
+  '.....NNNNNNNNNNNNNN.....',
+  '..........NnnnN.........',
+  '...NNNNNNNNNNNNNNNNNN...',
+  '..NhhhhhhhhhhhhhhhhhhN..',
+  'NNNhggggNNNNNNNNgggggNNN',
+  'NgNhggggNnnnnnnNgggggNgN',
+  'NgNhggggNncnncnNgggggNgN',
+  'NgNhggggNnnnnnnNgggggNgN',
+  'NgNhggggNNNNNNNNgggggNgN',
+  'NNNhggggggggggggggggggNN',
+  '..NnnnnnnnnnnnnnnnnnnN..',
+  '..NNNNNNNNNNNNNNNNNNNN..'
+];
+const ROBOT_LEG = ['.NnnnN.', '.NnnnN.', 'NNNNNNN', 'NhhhhhN', 'NNNNNNN'];
+const ROBOT_H = 29;        // head top above the feet (without the antenna): this is where Felix has to land
+
 const PLANE = [
   '........................................................................................................',
   '...............NNNNN....................................................................................',
@@ -616,6 +654,7 @@ const ICON = {
   trophy16: ['................','..NNNNNNNNNNNN..','.NYNYVYYYYYYNYN.','NY.NYVYYYYYYN.YN','NY.NYVYYYYYYN.YN','.NYNYYYYYYYyNYN.','..NNNYYYYYyNNN..','....NNYYYyNN....','......NYyN......','......NYyN......','.....NYYYyN.....','....NNNNNNNN....','....NaaaaaaN....','....NNNNNNNN....','................','................'],
   mortar16: ['................','................','.......NN.......','.....NNnnNN.....','...NNnnnnnnNN...','.NNnnnnnnnnnnNN.','NnnnnnnnnnnnnnnN','.NNnnnnnnnnnnNNY','...NNnnnnnnNN.Y.','....NnNNNNnN..Y.','....NnnnnnnN.YYY','....NnnnnnnN.YYY','.....NNNNNN.....','................','................','................'],
   briefcase16: ['................','................','......NNNN......','.....NaNNaN.....','..NNNNNNNNNNNN..','.NbbbbbbbbbbbbN.','.NHHHHHHHHHHHHN.','.NbbbbbYYbbbbbN.','.NaaaaaYYaaaaaN.','.NbbbbbbbbbbbbN.','.NbbbbbbbbbbbbN.','.NbbbbbbbbbbbbN.','.NaaaaaaaaaaaaN.','..NNNNNNNNNNNN..','................','................'],
+  robot16: ['.......NN.......','......NGGN......','.......NN.......','.......nn.......','..NNNNNNNNNNNN..','.NhhhhhhhhhhhhN.','.NhgNNNNNNNNggN.','.NhgNnGGnGGnNgN.','.NhgNnGGnGGnNgN.','.NhgNnnGGGGnNgN.','.NhgNNNNNNNNggN.','.NhgggggggggggN.','.NnnnnnnnnnnnnN.','..NNNNNNNNNNNN..','....NnnN.NnnN...','....NNNN.NNNN...'],
   heart16: ['................','................','..NNNN...NNNN...','.NqqqqN.NqqqqN..','NqWWqqqNqqqqqqN.','NqWqqqqqqqqqqqN.','NqqqqqqqqqqqqxN.','.NqqqqqqqqqqxN..','..NqqqqqqqqxN...','...NqqqqqqxN....','....NqqqqxN.....','.....NqqxN......','......NxN.......','.......N........','................','................'],
   star:   ['.....YY.....','.....YY.....','....YYYY....','YYYYYYYYYYYY','.YYYYYYYYYY.','..YYYYYYYY..','...YYYYYY...','..YYYYYYYY..','..YYY..YYY..','.YY......YY.','............','............']
 };
@@ -692,7 +731,7 @@ const LEVEL = [
   { id:'f_ral', kind:'flight', len:820,  route:'FRA > RDU', sub:'EXCHANGE SEMESTER' },
   { id:'ral',   kind:'ground', len:820,  theme:'raleigh',   name:'RALEIGH, USA',   years:'2015-2015',      sub:'NC STATE UNIVERSITY', map:'ral' },
   { id:'f_bk',  kind:'flight', len:620,  route:'RDU > FRA', sub:'BACK TO KARLSRUHE' },
-  { id:'ka2',   kind:'ground', len:1950, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
+  { id:'ka2',   kind:'ground', len:2350, theme:'karlsruhe', name:'KARLSRUHE',      years:'2016-2019', sub:'', map:'ka' },
   { id:'zh',    kind:'ground', len:1350, theme:'zurich',    name:'ZURICH',         years:'2019-2021', sub:'', map:'zh' },
   { id:'f_mck', kind:'flight', len:2200, route:'MCKINSEY CLIENT WORK', sub:'', mck:true },
   { id:'ox',    kind:'ground', len:2300, theme:'oxford',    name:'OXFORD',         years:'2021-2023', sub:'', map:'ox' },
@@ -752,7 +791,10 @@ const HELPS = [
   { seg:'zh2',   off:450 , year:'2025-',     tag:'DEPUTY DISTRICT CHAIRMAN', role:'Deputy district chairman', desc:'', org:'Political party group', loc:'Neckar-Odenwald-Kreis', prop:'lectern' },
   { seg:'muc',   off:700,  year:'2026-',     tag:'START-UP MENTOR',  role:'Mentor to start-ups', desc:'', org:'Hack Nation', loc:'', prop:'laptop' }
 ];
-HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'work'; h.k = 'volunteer'; });
+HELPS.forEach((h,i)=>{ h.i = i; h.x = wx(h.seg, Math.round(h.off*UK)); h.t = 'vol'; h.k = 'volunteer'; });
+/* A robot waits at the end of the Karlsruhe years (2018). It hunts Felix; he has to jump on it. Once mastered, it follows him like a pet. */
+const ROBOT = { year:'2018-', tag:'MASTERING AI', role:'AI expert', desc:'Multimodal AI, LLMs, data', org:'Oxford, QuantumBlack, Waterland', loc:'', icon:'robot16', t:'work', k:'robot',
+  home: wx('ka2', Math.round(2150*UK)), hunt:250, walk:36, charge:90 };
 /* Story moments without a box: the return to QuantumBlack during the DPhil (not a separate overview row) */
 const EVENTS = [
   { seg:'ka1', off:0, wear:['student','beard'] },       // uniform off as soon as the airbase is left, and from now on a beard
@@ -793,12 +835,13 @@ function reset(){
     lastSeg:null, manual:false,
     fly:[], sparks:[], pops:[], bubbles:[],
     started:false, auto:false, startT:0,
-    intro:null, btnGlow:0, helpPop:null, allUnlocked:false
+    intro:null, btnGlow:0, helpPop:null, allUnlocked:false, kb:null
   };
   BOXES.forEach(b=>{ b.hit=false; b.bump=0; b.open=0; });
   MCK_FLAGS.forEach(f=>f.got=false);
   HELPS.forEach(h=>h.got=false);
   EVENTS.forEach(e=>e.done=false);
+  Object.assign(ROBOT, { got:false, x:ROBOT.home, vx:0, face:-1, state:'idle', t:0, flash:0, squash:0, wait:0, bumps:0 });
 }
 reset();
 const SH = () => SPRH[S.kid];
@@ -877,10 +920,15 @@ function step(dt){
   S.flyBlend = clamp(S.flyBlend + (wantFly ? dt*2.2 : -dt*2.2), 0, 1);
 
   /* horizontal */
-  const fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) : 1;   // together even faster
+  let fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) : 1;   // together even faster
+  if (!S.manual && !ROBOT.got && Math.abs(ROBOT.x - S.x) < 600) fast = 1;         // playing by itself: walk when the robot is near, so the jump lands
   const speed = (wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) : SPD) * fast;   // Shift also speeds up the plane
   S.fast = fast;
-  if (S.ended){
+  const END_X = WORLD_END - 280;
+  if (S.kb){
+    /* pushed back by the robot: no control for a moment */
+    S.kb.t -= dt; S.x += S.kb.vx*dt; if (S.kb.t <= 0) S.kb = null;
+  } else if (S.ended){
     /* the end: both stroll to the right, into the bright light */
     S.x += 92*dt; S.facing = 1;
   } else if (S.manual){
@@ -900,10 +948,11 @@ function step(dt){
         const d = b.x + 16 - S.x, lead = leadFor(b.y);
         if (lead !== null && d > 0 && d <= lead){ S.vy = JUMPV; S.onGround = false; sfx('jump'); break; }
       }
+      if (S.onGround) robotAutoJump(speed, END_X);
     }
   }
   /* the end: only with all achievements; otherwise a warning and the way is blocked */
-  const END_X = WORLD_END - 280, complete = S.stars >= TOTAL();
+  const complete = S.stars >= TOTAL();
   if (!S.ended && S.x >= END_X){
     if (complete){ S.ended = true; sfx('flag'); }
     else { if (!S.warn) sfx('jump'); S.x = END_X; }
@@ -945,6 +994,7 @@ function step(dt){
       onHit(b);
     }
   }
+  stepRobot(dt);
 
   /* flight stars */
   for (const fl of MCK_FLAGS){
@@ -1039,6 +1089,54 @@ function onHit(b){
   if (b.fx==='mck_off') S.mck = false;
 }
 function camX(){ return clamp(S.x - 200, 0, WORLD_END - W); }
+
+/* ---- the robot: idle at home, charges when Felix comes near, pushes him back on contact, mastered when he lands on it ---- */
+const ROBOT_TLAND = (() => { const apex = JUMPV*JUMPV/(2*GRAV); return -JUMPV/GRAV + Math.sqrt(2*Math.max(0, apex - ROBOT_H)/GRAV); })();   // s from take-off to landing on its head
+function robotAutoJump(speed, endX){
+  const rb = ROBOT; if (rb.got || Math.abs(rb.x - S.x) > 600) return;
+  const felixAt = Math.min(S.x + speed*ROBOT_TLAND, endX), robotAt = rb.x + rb.vx*ROBOT_TLAND, gap = robotAt - felixAt;
+  const closing = rb.vx - (felixAt > S.x + 1 ? speed : 0) < 0;      // is the gap shrinking or growing?
+  if (gap >= (closing ? -16 : -7) && gap <= (closing ? 7 : 16)){ S.vy = JUMPV; S.onGround = false; sfx('jump'); }
+}
+function stepRobot(dt){
+  const rb = ROBOT; rb.t += dt; rb.flash = Math.max(0, rb.flash - dt); rb.squash = Math.max(0, rb.squash - dt*2.8);
+  if (rb.got){
+    /* mastered: it follows him like a pet (behind the partner once she is there); on the plane it sits at the front */
+    const x0 = rb.x;
+    if (S.flyBlend > 0.3) rb.x = S.x + 30*S.facing;
+    else { const want = S.x - (S.partner ? 74 : 40)*S.facing; rb.x += (want - rb.x)*Math.min(1, dt*8); rb.x = clamp(rb.x, want - 30, want + 30); }
+    rb.vx = (rb.x - x0)/Math.max(dt, 1e-4); rb.face = S.facing;
+    return;
+  }
+  const d = S.x - rb.x, dir = d < 0 ? -1 : 1, near = Math.abs(d) < rb.hunt;
+  if (rb.state === 'retreat'){
+    /* after a bump it backs away from Felix for a moment (but not further than 200 px from home), then hunts again */
+    rb.wait -= dt; rb.vx = Math.abs(rb.x - dir*rb.walk*dt - rb.home) < 200 ? -dir*rb.walk : 0; rb.face = dir;
+    if (rb.wait <= 0) rb.state = 'idle';
+  } else if (near){ rb.state = 'charge'; rb.vx = dir*rb.charge; rb.face = dir; }
+  else if (rb.state !== 'charge' || Math.abs(d) > rb.hunt + 140){
+    rb.state = 'idle'; rb.vx = Math.abs(rb.home - rb.x) > 3 ? Math.sign(rb.home - rb.x)*rb.walk : 0; rb.face = rb.vx ? Math.sign(rb.vx) : dir;
+  }
+  rb.x += rb.vx*dt;
+  /* contact */
+  const rTop = GROUND - ROBOT_H;
+  if (S.flyBlend === 0 && Math.abs(S.x - rb.x) < 22){
+    if (S.vy > 0 && S.y <= rTop + 18 && S.y >= rTop - 12){
+      /* landed on it: mastered */
+      rb.got = true; rb.state = 'tamed'; rb.vx = 0; rb.squash = 1; rb.tamedAt = S.t; rb.face = S.facing;
+      S.y = rTop; S.vy = JUMPV*0.55; S.onGround = false;
+      S.stars++; S.btnGlow = 1; refreshPanel(); sfx('star');
+      popSparks(rb.x, rTop, '#7fc0dd', 14, 120);
+      S.helpPop = { h:{ lines:[rb.tag, 'AI EXPERT', rb.year] }, t:0, col:'#7fc0dd', dur:2.6 };
+      S.fly.push({ icon:rb.icon, x:rb.x - 18, y:rTop - 34, t:0, phase:0, sc:3, fast:false, target: () => [W - 40 + camX(), 6], arrive: () => { S.btnGlow = 1; refreshPanel(); } });
+    } else if (!S.kb && S.y > rTop + 18){
+      /* walked into it: pushed back, the robot backs off for a moment */
+      S.kb = { t:0.45, vx:dir*300 }; if (S.onGround){ S.vy = -190; S.onGround = false; }
+      rb.flash = 0.5; rb.state = 'retreat'; rb.wait = 1.6; rb.bumps++; sfx('buzz');
+      S.helpPop = { h:{ lines:['BEEP', 'JUMP ON IT'] }, t:0, col:'#e8746b', dur:1.8 };
+    }
+  }
+}
 </script>
 <script>
 /* =====================================================================
@@ -1647,7 +1745,7 @@ const PROPS = {
   germ:  [[40,(x,y,t)=>hangar(x,y,150)],[230,(x,y,t)=>controlTower(x,y)],[290,(x,y,t)=>deFlagPole(x,y,t)],[340,(x,y,t)=>jetParked(x,y)],[470,(x,y,t)=>ortsschild(x,y,'GERMERSHEIM')],[570,(x,y,t)=>windsock(x,y,t)],[620,(x,y,t)=>barracks(x,y)],[830,(x,y,t)=>fortressGate(x,y)]],
   ka1:   [[40,(x,y,t)=>schloss(x,y)],[210,(x,y,t)=>ortsschild(x,y,'KARLSRUHE')],[300,(x,y,t)=>tram(x,y,t)],[450,(x,y,t)=>pyramid(x,y)],[700,(x,y,t)=>brickHall(x,y,120,50,'KIT')]],
   ral:   [[60,(x,y,t)=>brickHall(x,y,110,54,'NC STATE')],[240,(x,y,t)=>belltower(x,y)],[330,(x,y,t)=>usFlag(x,y,t)],[430,(x,y,t)=>ortsschild(x,y,'RALEIGH','us')],[520,(x,y,t)=>pickup(x,y)],[620,(x,y,t)=>brickHall(x,y,100,60)]],
-  ka2:   [[40,(x,y,t)=>brickHall(x,y,120,50,'KIT')],[175,(x,y,t)=>ortsschild(x,y,'KARLSRUHE')],[260,(x,y,t)=>tram(x,y,t)],[580,(x,y,t)=>halfTimbered(x,y,60,44,'#6f4a3a')],[860,(x,y,t)=>schloss(x,y)],[1050,(x,y,t)=>pylon(x,y)],[1120,(x,y,t)=>windTurbine(x,y,t)],[1180,(x,y,t)=>carFactory(x,y)],[1360,(x,y,t)=>lectureHall(x,y,'DHBW')],[1690,(x,y,t)=>smartHouse(x,y)],[1850,(x,y,t)=>tram(x,y,t)]],
+  ka2:   [[40,(x,y,t)=>brickHall(x,y,120,50,'KIT')],[175,(x,y,t)=>ortsschild(x,y,'KARLSRUHE')],[260,(x,y,t)=>tram(x,y,t)],[580,(x,y,t)=>halfTimbered(x,y,60,44,'#6f4a3a')],[860,(x,y,t)=>schloss(x,y)],[1050,(x,y,t)=>pylon(x,y)],[1120,(x,y,t)=>windTurbine(x,y,t)],[1180,(x,y,t)=>carFactory(x,y)],[1360,(x,y,t)=>lectureHall(x,y,'DHBW')],[1690,(x,y,t)=>smartHouse(x,y)],[1850,(x,y,t)=>tram(x,y,t)],[1975,(x,y,t)=>halfTimbered(x,y,56,38,'#6f4a3a')],[2240,(x,y,t)=>brickHall(x,y,100,46)]],
   zh:    [[60,(x,y,t)=>ethBuilding(x,y-16)],[225,(x,y,t)=>ortsschild(x,y,'ZÜRICH','ch')],[420,(x,y,t)=>grossmunster(x,y-16)],[640,(x,y,t)=>tram(x,y,t)],[880,(x,y,t)=>primeTower(x,y)],[1050,(x,y,t)=>cityRowLocal(x,y)]],
   it:    [[60,(x,y,t)=>duomo(x,y)],[300,(x,y,t)=>vespa(x,y)],[480,(x,y,t)=>halfTimbered(x,y,60,44,'#c9432f')]],
   fi:    [[80,(x,y,t)=>saunaHut(x,y)],[420,(x,y,t)=>saunaHut(x,y)]],
@@ -1769,10 +1867,28 @@ function drawPartner(px, feetY){
   const f = Math.floor(S.partner.t*9)%4, bob = (f===1||f===3) ? -2 : 0;
   shadow(px, feetY, 30);
   ctx.save(); ctx.translate(Math.round(px), Math.round(feetY - PARTNER_H + bob)); ctx.translate(-16, 0);
-  draw(P_HEAD, 0, 0); draw(P_BODY, 0, 22);
+  const skin = (x, y, ch) => ch==='S' ? P_SKIN : P_SKIN_D;
+  drawRemap(P_HEAD, 0, 0, 'SD', skin); drawRemap(P_BODY, 0, 22, 'SD', skin);
   ctx.restore();
 }
 
+function drawRobot(px, t, feetY){
+  const rb = ROBOT, walking = feetY === GROUND && Math.abs(rb.vx) > 4, f = Math.floor(t*8)%2;
+  const sq = rb.squash > 0 ? 1 - 0.38*Math.sin(rb.squash*Math.PI) : 1;    // flattens for a moment when Felix lands on it
+  if (feetY === GROUND) shadow(px, GROUND, 26);
+  ctx.save(); ctx.translate(Math.round(px), Math.round(feetY));
+  if (sq !== 1) ctx.scale(1, sq);
+  if (rb.face < 0) ctx.scale(-1, 1);
+  ctx.translate(-12, -35);
+  const eye = rb.got ? '#5ad86a' : rb.flash > 0 ? '#ffffff' : (Math.floor(t*6)%4 ? '#e0463c' : '#8b1e2d');
+  const ant = rb.got ? '#5ad86a' : (Math.floor(t*4)%2 ? '#e0463c' : '#5a1a14');
+  drawRemap(ROBOT_BODY, 0, 0, 'EV', (x, y, ch) => ch==='E' ? eye : ant);
+  draw(ROBOT_LEG, 4, 30 - (walking && f===0 ? 2 : 0)); draw(ROBOT_LEG, 13, 30 - (walking && f===1 ? 2 : 0));
+  ctx.restore();
+  if (rb.got && S.t - rb.tamedAt < 2.6){                                   // a heart rises: it is on his side now
+    const k = (S.t - rb.tamedAt)/2.6; ctx.globalAlpha = 1 - k; drawIcon(ICON.heart16, Math.round(px - 8), Math.round(feetY - 52 - k*40), 1); ctx.globalAlpha = 1;
+  }
+}
 function panelBox(x, y, w, h, col='rgba(10,12,17,.8)'){ r(x, y, w, h, col); r(x, y, w, 1, 'rgba(255,255,255,.08)'); }
 
 function render(){
@@ -1806,6 +1922,7 @@ function render(){
   for (const h of HELPS){ const sx = h.x - cam; if (sx > -60 && sx < W+60) drawHelp(h, sx, t); }
   if (S.outlook > 0) brightLight(S.outlook, t);
   if (S.outlook > 0) signpost(WORLD_END - 150 - cam, S.outlook);
+  { const sx = ROBOT.x - cam; if (sx > -40 && sx < W + 40){ ctx.globalAlpha = fadeRight(sx); drawRobot(sx, t, ROBOT.got && S.flyBlend > 0 ? S.y : GROUND); ctx.globalAlpha = 1; } }
   if (S.partner){ ctx.globalAlpha = fadeRight(S.partner.x - cam); drawPartner(S.partner.x - cam, S.flyBlend > 0 ? S.y : GROUND); ctx.globalAlpha = 1; }
 
   /* stork intro */
@@ -2037,7 +2154,7 @@ function drawScenery(cam, t){
 }
 
 /* ---------- HUD ---------- */
-const TOTAL = () => BOXES.length + HELPS.length;
+const TOTAL = () => BOXES.length + HELPS.length + 1;   // boxes, volunteering, and the robot
 const TOUCH = matchMedia('(pointer:coarse)').matches;
 function drawHUD(seg, cam){
   /* achievements button, top right, small */
@@ -2144,7 +2261,7 @@ function refreshPanel(){
     .sort((a,c)=> yStart(a[0]) - yStart(c[0]) || a[1] - c[1]).map(x=>x[0]);
   ovBody.innerHTML = `<div class="cols">
     <div class="col">${table([['life','Life',[['',by('life')]]], ['edu','Education',[['Timeline',by('edu','station')],['Degrees and honours',degHon]]]])}</div>
-    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Volunteering',HELPS]]]])}</div></div>`;
+    <div class="col">${table([['work','Work',[['Positions',by('work','station')],['Expertise',[ROBOT]]]], ['vol','Volunteering',[['',HELPS]]]])}</div></div>`;
 }
 function openPanel(open){
   panelOpen = open; ov.classList.toggle('open', open);
@@ -2157,6 +2274,7 @@ document.getElementById('ovAll').onclick = ()=>{
   for (const b of BOXES){ if (b.hit) continue; b.hit = true; b.open = 1; S.stars++; if (b.wear) wear(b.wear); }
   for (const fl of MCK_FLAGS){ if (!fl.got){ fl.got = true; S.flagsGot.push(fl.c); } }
   for (const h of HELPS){ if (!h.got){ h.got = true; S.stars++; } }
+  if (!ROBOT.got){ ROBOT.got = true; ROBOT.state = 'tamed'; ROBOT.vx = 0; ROBOT.tamedAt = -10; ROBOT.x = S.x - 40; S.stars++; }
   S.kid = 0; S.visible = true; S.fly = []; S.allUnlocked = true; userGesture(); sfx('flag'); refreshPanel();
 };
 
@@ -2213,6 +2331,7 @@ function sfx(k){
   else if (k==='star'){ tone(1046,.08,'triangle',.07); tone(1318,.1,'triangle',.07,.08); tone(1568,.16,'triangle',.07,.16); }
   else if (k==='wear'){ tone(523,.06,'triangle',.06); tone(784,.12,'triangle',.06,.06); }
   else if (k==='flag'){ [523,659,784,1046].forEach((f,i)=>tone(f,.18,'square',.05,i*.12)); }
+  else if (k==='buzz'){ tone(150,.16,'sawtooth',.04); tone(110,.14,'square',.03,.05); }
 }
 const N = n => 440*Math.pow(2,(n-69)/12);
 const LEAD = [72,76,79,76, 69,72,76,72, 65,69,72,69, 67,71,74,71, 72,76,79,84, 83,79,76,74, 77,76,74,72, 74,67,0,0];
