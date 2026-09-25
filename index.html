@@ -774,7 +774,8 @@ function textC2(s, cx, y, col, sp=1){ text2(s, Math.round(cx - tw2(s,sp)/2), y, 
    3. WORLD DATA
    ===================================================================== */
 const GROUND = 266;            // y of the ground surface
-const SPD   = 240;             // walk speed px/s
+const SPD   = 228;             // walk speed px/s
+const RUNSPD= 252;             // ground base speed with Shift (times the run factor): walking a bit slower, running a bit faster (v46)
 const FLYSPD= 830;             // plane speed px/s
 const FLYSPD_MCK = 600;        // slower over the McKinsey client countries, so the flags can be seen
 const FLY_Y = 150;              // feet y while flying (plane deck)
@@ -1006,7 +1007,7 @@ function step(dt){
   /* horizontal */
   let fast = (keys.ShiftLeft || keys.ShiftRight) ? (S.partner ? 2.8 : 1.9) + (S.buff ? 0.6 : 0) : 1;   // together even faster, and after the secret workout faster still
   if (!S.manual && !ROBOT.got && Math.abs(ROBOT.x - S.x) < 600) fast = 1;         // playing by itself: walk when the robot is near, so the jump lands
-  const speed = (wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) : SPD) * fast;   // Shift also speeds up the plane
+  const speed = wantFly ? (seg.id==='f_mck' ? FLYSPD_MCK : FLYSPD) * fast : (fast > 1 ? RUNSPD : SPD) * fast;   // Shift also speeds up the plane
   S.fast = fast;
   const END_X = WORLD_END - 280;
   if (S.kb){
